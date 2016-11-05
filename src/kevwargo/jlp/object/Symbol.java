@@ -28,4 +28,8 @@ public class Symbol extends LispObject {
         this.name = name;
     }
 
+    public String toString() {
+        return String.format("Lisp symbol '%s'", name);
+    }
+
 }

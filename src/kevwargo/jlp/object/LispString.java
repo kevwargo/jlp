@@ -18,6 +18,6 @@ public class LispString extends LispDataObject {
     }
 
     public String toString() {
-        return String.format("Lisp string \"%s\"", value.replaceAll("\\", "\\\\").replaceAll("\"", "\\\""));
+        return String.format("Lisp string \"%s\"", value);
     }
 }
