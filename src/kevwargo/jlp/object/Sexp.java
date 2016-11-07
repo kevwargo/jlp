@@ -1,18 +1,18 @@
 package kevwargo.jlp.object;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import kevwargo.jlp.LispException;
 
 
 public class Sexp extends LispObject {
 
-    private LinkedList<LispObject> contents;
-    private LispObject first;
+    private List<LispObject> contents;
 
     public Sexp() {
-        contents = new LinkedList<LispObject>();
+        contents = new ArrayList<LispObject>();
     }
 
     public void add(LispObject object) {
@@ -20,16 +20,15 @@ public class Sexp extends LispObject {
     }
 
     public LispObject eval(HashMap<String, LispObject> namespace) throws LispException {
-        if (contents.isEmpty()) {
+        ListIterator<LispObject> iterator = contents.listIterator();
+        if (!iterator.hasNext()) {
             return new LispNil();
         }
-        if (first == null) {
-            first = contents.remove(0);
-        }
-        if (!(first instanceof Symbol)) {
+        LispObject first = iterator.next();
+        if (!(first instanceof LispSymbol)) {
             throw new LispException("First object in sexp must be a symbol");
         }
-        String name = ((Symbol)first).getName();
+        String name = ((LispSymbol)first).getName();
         LispObject function = namespace.get(name);
         if (function == null) {
             throw new LispException(String.format("Global function '%s' not found", name));
@@ -37,22 +36,23 @@ public class Sexp extends LispObject {
         if (!(function instanceof LispFunction)) {
             throw new LispException(String.format("Global symbol's '%s' value is not a function", name));
         }
-        List<LispObject> args = new LinkedList<LispObject>();
-        for (LispObject object : contents) {
-            args.add(object);
+        List<LispObject> args = new ArrayList<LispObject>();
+        while (iterator.hasNext()) {
+            args.add(iterator.next());
         }
-        return ((LispFunction)function).eval(namespace, args);
+        ((LispFunction)function).setArguments(namespace, args);
+        return function.eval(namespace);
     }
 
     public String toString() {
-        if (first == null) {
-            first = contents.remove(0);
+        ListIterator<LispObject> iterator = contents.listIterator();
+        if (!iterator.hasNext()) {
+            return "()";
         }
         StringBuffer sb = new StringBuffer();
-        sb.append('(').append(first.toString());
-        for (LispObject object : contents) {
-            sb.append("\n ");
-            sb.append(object.toString());
+        sb.append('(').append(iterator.next().toString());
+        while (iterator.hasNext()) {
+            sb.append(" ").append(iterator.next());
         }
         return sb.append(')').toString();
     }

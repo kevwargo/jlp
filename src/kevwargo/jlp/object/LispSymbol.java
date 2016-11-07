@@ -4,11 +4,11 @@ import java.util.HashMap;
 import kevwargo.jlp.LispException;
 
 
-public class Symbol extends LispObject {
+public class LispSymbol extends LispObject {
 
     private String name;
 
-    public Symbol(String name) {
+    public LispSymbol(String name) {
         this.name = name;
     }
 
@@ -29,7 +29,7 @@ public class Symbol extends LispObject {
     }
 
     public String toString() {
-        return String.format("Lisp symbol '%s'", name);
+        return String.format("LispSymbol %s", name);
     }
 
 }

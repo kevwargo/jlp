@@ -18,6 +18,6 @@ public class LispFloat extends LispDataObject {
     }
 
     public String toString() {
-        return String.format("Lisp float %f", value);
+        return String.format("%f", value);
     }
 }

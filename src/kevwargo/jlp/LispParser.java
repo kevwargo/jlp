@@ -125,12 +125,12 @@ public class LispParser {
                     sb.append(source.charAt(++position));
                     break;
                 case '"': case '(': case ')': case ' ': case '\t': case '\n': case '\r':
-                    return new Symbol(sb.toString());
+                    return new LispSymbol(sb.toString());
                 default:
                     sb.append(currentChar);
             }
         }
-        return new Symbol(sb.toString());
+        return new LispSymbol(sb.toString());
     }
 
     private LispObject parseNumber(String source, int length) throws LispException {

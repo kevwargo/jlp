@@ -18,6 +18,6 @@ public class LispJavaObject extends LispDataObject {
     }
 
     public String toString() {
-        return String.format("Lisp wrapper for Java object %s", value.toString());
+        return String.format("Java object %s", value.toString());
     }
 }

@@ -18,6 +18,6 @@ public class LispInt extends LispDataObject {
     }
 
     public String toString() {
-        return String.format("Lisp int %d", value);
+        return String.format("%d", value);
     }
 }
