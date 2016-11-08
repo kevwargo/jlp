@@ -1,12 +1,12 @@
 package kevwargo.jlp.object;
 
-import java.util.HashMap;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.LispNamespace;
 
 
 public abstract class LispDataObject extends LispObject {
 
-    public LispObject eval(HashMap<String, LispObject> namespace) throws LispException {
+    public LispObject eval(LispNamespace namespace) throws LispException {
         return this;
     }
     

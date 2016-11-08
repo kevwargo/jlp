@@ -1,10 +1,10 @@
 package kevwargo.jlp.object;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.LispNamespace;
 
 
 public class Sexp extends LispObject {
@@ -19,28 +19,37 @@ public class Sexp extends LispObject {
         contents.add(object);
     }
 
-    public LispObject eval(HashMap<String, LispObject> namespace) throws LispException {
+    public LispObject set(int index, LispObject object) {
+        return contents.set(index, object);
+    }
+
+    public int size() {
+        return contents.size();
+    }
+
+    public ListIterator<LispObject> listIterator() {
+        return contents.listIterator();
+    }
+
+    public LispObject eval(LispNamespace namespace) throws LispException {
         ListIterator<LispObject> iterator = contents.listIterator();
         if (!iterator.hasNext()) {
-            return new LispNil();
+            return LispNil.getInstance();
         }
         LispObject first = iterator.next();
         if (!(first instanceof LispSymbol)) {
             throw new LispException("First object in sexp must be a symbol");
         }
         String name = ((LispSymbol)first).getName();
-        LispObject function = namespace.get(name);
-        if (function == null) {
-            throw new LispException(String.format("Global function '%s' not found", name));
-        }
-        if (!(function instanceof LispFunction)) {
-            throw new LispException(String.format("Global symbol's '%s' value is not a function", name));
+        LispObject function = namespace.resolve(name);
+        if (!(function instanceof LispBuiltinFunction)) {
+            throw new LispException(String.format("Symbol's value is not a function: %s", name));
         }
         List<LispObject> args = new ArrayList<LispObject>();
         while (iterator.hasNext()) {
             args.add(iterator.next());
         }
-        ((LispFunction)function).setArguments(namespace, args);
+        ((LispBuiltinFunction)function).setArguments(namespace, args);
         return function.eval(namespace);
     }
 

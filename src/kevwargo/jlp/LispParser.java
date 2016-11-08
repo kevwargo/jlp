@@ -31,8 +31,11 @@ public class LispParser {
                         throw new LispException("Invalid input: ')'");
                     }
                     sexp = sexpStack.pop();
+                    LispObject result = sexp.size() > 0 ? sexp : LispNil.getInstance();
                     if (sexpStack.empty()) {
-                        return sexp;
+                        return result;
+                    } else {
+                        sexpStack.peek().set(sexpStack.peek().size() - 1, result);
                     }
                     break;
                 case '"':
@@ -105,13 +108,13 @@ public class LispParser {
         String possibleT = source.substring(position, position + (position < length - 1 ? 2 : 1));
         if (possibleT.matches("t([ \t\n\r\"()]|$)")) {
             position++;
-            return new LispT();
+            return LispT.getInstance();
         }
         if (position <= length - 3) {
             String possibleNil = source.substring(position, position + (position < length - 3 ? 4 : 3));
             if (possibleNil.matches("nil([ \t\n\r\"()]|$)")) {
                 position += 3;
-                return new LispNil();
+                return LispNil.getInstance();
             }
         }
         StringBuffer sb = new StringBuffer();

@@ -1,7 +1,7 @@
 package kevwargo.jlp.object;
 
-import java.util.HashMap;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.LispNamespace;
 
 
 public class LispSymbol extends LispObject {
@@ -12,12 +12,8 @@ public class LispSymbol extends LispObject {
         this.name = name;
     }
 
-    public LispObject eval(HashMap<String, LispObject> namespace) throws LispException {
-        LispObject result = namespace.get(name);
-        if (result == null) {
-            throw new LispException(String.format("Global symbol %s not found", name));
-        }
-        return result;
+    public LispObject eval(LispNamespace namespace) throws LispException {
+        return namespace.resolve(name);
     }
 
     public String getName() {
