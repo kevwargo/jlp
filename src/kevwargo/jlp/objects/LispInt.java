@@ -1,4 +1,4 @@
-package kevwargo.jlp.object;
+package kevwargo.jlp.objects;
 
 
 public class LispInt extends LispDataObject {

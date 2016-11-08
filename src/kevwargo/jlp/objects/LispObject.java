@@ -1,4 +1,4 @@
-package kevwargo.jlp.object;
+package kevwargo.jlp.objects;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;

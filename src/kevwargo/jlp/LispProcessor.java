@@ -2,8 +2,10 @@ package kevwargo.jlp;
 
 import java.util.HashMap;
 import java.util.List;
-import kevwargo.jlp.object.*;
 import java.util.ListIterator;
+import kevwargo.jlp.objects.*;
+import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defun;
+import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defmacro;
 
 public class LispProcessor {
 
@@ -27,7 +29,7 @@ public class LispProcessor {
                     return LispNil.getInstance();
                 }
             });
-        namespace.put("quote", new LispMacro("quote", new String[] {"arg"}, false) {
+        namespace.put("quote", new LispBuiltinMacro("quote", new String[] {"arg"}, false) {
                 public LispObject eval(LispNamespace namespace) {
                     return arguments.get("arg");
                 }
@@ -44,39 +46,9 @@ public class LispProcessor {
                     return new LispString(result);
                 }
             });
-        namespace.put("defun", new LispMacro("defun", new String[] {"name", "arglist"}, true) {
-                public LispObject eval(LispNamespace namespace) throws LispException {
-                    LispObject nameObject = arguments.get("name");
-                    if (!(nameObject instanceof LispSymbol)) {
-                        throw new LispException("Wrong argument type: name must be a symbol");
-                    }
-                    LispObject arglist = arguments.get("arglist");
-                    if (!(arglist instanceof Sexp) && !(arglist instanceof LispNil)) {
-                        throw new LispException("Wrong argument type: arglist must be a sexp or nil");
-                    }
-                    String args[];
-                    if (arglist instanceof Sexp) {
-                        Sexp argsSexp = (Sexp)arglist;
-                        args = new String[argsSexp.size()];
-                        ListIterator<LispObject> iterator = argsSexp.listIterator();
-                        int i = 0;
-                        while (iterator.hasNext()) {
-                            LispObject object = iterator.next();
-                            if (!(object instanceof LispSymbol)) {
-                                throw new LispException(String.format("Formal argument must be a symbol (got %s)", object.toString()));
-                            } else {
-                                args[i++] = ((LispSymbol)object).getName();
-                            }
-                        }
-                    } else {
-                        args = new String[0];
-                    }
-                    String name = ((LispSymbol)nameObject).getName();
-                    namespace.bind(name, new LispFunction(name, args, false, rest));
-                    return new LispSymbol(name);
-                }
-            });
-        namespace.put("let", new LispMacro("let", new String[] {"mappings"}, true) {
+        namespace.put("defun", new LispBuiltins_Defun());
+        namespace.put("defmacro", new LispBuiltins_Defmacro());
+        namespace.put("let", new LispBuiltinMacro("let", new String[] {"mappings"}, true) {
                 public LispObject eval(LispNamespace namespace) throws LispException {
                     LispObject mappingsObject = arguments.get("mappings");
                     if (!(mappingsObject instanceof Sexp)) {

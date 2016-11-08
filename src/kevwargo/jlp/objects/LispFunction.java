@@ -1,4 +1,4 @@
-package kevwargo.jlp.object;
+package kevwargo.jlp.objects;
 
 import java.util.HashMap;
 import java.util.List;

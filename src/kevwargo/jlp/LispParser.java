@@ -1,6 +1,6 @@
 package kevwargo.jlp;
 
-import kevwargo.jlp.object.*;
+import kevwargo.jlp.objects.*;
 import java.util.Stack;
 
 public class LispParser {

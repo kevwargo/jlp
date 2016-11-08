@@ -1,7 +1,7 @@
 package kevwargo.jlp;
 
 import java.util.HashMap;
-import kevwargo.jlp.object.*;
+import kevwargo.jlp.objects.*;
 
 public class LispNamespace {
 
