@@ -9,6 +9,8 @@ import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defmacro;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Let;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_LetStar;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Quote;
+import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Concat;
+import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Print;
 
 public class LispProcessor {
 
@@ -24,27 +26,9 @@ public class LispProcessor {
 
     private LispProcessor() {
         HashMap<String, LispObject> namespace = new HashMap<String, LispObject>();
-        namespace.put("print", new LispBuiltinFunction("print", new String[0], true) {
-                public LispObject eval(LispNamespace namespace) {
-                    for (LispObject object : rest) {
-                        System.out.println(object.toString());
-                    }
-                    return LispNil.getInstance();
-                }
-            });
+        namespace.put("print", new LispBuiltins_Print());
         namespace.put("quote", new LispBuiltins_Quote());
-        namespace.put("concat", new LispBuiltinFunction("concat", new String[0], true) {
-                public LispObject eval(LispNamespace namespace) throws LispException {
-                    String result = "";
-                    for (LispObject object : rest) {
-                        if (!(object instanceof LispString)) {
-                            throw new LispException("Wrong argument type: string expected");
-                        }
-                        result += ((LispString)object).getValue();
-                    }
-                    return new LispString(result);
-                }
-            });
+        namespace.put("concat", new LispBuiltins_Concat());
         namespace.put("defun", new LispBuiltins_Defun());
         namespace.put("defmacro", new LispBuiltins_Defmacro());
         namespace.put("let", new LispBuiltins_Let());
