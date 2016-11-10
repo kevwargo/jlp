@@ -6,10 +6,14 @@ import java.util.ListIterator;
 import kevwargo.jlp.objects.*;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defun;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defmacro;
+import kevwargo.jlp.objects.builtins.macros.LispBuiltins_If;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Let;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_LetStar;
+import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Progn;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Quote;
+import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Append;
 import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Concat;
+import kevwargo.jlp.objects.builtins.functions.LispBuiltins_List;
 import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Print;
 
 public class LispProcessor {
@@ -33,6 +37,10 @@ public class LispProcessor {
         namespace.put("defmacro", new LispBuiltins_Defmacro());
         namespace.put("let", new LispBuiltins_Let());
         namespace.put("let*", new LispBuiltins_LetStar());
+        namespace.put("list", new LispBuiltins_List());
+        namespace.put("append", new LispBuiltins_Append());
+        namespace.put("if", new LispBuiltins_If());
+        namespace.put("progn", new LispBuiltins_Progn());
         basicNamespace = new LispNamespace(namespace);
     }
 
