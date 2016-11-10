@@ -18,13 +18,13 @@ public class LispBuiltins_If extends LispBuiltinMacro {
 
     public LispObject eval(LispNamespace namespace) throws LispException {
         LispObject result;
-        if (arguments.get("condition") instanceof LispNil) {
+        if (arguments.get("condition").getBooleanValue()) {
+            result = arguments.get("true").eval(namespace);
+        } else {
             result = LispNil.getInstance();
             for (LispObject object : rest) {
                 result = object.eval(namespace);
             }
-        } else {
-            result = arguments.get("true").eval(namespace);
         }
         return result;
     }

@@ -17,5 +17,9 @@ public class LispNil extends LispDataObject {
     public String toString() {
         return "nil";
     }
+
+    public boolean getBooleanValue() {
+        return false;
+    }
     
 }
