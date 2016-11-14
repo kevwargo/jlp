@@ -19,9 +19,9 @@ public class LispParser {
                     break;
                 case '(':
                     position++;
-                    sexp = new Sexp();
+                    sexp = Sexp.getInstance();
                     if (!sexpStack.empty()) {
-                        sexpStack.peek().add(sexp);
+                        addToSexpOnTop(sexp);
                     }
                     sexpStack.push(sexp);
                     break;
@@ -31,11 +31,8 @@ public class LispParser {
                         throw new LispException("Invalid input: ')'");
                     }
                     sexp = sexpStack.pop();
-                    LispObject result = sexp.size() > 0 ? sexp : LispNil.getInstance();
                     if (sexpStack.empty()) {
-                        return result;
-                    } else {
-                        sexpStack.peek().set(sexpStack.peek().size() - 1, result);
+                        return sexp;
                     }
                     break;
                 case '"':
@@ -43,7 +40,7 @@ public class LispParser {
                     if (sexpStack.empty()) {
                         return string;
                     }
-                    sexpStack.peek().add(string);
+                    addToSexpOnTop(string);
                     break;
                 case '1': case '2': case '3': case '4': case '5':
                 case '6': case '7': case '8': case '9': case '0':
@@ -52,14 +49,14 @@ public class LispParser {
                     if (sexpStack.empty()) {
                         return number;
                     }
-                    sexpStack.peek().add(number);
+                    addToSexpOnTop(number);
                     break;
                 default:
                     LispObject symbol = parseSymbol(lispSource, length);
                     if (sexpStack.empty()) {
                         return symbol;
                     }
-                    sexpStack.peek().add(symbol);
+                    addToSexpOnTop(symbol);
             }
         }
         if (sexpStack.empty()) {
@@ -67,6 +64,12 @@ public class LispParser {
         } else {
             throw new LispException("Unexpected end of stream while parsing a sexp");
         }
+    }
+
+    private void addToSexpOnTop(LispObject object) {
+        Sexp sexp = sexpStack.pop();
+        sexp = sexp.add(object);
+        sexpStack.push(sexp);
     }
 
     private char escapeChar(char c) {
@@ -114,7 +117,7 @@ public class LispParser {
             String possibleNil = source.substring(position, position + (position < length - 3 ? 4 : 3));
             if (possibleNil.matches("nil([ \t\n\r\"()]|$)")) {
                 position += 3;
-                return LispNil.getInstance();
+                return Sexp.getInstance();
             }
         }
         StringBuffer sb = new StringBuffer();

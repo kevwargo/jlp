@@ -35,9 +35,9 @@ public abstract class LispBuiltinFunction extends LispObject {
             throw new LispException(String.format("Too few arguments to %s: %d", name, argCount));
         }
         if (formalArguments.rest() != null) {
-            Sexp rest = new Sexp();
+            Sexp rest = Sexp.getInstance();
             while (actual.hasNext()) {
-                rest.add(evalArg(actual.next(), namespace));
+                rest = rest.add(evalArg(actual.next(), namespace));
             }
             arguments.put(formalArguments.rest(), rest);
         } else if (actual.hasNext()) {

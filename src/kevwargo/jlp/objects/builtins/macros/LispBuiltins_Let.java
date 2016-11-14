@@ -32,7 +32,7 @@ public class LispBuiltins_Let extends LispBuiltinMacro {
         while (iterator.hasNext()) {
             LispObject mapping = iterator.next();
             if (mapping instanceof LispSymbol) {
-                mappings.put(((LispSymbol)mapping).getName(), LispNil.getInstance());
+                mappings.put(((LispSymbol)mapping).getName(), Sexp.getInstance());
             } else if (mapping instanceof Sexp) {
                 Iterator<LispObject> mappingIterator = ((Sexp)mapping).iterator();
                 LispObject varObject = mappingIterator.next();
@@ -43,7 +43,7 @@ public class LispBuiltins_Let extends LispBuiltinMacro {
                 if (mappingIterator.hasNext()) {
                     valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));
                 } else {
-                    valObject = LispNil.getInstance();
+                    valObject = Sexp.getInstance();
                 }
                 mappings.put(((LispSymbol)varObject).getName(), valObject);
                 if (mappingIterator.hasNext()) {
@@ -53,7 +53,7 @@ public class LispBuiltins_Let extends LispBuiltinMacro {
                 throw new LispException("Mapping must be a symbol or a sexp: " + mapping.toString());
             }
         }
-        LispObject result = LispNil.getInstance();
+        LispObject result = Sexp.getInstance();
         LispNamespace localNamespace = namespace.prepend(mappings);
         iterator = ((Sexp)arguments.get("body")).iterator();
         while (iterator.hasNext()) {

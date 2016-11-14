@@ -5,7 +5,6 @@ import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinFunction;
-import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
@@ -18,10 +17,10 @@ public class LispBuiltins_List extends LispBuiltinFunction {
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
-        Sexp result = new Sexp();
+        Sexp result = Sexp.getInstance();
         Iterator<LispObject> argsIterator = ((Sexp)arguments.get("args")).iterator();
         while (argsIterator.hasNext()) {
-            result.add(argsIterator.next());
+            result = result.add(argsIterator.next());
         }
         return result;
     }

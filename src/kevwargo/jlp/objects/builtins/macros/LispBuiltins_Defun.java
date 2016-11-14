@@ -5,7 +5,6 @@ import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinMacro;
 import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.Sexp;
@@ -31,8 +30,8 @@ public class LispBuiltins_Defun extends LispBuiltinMacro {
 
     protected FormalArguments extractArgs() throws LispException {
         LispObject arglist = arguments.get("arglist");
-        if (!(arglist instanceof Sexp) && !(arglist instanceof LispNil)) {
-            throw new LispException("Wrong argument type: arglist must be a sexp or nil");
+        if (!(arglist instanceof Sexp)) {
+            throw new LispException("Wrong argument type: arglist must be a sexp");
         }
         FormalArguments args = new FormalArguments();
         if (arglist instanceof Sexp) {

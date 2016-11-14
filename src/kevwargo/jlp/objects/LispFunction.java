@@ -15,7 +15,7 @@ public class LispFunction extends LispBuiltinFunction {
     }
 
     public LispObject eval(LispNamespace basicNamespace) throws LispException {
-        LispObject result = LispNil.getInstance();
+        LispObject result = Sexp.getInstance();
         LispNamespace namespace = basicNamespace.prepend(arguments);
         Iterator<LispObject> iterator = body.iterator();
         while (iterator.hasNext()) {

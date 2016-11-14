@@ -9,22 +9,30 @@ import kevwargo.jlp.LispNamespace;
 
 public class Sexp extends LispObject {
 
+    private static Sexp instance;
+
     private List<LispObject> contents;
 
-    public Sexp() {
+    private Sexp() {
         contents = new ArrayList<LispObject>();
     }
 
-    public void add(LispObject object) {
-        contents.add(object);
+    public static Sexp getInstance() {
+        if (instance == null) {
+            instance = new Sexp();
+        }
+        return instance;
     }
 
-    public LispObject set(int index, LispObject object) {
-        return contents.set(index, object);
-    }
-
-    public int size() {
-        return contents.size();
+    public Sexp add(LispObject object) {
+        Sexp result;
+        if (this == instance) {
+            result = new Sexp();
+        } else {
+            result = this;
+        }
+        result.contents.add(object);
+        return result;
     }
 
     public Iterator<LispObject> iterator() {
@@ -34,7 +42,7 @@ public class Sexp extends LispObject {
     public LispObject eval(LispNamespace namespace) throws LispException {
         Iterator<LispObject> iterator = contents.iterator();
         if (!iterator.hasNext()) {
-            return LispNil.getInstance();
+            return this;
         }
         LispObject first = iterator.next();
         if (!(first instanceof LispSymbol)) {
@@ -52,7 +60,7 @@ public class Sexp extends LispObject {
     public String toString() {
         Iterator<LispObject> iterator = contents.iterator();
         if (!iterator.hasNext()) {
-            return "()";
+            return "nil";
         }
         StringBuffer sb = new StringBuffer();
         sb.append('(').append(iterator.next().toString());
@@ -62,4 +70,7 @@ public class Sexp extends LispObject {
         return sb.append(')').toString();
     }
 
+    public boolean getBooleanValue() {
+        return !contents.isEmpty();
+    }
 }
