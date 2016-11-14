@@ -2,7 +2,7 @@ package kevwargo.jlp;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Iterator;
 import kevwargo.jlp.objects.*;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defun;
 import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defmacro;

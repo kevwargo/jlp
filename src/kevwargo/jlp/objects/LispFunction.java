@@ -1,24 +1,25 @@
 package kevwargo.jlp.objects;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.FormalArguments;
 
 public class LispFunction extends LispBuiltinFunction {
 
-    private LispObject[] body;
+    private Sexp body;
 
-    public LispFunction(String name, String[] formalArguments, boolean allowRest, LispObject[] body) {
-        super(name, formalArguments, allowRest);
+    public LispFunction(String name, FormalArguments formalArguments, Sexp body) {
+        super(name, formalArguments);
         this.body = body;
     }
 
     public LispObject eval(LispNamespace basicNamespace) throws LispException {
         LispObject result = LispNil.getInstance();
-        LispNamespace namespace = basicNamespace.prepend(this.arguments);
-        for (LispObject expr : body) {
-            result = expr.eval(namespace);
+        LispNamespace namespace = basicNamespace.prepend(arguments);
+        Iterator<LispObject> iterator = body.iterator();
+        while (iterator.hasNext()) {
+            result = iterator.next().eval(namespace);
         }
         return result;
     }

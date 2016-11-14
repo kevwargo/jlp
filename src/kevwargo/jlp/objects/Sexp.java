@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 
@@ -27,12 +27,12 @@ public class Sexp extends LispObject {
         return contents.size();
     }
 
-    public ListIterator<LispObject> listIterator() {
-        return contents.listIterator();
+    public Iterator<LispObject> iterator() {
+        return contents.iterator();
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
-        ListIterator<LispObject> iterator = contents.listIterator();
+        Iterator<LispObject> iterator = contents.iterator();
         if (!iterator.hasNext()) {
             return LispNil.getInstance();
         }
@@ -45,16 +45,12 @@ public class Sexp extends LispObject {
         if (!(function instanceof LispBuiltinFunction)) {
             throw new LispException(String.format("Symbol's value is not a function: %s", name));
         }
-        List<LispObject> args = new ArrayList<LispObject>();
-        while (iterator.hasNext()) {
-            args.add(iterator.next());
-        }
-        ((LispBuiltinFunction)function).setArguments(namespace, args);
+        ((LispBuiltinFunction)function).setArguments(namespace, iterator);
         return function.eval(namespace);
     }
 
     public String toString() {
-        ListIterator<LispObject> iterator = contents.listIterator();
+        Iterator<LispObject> iterator = contents.iterator();
         if (!iterator.hasNext()) {
             return "()";
         }

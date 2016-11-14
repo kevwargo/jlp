@@ -2,58 +2,50 @@ package kevwargo.jlp.objects;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.FormalArguments;
 
 
 public abstract class LispBuiltinFunction extends LispObject {
 
-    private String[] formalArguments;
-    private boolean allowRest;
+    private FormalArguments formalArguments;
     protected String name;
     protected HashMap<String, LispObject> arguments;
-    protected LispObject[] rest;
-    protected boolean evalArgs;
 
-    public LispBuiltinFunction(String name, String[] formalArguments, boolean allowRest) {
+    public LispBuiltinFunction(String name, FormalArguments formalArguments) {
         this.name = name;
         this.formalArguments = formalArguments;
-        this.allowRest = allowRest;
-        evalArgs = true;
     }
 
-    public void setArguments(LispNamespace namespace, List<LispObject> arguments) throws LispException {
-        int actualSize = arguments.size();
-        int formalSize = formalArguments.length;
-        if (actualSize < formalSize || actualSize > formalSize && !allowRest) {
-            throw new LispException(
-                    String.format(
-                            "Wrong number of arguments for %s: %d (%d expected)",
-                            name,
-                            actualSize,
-                            formalSize
-                        )
-                );
+    protected LispObject evalArg(LispObject arg, LispNamespace namespace) throws LispException {
+        return arg.eval(namespace);
+    }
+
+    public void setArguments(LispNamespace namespace, Iterator<LispObject> actual) throws LispException {
+        arguments = new HashMap<String, LispObject>();
+        Iterator<String> formal = formalArguments.positional().iterator();
+        int argCount = 0;
+        while (formal.hasNext() && actual.hasNext()) {
+            arguments.put(formal.next(), evalArg(actual.next(), namespace));
+            argCount++;
         }
-        this.arguments = new HashMap<String, LispObject>();
-        if (evalArgs) {
-            for (int i = 0; i < formalSize; i++) {
-                this.arguments.put(formalArguments[i], arguments.get(i).eval(namespace));
-            }
-        } else {
-            for (int i = 0; i < formalSize; i++) {
-                this.arguments.put(formalArguments[i], arguments.get(i));
-            }
+        if (formal.hasNext()) {
+            throw new LispException(String.format("Too few arguments to %s: %d", name, argCount));
         }
-        rest = new LispObject[actualSize - formalSize];
-        if (evalArgs) {
-            for (int i = formalSize; i < actualSize; i++) {
-                rest[i - formalSize] = arguments.get(i).eval(namespace);
+        if (formalArguments.rest() != null) {
+            Sexp rest = new Sexp();
+            while (actual.hasNext()) {
+                rest.add(evalArg(actual.next(), namespace));
             }
-        } else {
-            for (int i = formalSize; i < actualSize; i++) {
-                rest[i - formalSize] = arguments.get(i);
+            arguments.put(formalArguments.rest(), rest);
+        } else if (actual.hasNext()) {
+            while (actual.hasNext()) {
+                actual.next();
+                argCount++;
             }
+            throw new LispException(String.format("Too many arguments to %s: %d", name, argCount));
         }
     }
 

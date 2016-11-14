@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.ListIterator;
+import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinMacro;
@@ -9,6 +9,7 @@ import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.utils.FormalArguments;
 
 public class LispBuiltins_Defun extends LispBuiltinMacro {
 
@@ -17,7 +18,7 @@ public class LispBuiltins_Defun extends LispBuiltinMacro {
     }
 
     public LispBuiltins_Defun(String name) {
-        super(name, new String[] {"name", "arglist"}, true);
+        super(name, (new FormalArguments()).addPositional("name").addPositional("arglist").setRest("body"));
     }
 
     protected String extractName() throws LispException {
@@ -28,34 +29,42 @@ public class LispBuiltins_Defun extends LispBuiltinMacro {
         return ((LispSymbol)nameObject).getName();
     }
 
-    protected String[] extractArgs() throws LispException {
+    protected FormalArguments extractArgs() throws LispException {
         LispObject arglist = arguments.get("arglist");
         if (!(arglist instanceof Sexp) && !(arglist instanceof LispNil)) {
             throw new LispException("Wrong argument type: arglist must be a sexp or nil");
         }
-        String args[];
+        FormalArguments args = new FormalArguments();
         if (arglist instanceof Sexp) {
             Sexp argsSexp = (Sexp)arglist;
-            args = new String[argsSexp.size()];
-            ListIterator<LispObject> iterator = argsSexp.listIterator();
-            int i = 0;
+            Iterator<LispObject> iterator = argsSexp.iterator();
             while (iterator.hasNext()) {
                 LispObject object = iterator.next();
                 if (!(object instanceof LispSymbol)) {
                     throw new LispException(String.format("Formal argument must be a symbol (got %s)", object.toString()));
                 } else {
-                    args[i++] = ((LispSymbol)object).getName();
+                    LispSymbol symbol = (LispSymbol)object;
+                    if (symbol.getName().equals("&rest")) {
+                        if (!iterator.hasNext()) {
+                            throw new LispException("&rest keyword must be followed by a symbol");
+                        }
+                        LispObject restObject = iterator.next();
+                        if (!(restObject instanceof LispSymbol)) {
+                            throw new LispException(String.format("Formal argument must be a symbol (got %s)", restObject.toString()));
+                        }
+                        args.setRest(((LispSymbol)restObject).getName());
+                        break;
+                    }
+                    args.addPositional(symbol.getName());
                 }
             }
-        } else {
-            args = new String[0];
         }
         return args;
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
         String name = extractName();
-        namespace.bind(name, new LispFunction(name, extractArgs(), false, rest));
+        namespace.bind(name, new LispFunction(name, extractArgs(), (Sexp)arguments.get("body")));
         return new LispSymbol(name);
     }
 
