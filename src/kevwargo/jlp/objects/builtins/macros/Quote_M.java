@@ -6,9 +6,9 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.utils.FormalArguments;
 
 
-public class LispBuiltins_Quote extends LispBuiltinMacro {
+public class Quote_M extends LispBuiltinMacro {
 
-    public LispBuiltins_Quote() {
+    public Quote_M() {
         super("quote", new FormalArguments().addPositional("obj"));
     }
 

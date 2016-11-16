@@ -8,9 +8,9 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
 
-public class LispBuiltins_If extends LispBuiltinMacro {
+public class If_M extends LispBuiltinMacro {
 
-    public LispBuiltins_If() {
+    public If_M() {
         super("if", new FormalArguments().addPositional("condition").addPositional("true").setRest("false"));
     }
 

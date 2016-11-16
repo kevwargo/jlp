@@ -8,13 +8,13 @@ import kevwargo.jlp.objects.*;
 import kevwargo.jlp.utils.FormalArguments;
 
 
-public class LispBuiltins_Let extends LispBuiltinMacro {
+public class Let_M extends LispBuiltinMacro {
 
-    public LispBuiltins_Let() {
+    public Let_M() {
         this("let");
     }
 
-    public LispBuiltins_Let(String name) {
+    public Let_M(String name) {
         super(name, new FormalArguments().addPositional("mappings").setRest("body"));
     }
 

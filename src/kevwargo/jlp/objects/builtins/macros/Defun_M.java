@@ -10,13 +10,13 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
 
-public class LispBuiltins_Defun extends LispBuiltinMacro {
+public class Defun_M extends LispBuiltinMacro {
 
-    public LispBuiltins_Defun() {
+    public Defun_M() {
         this("defun");
     }
 
-    public LispBuiltins_Defun(String name) {
+    public Defun_M(String name) {
         super(name, (new FormalArguments()).addPositional("name").addPositional("arglist").setRest("body"));
     }
 

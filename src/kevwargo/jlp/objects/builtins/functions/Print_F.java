@@ -5,9 +5,9 @@ import kevwargo.jlp.objects.LispBuiltinFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.utils.FormalArguments;
 
-public class LispBuiltins_Print extends LispBuiltinFunction {
+public class Print_F extends LispBuiltinFunction {
 
-    public LispBuiltins_Print() {
+    public Print_F() {
         super("print", new FormalArguments().addPositional("obj"));
     }
 

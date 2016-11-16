@@ -6,27 +6,23 @@ import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinFunction;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
 
-public class LispBuiltins_Concat extends LispBuiltinFunction {
 
-    public LispBuiltins_Concat() {
-        super("concat", new FormalArguments(new ArrayList<String>(), "args"));
+public class List_F extends LispBuiltinFunction {
+
+    public List_F() {
+        super("list", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
-        String result = "";
+        Sexp result = Sexp.getInstance();
         Iterator<LispObject> argsIterator = ((Sexp)arguments.get("args")).iterator();
         while (argsIterator.hasNext()) {
-            LispObject object = argsIterator.next();
-            if (!(object instanceof LispString)) {
-                throw new LispException("Wrong argument type: string expected");
-            }
-            result += ((LispString)object).getValue();
+            result = result.add(argsIterator.next());
         }
-        return new LispString(result);
+        return result;
     }
     
 }

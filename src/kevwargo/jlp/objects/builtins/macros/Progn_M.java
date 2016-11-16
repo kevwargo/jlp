@@ -10,9 +10,9 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
 
-public class LispBuiltins_Progn extends LispBuiltinMacro {
+public class Progn_M extends LispBuiltinMacro {
 
-    public LispBuiltins_Progn() {
+    public Progn_M() {
         super("progn", new FormalArguments().setRest("body"));
     }
 

@@ -5,9 +5,9 @@ import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispObject;
 
 
-public class LispBuiltins_LetStar extends LispBuiltins_Let {
+public class LetStar_M extends Let_M {
 
-    public LispBuiltins_LetStar() {
+    public LetStar_M() {
         super("let*");
     }
 

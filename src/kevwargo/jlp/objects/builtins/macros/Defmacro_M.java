@@ -8,9 +8,9 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.Sexp;
 
 
-public class LispBuiltins_Defmacro extends LispBuiltins_Defun {
+public class Defmacro_M extends Defun_M {
 
-    public LispBuiltins_Defmacro() {
+    public Defmacro_M() {
         super("defmacro");
     }
 

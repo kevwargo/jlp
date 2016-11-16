@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
 import kevwargo.jlp.objects.*;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defun;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Defmacro;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_If;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Let;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_LetStar;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Progn;
-import kevwargo.jlp.objects.builtins.macros.LispBuiltins_Quote;
-import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Append;
-import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Concat;
-import kevwargo.jlp.objects.builtins.functions.LispBuiltins_List;
-import kevwargo.jlp.objects.builtins.functions.LispBuiltins_Print;
+import kevwargo.jlp.objects.builtins.macros.Defun_M;
+import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
+import kevwargo.jlp.objects.builtins.macros.If_M;
+import kevwargo.jlp.objects.builtins.macros.Let_M;
+import kevwargo.jlp.objects.builtins.macros.LetStar_M;
+import kevwargo.jlp.objects.builtins.macros.Progn_M;
+import kevwargo.jlp.objects.builtins.macros.Quote_M;
+import kevwargo.jlp.objects.builtins.functions.Append_F;
+import kevwargo.jlp.objects.builtins.functions.Concat_F;
+import kevwargo.jlp.objects.builtins.functions.List_F;
+import kevwargo.jlp.objects.builtins.functions.Print_F;
 
 public class LispProcessor {
 
@@ -30,17 +30,17 @@ public class LispProcessor {
 
     private LispProcessor() {
         HashMap<String, LispObject> namespace = new HashMap<String, LispObject>();
-        namespace.put("print", new LispBuiltins_Print());
-        namespace.put("quote", new LispBuiltins_Quote());
-        namespace.put("concat", new LispBuiltins_Concat());
-        namespace.put("defun", new LispBuiltins_Defun());
-        namespace.put("defmacro", new LispBuiltins_Defmacro());
-        namespace.put("let", new LispBuiltins_Let());
-        namespace.put("let*", new LispBuiltins_LetStar());
-        namespace.put("list", new LispBuiltins_List());
-        namespace.put("append", new LispBuiltins_Append());
-        namespace.put("if", new LispBuiltins_If());
-        namespace.put("progn", new LispBuiltins_Progn());
+        namespace.put("print", new Print_F());
+        namespace.put("quote", new Quote_M());
+        namespace.put("concat", new Concat_F());
+        namespace.put("defun", new Defun_M());
+        namespace.put("defmacro", new Defmacro_M());
+        namespace.put("let", new Let_M());
+        namespace.put("let*", new LetStar_M());
+        namespace.put("list", new List_F());
+        namespace.put("append", new Append_F());
+        namespace.put("if", new If_M());
+        namespace.put("progn", new Progn_M());
         basicNamespace = new LispNamespace(namespace);
     }
 

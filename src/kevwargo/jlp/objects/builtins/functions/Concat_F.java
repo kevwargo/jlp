@@ -6,30 +6,27 @@ import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinFunction;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.Sexp;
 import kevwargo.jlp.utils.FormalArguments;
 
+public class Concat_F extends LispBuiltinFunction {
 
-public class LispBuiltins_Append extends LispBuiltinFunction {
-
-    public LispBuiltins_Append() {
-        super("append", new FormalArguments(new ArrayList<String>(), "args"));
+    public Concat_F() {
+        super("concat", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
-        Sexp result = Sexp.getInstance();
+        String result = "";
         Iterator<LispObject> argsIterator = ((Sexp)arguments.get("args")).iterator();
         while (argsIterator.hasNext()) {
             LispObject object = argsIterator.next();
-            if (!(object instanceof Sexp)) {
-                throw new LispException("Only lists can be appended");
+            if (!(object instanceof LispString)) {
+                throw new LispException("Wrong argument type: string expected");
             }
-            Iterator<LispObject> iterator = ((Sexp)object).iterator();
-            while (iterator.hasNext()) {
-                result = result.add(iterator.next());
-            }
+            result += ((LispString)object).getValue();
         }
-        return result;
+        return new LispString(result);
     }
     
 }
