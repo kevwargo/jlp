@@ -25,7 +25,7 @@ public class LispSymbol extends LispObject {
     }
 
     public String toString() {
-        return String.format("LispSymbol %s", name);
+        return String.format("'%s", name);
     }
 
 }
