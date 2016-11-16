@@ -45,6 +45,7 @@ public class LispProcessor {
     }
 
     public void process(String lispSource) throws LispException {
+        // LispObject result = (new LispParser()).parse(lispSource);
         LispObject result = (new LispParser()).parse(lispSource).eval(basicNamespace);
         System.out.println("Result: " + result.toString());
     }

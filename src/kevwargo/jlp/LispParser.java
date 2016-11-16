@@ -19,11 +19,7 @@ public class LispParser {
                     break;
                 case '(':
                     position++;
-                    sexp = Sexp.getInstance();
-                    if (!sexpStack.empty()) {
-                        addToSexpOnTop(sexp);
-                    }
-                    sexpStack.push(sexp);
+                    sexpStack.push(Sexp.getInstance());
                     break;
                 case ')':
                     position++;
@@ -33,6 +29,8 @@ public class LispParser {
                     sexp = sexpStack.pop();
                     if (sexpStack.empty()) {
                         return sexp;
+                    } else {
+                        addToSexpOnTop(sexp);
                     }
                     break;
                 case '"':
