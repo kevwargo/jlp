@@ -1,20 +1,22 @@
 package kevwargo.jlp;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import kevwargo.jlp.objects.*;
-import kevwargo.jlp.objects.builtins.macros.Defun_M;
-import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
-import kevwargo.jlp.objects.builtins.macros.If_M;
-import kevwargo.jlp.objects.builtins.macros.Let_M;
-import kevwargo.jlp.objects.builtins.macros.LetStar_M;
-import kevwargo.jlp.objects.builtins.macros.Progn_M;
-import kevwargo.jlp.objects.builtins.macros.Quote_M;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
 import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
+import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
+import kevwargo.jlp.objects.builtins.macros.Defun_M;
+import kevwargo.jlp.objects.builtins.macros.If_M;
+import kevwargo.jlp.objects.builtins.macros.LetStar_M;
+import kevwargo.jlp.objects.builtins.macros.Let_M;
+import kevwargo.jlp.objects.builtins.macros.Progn_M;
+import kevwargo.jlp.objects.builtins.macros.Quote_M;
 
 public class LispProcessor {
 
@@ -44,10 +46,11 @@ public class LispProcessor {
         basicNamespace = new LispNamespace(namespace);
     }
 
-    public void process(String lispSource) throws LispException {
-        // LispObject result = (new LispParser()).parse(lispSource);
-        LispObject result = (new LispParser()).parse(lispSource).eval(basicNamespace);
-        System.out.println("Result: " + result.toString());
+    public void process(LispParser parser) throws IOException, LispException {
+        LispObject lispObject;
+        while ((lispObject = parser.read()) != null) {
+            System.out.println("Result: " + lispObject.eval(basicNamespace).toString());
+        }
     }
 
 }

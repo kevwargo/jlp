@@ -1,205 +1,224 @@
 package kevwargo.jlp;
 
-import kevwargo.jlp.objects.*;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Stack;
+import kevwargo.jlp.objects.*;
 
 public class LispParser {
 
-    private Stack<Sexp> sexpStack;
-    private int position;
+    private static final int STATE_INIT = 0;
+    private static final int STATE_SYMBOL = 1;
+    private static final int STATE_STRING = 2;
+    private static final int STATE_COMMENT = 3;
 
-    public LispObject parse(String lispSource) throws LispException {
+    private BufferedReader reader;
+    private Stack<Sexp> sexpStack;
+    private StringBuffer stringBuffer;
+    private LispObject parsedObject;
+    private LispObject currentSexp;
+    private int charNum;
+    private int state;
+
+    public LispParser(InputStream stream) throws UnsupportedEncodingException {
+        reader = new BufferedReader(new InputStreamReader(stream, "utf-8"));
+    }
+
+    public LispParser(String filename) throws IOException {
+        this(new FileInputStream(filename));
+    }
+
+    public LispObject read() throws IOException, LispException {
         sexpStack = new Stack<Sexp>();
-        int length = lispSource.length();
-        for (position = 0; position < length; ) {
-            Sexp sexp;
-            switch (lispSource.charAt(position)) {
-                case ' ': case '\t': case '\n': case '\r':
-                    position++;
-                    break;
-                case '(':
-                    position++;
-                    sexpStack.push(Sexp.getInstance());
-                    break;
-                case ')':
-                    position++;
-                    if (sexpStack.empty()) {
-                        throw new LispException("Invalid input: ')'");
-                    }
-                    sexp = sexpStack.pop();
-                    if (sexpStack.empty()) {
-                        return sexp;
-                    } else {
-                        addToSexpOnTop(sexp);
-                    }
-                    break;
-                case '"':
-                    LispString string = parseString(lispSource, length);
-                    if (sexpStack.empty()) {
-                        return string;
-                    }
-                    addToSexpOnTop(string);
-                    break;
-                case '1': case '2': case '3': case '4': case '5':
-                case '6': case '7': case '8': case '9': case '0':
-                case '-': case '+': case '.':
-                    LispObject number = parseNumber(lispSource, length);
-                    if (sexpStack.empty()) {
-                        return number;
-                    }
-                    addToSexpOnTop(number);
-                    break;
-                default:
-                    LispObject symbol = parseSymbol(lispSource, length);
-                    if (sexpStack.empty()) {
-                        return symbol;
-                    }
-                    addToSexpOnTop(symbol);
+        stringBuffer = new StringBuffer();
+        state = STATE_INIT;
+        parsedObject = null;
+        try {
+            while (true) {
+                char currentChar = nextChar();
+                charNum++;
+                switch (state) {
+                    case STATE_INIT:
+                        handleInit(currentChar);
+                        break;
+                    case STATE_SYMBOL:
+                        handleSymbol(currentChar);
+                        break;
+                    case STATE_STRING:
+                        handleString(currentChar);
+                        break;
+                    case STATE_COMMENT:
+                        handleComment(currentChar);
+                        break;
+                }
+                if (parsedObject != null) {
+                    return parsedObject;
+                }
             }
+        } catch (EOFException e) {
+            if (!sexpStack.empty() || state == STATE_SYMBOL || state == STATE_STRING) {
+                throw new LispException("Unexpected end of file during parsing " + charNum);
+            }
+        } catch (LispException e) {
+            if (reader != null) {
+                reader.close();
+                reader = null;
+            }
+            throw e;
         }
-        if (sexpStack.empty()) {
-            return null;
-        } else {
-            throw new LispException("Unexpected end of stream while parsing a sexp");
+        return null;
+    }
+
+    private char nextChar() throws IOException {
+        if (reader == null) {
+            throw new EOFException();
         }
+        int c;
+        try {
+            c = reader.read();
+            if (c < 0) {
+                throw new EOFException();
+            }
+        } catch (IOException e) {
+            reader.close();
+            reader = null;
+            throw e;
+        }
+        return (char)c;
     }
 
     private void addToSexpOnTop(LispObject object) {
-        Sexp sexp = sexpStack.pop();
-        sexp = sexp.add(object);
-        sexpStack.push(sexp);
+        if (!sexpStack.empty()) {
+            Sexp sexp = sexpStack.pop();
+            sexp = sexp.add(object);
+            sexpStack.push(sexp);
+        }
     }
 
-    private char escapeChar(char c) {
-        switch (c) {
-            case 'n':
-                return '\n';
-            case 'r':
-                return '\r';
-            case 't':
-                return '\t';
+    private void handleInit(char currentChar) throws LispException {
+        switch (currentChar) {
+            case ' ': case '\t': case '\n': case '\r':
+                break;
+            case '"':
+                state = STATE_STRING;
+                break;
+            case ';':
+                state = STATE_COMMENT;
+                break;
+            case '(':
+                sexpStack.push(Sexp.getInstance());
+                break;
+            case ')':
+                if (sexpStack.empty()) {
+                    throw new LispException("Invalid input: ')'");
+                }
+                Sexp sexp = sexpStack.pop();
+                if (sexpStack.empty()) {
+                    parsedObject = sexp;
+                } else {
+                    addToSexpOnTop(sexp);
+                }
+                break;
             default:
-                return c;
-        }
-    }
-
-    private LispString parseString(String source, int length) throws LispException {
-        position++;
-        StringBuffer sb = new StringBuffer();
-        for (; position < length; position++) {
-            char currentChar = source.charAt(position);
-            switch (currentChar) {
-                case '"':
-                    position++;
-                    return new LispString(sb.toString());
-                case '\\':
-                    if (position == length - 1) {
-                        throw new LispException("A character was expected after a backslash");
-                    }
-                    sb.append(escapeChar(source.charAt(++position)));
-                    break;
-                default:
-                    sb.append(currentChar);
-            }
-        }
-        throw new LispException("Unexpected end of stream while parsing a string");
-    }
-
-    private LispObject parseSymbol(String source, int length) throws LispException {
-        String possibleT = source.substring(position, position + (position < length - 1 ? 2 : 1));
-        if (possibleT.matches("t([ \t\n\r\"()]|$)")) {
-            position++;
-            return LispT.getInstance();
-        }
-        if (position <= length - 3) {
-            String possibleNil = source.substring(position, position + (position < length - 3 ? 4 : 3));
-            if (possibleNil.matches("nil([ \t\n\r\"()]|$)")) {
-                position += 3;
-                return Sexp.getInstance();
-            }
-        }
-        StringBuffer sb = new StringBuffer();
-        for (; position < length; position++) {
-            char currentChar = source.charAt(position);
-            switch (currentChar) {
-                case '\\':
-                    if (position == length - 1) {
-                        throw new LispException("A character was expected after a backslash");
-                    }
-                    sb.append(source.charAt(++position));
-                    break;
-                case '"': case '(': case ')': case ' ': case '\t': case '\n': case '\r':
-                    return new LispSymbol(sb.toString());
-                default:
-                    sb.append(currentChar);
-            }
-        }
-        return new LispSymbol(sb.toString());
-    }
-
-    private LispObject parseNumber(String source, int length) throws LispException {
-        int oldPos = position;
-        StringBuffer sb = new StringBuffer();
-        boolean dotAllowed = true;
-        boolean expAllowed = false;
-        boolean signAllowed = true;
-        boolean done = false;
-        for (; position < length; position++) {
-            char currentChar = source.charAt(position);
-            switch (currentChar) {
-                case '-': case '+':
-                    if (!signAllowed) {
-                        position = oldPos;
-                        return parseSymbol(source, length);
-                    }
-                    break;
-                case '1': case '2': case '3': case '4': case '5':
-                case '6': case '7': case '8': case '9': case '0':
-                    expAllowed = true;
-                    break;
-                case '.':
-                    if (!dotAllowed) {
-                        position = oldPos;
-                        return parseSymbol(source, length);
-                    }
-                    dotAllowed = false;
+                state = STATE_SYMBOL;
+                stringBuffer.append(currentChar);
                 break;
-                case 'e': case 'E':
-                    if (!expAllowed) {
-                        position = oldPos;
-                        return parseSymbol(source, length);
-                    }
-                    expAllowed = false;
-                    dotAllowed = false;
-                    break;
-                case ' ': case '(': case ')': case '\n': case '\t': case '\r': case '"':
-                    done = true;
-                    break;
-                default:
-                    position = oldPos;
-                    return parseSymbol(source, length);
-            }
-            signAllowed = false;
-            if (done) {
+        }
+    }
+
+    private void handleSymbol(char currentChar) throws IOException, LispException {
+        switch (currentChar) {
+            case ' ': case '\t': case '\r': case '\n': case '(': case ')':
+                state = STATE_INIT;
                 break;
+            case '"':
+                state = STATE_STRING;
+                break;
+            case ';':
+                state = STATE_COMMENT;
+                break;
+            case '\\':
+                stringBuffer.append(nextChar());
+                break;
+            default:
+                stringBuffer.append(currentChar);
+        }
+        if (state != STATE_SYMBOL) {
+            String symbol = stringBuffer.toString();
+            stringBuffer = new StringBuffer();
+            LispObject object;
+
+            if (symbol.equals("nil")) {
+                object = Sexp.getInstance();
+            } else if (symbol.equals("t")) {
+                object = LispT.getInstance();
+            } else {
+                try {
+                    object = new LispNumber(symbol);
+                } catch (NumberFormatException nfe) {
+                    object = new LispSymbol(symbol);
+                }
             }
-            sb.append(currentChar);
-        }
-        char lastChar = sb.charAt(sb.length() - 1);
-        if (lastChar == 'e' || lastChar == 'E') {
-            position = oldPos;
-            return parseSymbol(source, length);
-        }
-        return stringToNumber(sb.toString());
-    }
 
-    private LispObject stringToNumber(String number) {
-        if (number.matches("^[+-]?[0-9]+$")) {
-            return new LispInt(Long.parseLong(number));
-        } else {
-            return new LispFloat(Double.parseDouble(number));
+            if (sexpStack.empty()) {
+                parsedObject = object;
+            } else {
+                addToSexpOnTop(object);
+            }
+
+            if (state == STATE_INIT) {
+                handleInit(currentChar);
+            }
         }
     }
 
+    private void handleString(char currentChar) throws IOException {
+        switch (currentChar) {
+            case '"':
+                state = STATE_INIT;
+                LispString string = new LispString(stringBuffer.toString());
+                stringBuffer = new StringBuffer();
+                if (sexpStack.empty()) {
+                    parsedObject = string;
+                } else {
+                    addToSexpOnTop(string);
+                }
+                break;
+            case '\\':
+                currentChar = nextChar();
+                switch(currentChar) {
+                    case 'b':
+                        stringBuffer.append('\b');
+                        break;
+                    case 'f':
+                        stringBuffer.append('\f');
+                        break;
+                    case 'n':
+                        stringBuffer.append('\n');
+                        break;
+                    case 'r':
+                        stringBuffer.append('\r');
+                        break;
+                    case 't':
+                        stringBuffer.append('\t');
+                        break;
+                    default:
+                        stringBuffer.append(currentChar);
+                }
+                break;
+            default:
+                stringBuffer.append(currentChar);
+        }
+    }
 
+    private void handleComment(char currentChar) {
+        if (currentChar == '\n' || currentChar == '\r') {
+            state = STATE_INIT;
+        }
+    }
 }

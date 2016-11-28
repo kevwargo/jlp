@@ -1,16 +1,15 @@
 package kevwargo.jlp;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class Main {
 
     public static void main(String args[]) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            LispProcessor.getInstance().process(line);
+        LispParser parser;
+        if (args.length > 0) {
+            parser = new LispParser(args[0]);
+        } else {
+            parser = new LispParser(System.in);
         }
+        LispProcessor.getInstance().process(parser);
     }
     
 }
