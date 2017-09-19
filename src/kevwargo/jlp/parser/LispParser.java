@@ -10,6 +10,7 @@ import kevwargo.jlp.objects.LispNumber;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
+import kevwargo.jlp.objects.LispT;
 import kevwargo.jlp.objects.Sexp;
 
 public class LispParser {
@@ -75,10 +76,16 @@ public class LispParser {
         LispObject object = null;
         switch (token.getType()) {
             case SYMBOL:
-                try {
-                    object = new LispNumber(token.getValue());
-                } catch (NumberFormatException nfe) {
-                    object = new LispSymbol(token.getValue());
+                if (token.getValue().equals("t")) {
+                    object = LispT.getInstance();
+                } else if (token.getValue().equals("nil")) {
+                    object = Sexp.getInstance();
+                } else {
+                    try {
+                        object = new LispNumber(token.getValue());
+                    } catch (NumberFormatException nfe) {
+                        object = new LispSymbol(token.getValue());
+                    }
                 }
                 break;
             case STRING:
