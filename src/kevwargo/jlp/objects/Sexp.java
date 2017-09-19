@@ -7,27 +7,41 @@ import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispNamespace;
 
 
-public class Sexp extends LispObject {
+public final class Sexp extends LispObject implements Iterable<LispObject> {
 
     private static Sexp instance;
+    private static Sexp specialInstance;
 
     private List<LispObject> contents;
+    private boolean special;
 
-    private Sexp() {
+    private Sexp(boolean special) {
         contents = new ArrayList<LispObject>();
+        this.special = special;
     }
 
     public static Sexp getInstance() {
         if (instance == null) {
-            instance = new Sexp();
+            instance = new Sexp(false);
         }
         return instance;
     }
 
-    public Sexp add(LispObject object) {
+    public static Sexp getSpecialInstance() {
+        if (specialInstance == null) {
+            specialInstance = new Sexp(true);
+        }
+        return specialInstance;
+    }
+
+    public Sexp add(LispObject object) throws LispException {
         Sexp result;
         if (this == instance) {
-            result = new Sexp();
+            result = new Sexp(false);
+        } else if (this == specialInstance) {
+            result = new Sexp(true);
+        } else if (special && contents.size() >= 2) {
+            throw new LispException("Special sexp can hold at most two elements");
         } else {
             result = this;
         }
@@ -72,5 +86,13 @@ public class Sexp extends LispObject {
 
     public boolean getBooleanValue() {
         return !contents.isEmpty();
+    }
+
+    public int size() {
+        return contents.size();
+    }
+
+    public boolean isSpecial() {
+        return special;
     }
 }

@@ -17,6 +17,7 @@ import kevwargo.jlp.objects.builtins.macros.LetStar_M;
 import kevwargo.jlp.objects.builtins.macros.Let_M;
 import kevwargo.jlp.objects.builtins.macros.Progn_M;
 import kevwargo.jlp.objects.builtins.macros.Quote_M;
+import kevwargo.jlp.parser.LispParser;
 
 public class LispProcessor {
 
@@ -49,7 +50,8 @@ public class LispProcessor {
     public void process(LispParser parser) throws IOException, LispException {
         LispObject lispObject;
         while ((lispObject = parser.read()) != null) {
-            System.out.println("Result: " + lispObject.eval(basicNamespace).toString());
+            // System.out.println("Result: " + lispObject.eval(basicNamespace));
+            System.out.println("Result: " + lispObject);
         }
     }
 

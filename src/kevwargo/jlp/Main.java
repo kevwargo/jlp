@@ -1,5 +1,7 @@
 package kevwargo.jlp;
 
+import kevwargo.jlp.parser.LispParser;
+
 public class Main {
 
     public static void main(String args[]) throws Exception {
