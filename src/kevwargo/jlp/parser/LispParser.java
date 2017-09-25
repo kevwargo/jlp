@@ -35,6 +35,7 @@ public class LispParser {
         while ((token = scanner.nextLispToken()) != null) {
             LispObject object;
             Sexp sexp;
+            String specialName;
             switch (token.getType()) {
                 case OPEN_PAREN:
                     if (currentSexp != null) {
@@ -61,7 +62,11 @@ public class LispParser {
                     if (currentSexp != null) {
                         sexpStack.push(currentSexp);
                     }
-                    currentSexp = Sexp.getSpecialInstance().add(new LispSymbol(token.getValue()));
+                    specialName = token.getValue();
+                    if (specialName.equals("'")) {
+                        specialName = "quote";
+                    }
+                    currentSexp = Sexp.getSpecialInstance().add(new LispSymbol(specialName));
                     break;
                 default:
                     if ((object = processToken(token)) != null) {
