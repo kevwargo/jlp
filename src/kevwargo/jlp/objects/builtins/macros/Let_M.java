@@ -22,42 +22,32 @@ public class Let_M extends LispBuiltinMacro {
         return namespace;
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
-        LispObject mappingsObject = arguments.get("mappings");
-        if (!(mappingsObject instanceof Sexp)) {
-            throw new LispException("Wrong argument type: mappings must be a sexp: " + mappingsObject.toString());
-        }
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
+        LispNamespace namespace = parseArgs(basicNamespace, arguments);
+        LispObject mappingsObject = namespace.resolve("mappings").assertType("sexp");
         HashMap<String, LispObject> mappings = new HashMap<String, LispObject>();
-        Iterator<LispObject> iterator = ((Sexp)mappingsObject).iterator();
-        while (iterator.hasNext()) {
-            LispObject mapping = iterator.next();
+        for (LispObject mapping : (Sexp)mappingsObject) {
             if (mapping instanceof LispSymbol) {
                 mappings.put(((LispSymbol)mapping).getName(), Sexp.getInstance());
             } else if (mapping instanceof Sexp) {
                 Iterator<LispObject> mappingIterator = ((Sexp)mapping).iterator();
-                LispObject varObject = mappingIterator.next();
-                if (!(varObject instanceof LispSymbol)) {
-                    throw new LispException("Wrong argument type: variable must be a symbol: " + varObject.toString());
-                }
-                LispObject valObject;
+                LispObject varObject = mappingIterator.next().assertType("symbol");
+                LispObject valObject = Sexp.getInstance();
                 if (mappingIterator.hasNext()) {
-                    valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));
-                } else {
-                    valObject = Sexp.getInstance();
+                    valObject = mappingIterator.next().eval(getVarValNamespace(basicNamespace, mappings));
                 }
-                mappings.put(((LispSymbol)varObject).getName(), valObject);
                 if (mappingIterator.hasNext()) {
                     throw new LispException("Mapping must be of structure (var val): " + mapping.toString());
                 }
+                mappings.put(((LispSymbol)varObject).getName(), valObject);
             } else {
                 throw new LispException("Mapping must be a symbol or a sexp: " + mapping.toString());
             }
         }
+        LispNamespace localNamespace = basicNamespace.prepend(mappings);
         LispObject result = Sexp.getInstance();
-        LispNamespace localNamespace = namespace.prepend(mappings);
-        iterator = ((Sexp)arguments.get("body")).iterator();
-        while (iterator.hasNext()) {
-            result = iterator.next().eval(localNamespace);
+        for (LispObject form : (Sexp)namespace.resolve("body")) {
+            result = form.eval(localNamespace);
         }
         return result;
     }

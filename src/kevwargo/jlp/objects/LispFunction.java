@@ -15,11 +15,11 @@ public class LispFunction extends LispBuiltinFunction {
         this.body = body;
     }
 
-    public LispObject eval(LispNamespace basicNamespace) throws LispException {
-        LispObject result = Sexp.getInstance();
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
         HashMap<String, LispObject> returnMap = new HashMap();
         returnMap.put("return", new ReturnFunction());
-        LispNamespace namespace = basicNamespace.prepend(arguments).prepend(returnMap);
+        LispNamespace namespace = parseArgs(basicNamespace, arguments).prepend(returnMap);
+        LispObject result = Sexp.getInstance();
         Iterator<LispObject> iterator = body.iterator();
         while (iterator.hasNext()) {
             try {
@@ -30,6 +30,11 @@ public class LispFunction extends LispBuiltinFunction {
         }
         return result;
     }
+
+    public String toString() {
+        return String.format("function `%s'", name);
+    }
+
 
     private class ReturnException extends LispException {
 
@@ -52,8 +57,8 @@ public class LispFunction extends LispBuiltinFunction {
             super("name", new FormalArguments().addPositional("value"));
         }
 
-        public LispObject eval(LispNamespace namespace) throws LispException {
-            throw new ReturnException(arguments.get("value"));
+        public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
+            throw new ReturnException(parseArgs(basicNamespace, arguments).resolve("value"));
         }
         
     }

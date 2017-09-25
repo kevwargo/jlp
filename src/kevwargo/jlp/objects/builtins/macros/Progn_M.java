@@ -16,11 +16,10 @@ public class Progn_M extends LispBuiltinMacro {
         super("progn", new FormalArguments().setRest("body"));
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
         LispObject result = Sexp.getInstance();
-        Iterator<LispObject> iterator = ((Sexp)arguments.get("body")).iterator();
-        while (iterator.hasNext()) {
-            result = iterator.next().eval(namespace);
+        for (LispObject form : (Sexp)parseArgs(basicNamespace, arguments).resolve("body")) {
+            result = form.eval(basicNamespace);
         }
         return result;
     }

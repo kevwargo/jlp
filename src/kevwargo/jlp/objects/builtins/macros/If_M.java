@@ -14,15 +14,15 @@ public class If_M extends LispBuiltinMacro {
         super("if", new FormalArguments().addPositional("condition").addPositional("true").setRest("false"));
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
+        LispNamespace namespace = parseArgs(basicNamespace, arguments);
         LispObject result;
-        if (arguments.get("condition").eval(namespace).getBooleanValue()) {
-            result = arguments.get("true").eval(namespace);
+        if (namespace.resolve("condition").eval(basicNamespace).getBooleanValue()) {
+            result = namespace.resolve("true").eval(basicNamespace);
         } else {
             result = Sexp.getInstance();
-            Iterator<LispObject> iterator = ((Sexp)arguments.get("false")).iterator();
-            while (iterator.hasNext()) {
-                result = iterator.next().eval(namespace);
+            for (LispObject form : (Sexp)namespace.resolve("false")) {
+                result = form.eval(basicNamespace);
             }
         }
         return result;

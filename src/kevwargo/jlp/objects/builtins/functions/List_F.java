@@ -16,11 +16,10 @@ public class List_F extends LispBuiltinFunction {
         super("list", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
         Sexp result = Sexp.getInstance();
-        Iterator<LispObject> argsIterator = ((Sexp)arguments.get("args")).iterator();
-        while (argsIterator.hasNext()) {
-            result = result.add(argsIterator.next());
+        for (LispObject object : (Sexp)parseArgs(basicNamespace, arguments).resolve("args")) {
+            result = result.add(object);
         }
         return result;
     }

@@ -14,14 +14,18 @@ public class LispMacro extends LispBuiltinMacro {
         this.body = body;
     }
 
-    public LispObject eval(LispNamespace basicNamespace) throws LispException {
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
+        LispNamespace namespace = parseArgs(basicNamespace, arguments);
         LispObject result = Sexp.getInstance();
-        LispNamespace namespace = basicNamespace.prepend(arguments);
         Iterator<LispObject> iterator = body.iterator();
         while (iterator.hasNext()) {
             result = iterator.next().eval(namespace);
         }
         return result.eval(basicNamespace);
+    }
+
+    public String toString() {
+        return String.format("macro `%s'", name);
     }
     
 }

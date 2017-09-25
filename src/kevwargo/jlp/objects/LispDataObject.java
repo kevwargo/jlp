@@ -9,5 +9,5 @@ public abstract class LispDataObject extends LispObject {
     public LispObject eval(LispNamespace namespace) throws LispException {
         return this;
     }
-    
+
 }

@@ -35,4 +35,8 @@ public class LispNumber extends LispDataObject {
         }
     }
 
+    public String type() {
+        return "number";
+    }
+
 }

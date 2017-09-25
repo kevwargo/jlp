@@ -20,4 +20,8 @@ public class LispJavaObject extends LispDataObject {
     public String toString() {
         return String.format("Java object %s", value.toString());
     }
+
+    public String type() {
+        return "javaObject";
+    }
 }

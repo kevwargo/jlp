@@ -28,4 +28,8 @@ public class LispSymbol extends LispObject {
         return name.replaceAll("[ \"'#(),.;?\\[\\]\\\\`]", "\\\\$0");
     }
 
+    public String type() {
+        return "symbol";
+    }
+
 }

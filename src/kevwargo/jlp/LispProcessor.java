@@ -8,15 +8,18 @@ import java.util.List;
 import kevwargo.jlp.objects.*;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
+import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
 import kevwargo.jlp.objects.builtins.macros.Defun_M;
 import kevwargo.jlp.objects.builtins.macros.If_M;
+import kevwargo.jlp.objects.builtins.macros.Lambda_M;
 import kevwargo.jlp.objects.builtins.macros.LetStar_M;
 import kevwargo.jlp.objects.builtins.macros.Let_M;
 import kevwargo.jlp.objects.builtins.macros.Progn_M;
 import kevwargo.jlp.objects.builtins.macros.Quote_M;
+import kevwargo.jlp.objects.builtins.macros.Setq_M;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -45,14 +48,17 @@ public class LispProcessor {
         namespace.put("append", new Append_F());
         namespace.put("if", new If_M());
         namespace.put("progn", new Progn_M());
+        namespace.put("lambda", new Lambda_M());
+        namespace.put("setq", new Setq_M());
+        namespace.put("eval", new Eval_F());
         basicNamespace = new LispNamespace(namespace);
     }
 
     public void process(LispParser parser) throws IOException, LispException {
         LispObject lispObject;
         while ((lispObject = parser.read()) != null) {
-            // System.out.println("Result: " + lispObject.eval(basicNamespace));
-            System.out.println("Result: " + lispObject);
+            System.out.println("Result: " + lispObject.eval(basicNamespace));
+            // System.out.println("Result: " + lispObject);
         }
     }
 

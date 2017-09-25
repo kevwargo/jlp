@@ -18,4 +18,8 @@ public class LispT extends LispDataObject {
         return "t";
     }
 
+    public String type() {
+        return "t";
+    }
+
 }

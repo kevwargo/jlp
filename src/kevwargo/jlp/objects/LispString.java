@@ -20,4 +20,8 @@ public class LispString extends LispDataObject {
     public String toString() {
         return "\"" + value.replaceAll("[\\\\\"]", "\\\\$0").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r").replaceAll("\t", "\\\\t") + "\"";
     }
+
+    public String type() {
+        return "string";
+    }
 }

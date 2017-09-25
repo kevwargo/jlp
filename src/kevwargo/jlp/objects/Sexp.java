@@ -58,17 +58,8 @@ public final class Sexp extends LispObject implements Iterable<LispObject> {
         if (!iterator.hasNext()) {
             return this;
         }
-        LispObject first = iterator.next();
-        if (!(first instanceof LispSymbol)) {
-            throw new LispException("First object in sexp must be a symbol");
-        }
-        String name = ((LispSymbol)first).getName();
-        LispObject function = namespace.resolve(name);
-        if (!(function instanceof LispBuiltinFunction)) {
-            throw new LispException(String.format("Symbol's value is not a function: %s", name));
-        }
-        ((LispBuiltinFunction)function).setArguments(namespace, iterator);
-        return function.eval(namespace);
+        LispBuiltinFunction function = (LispBuiltinFunction)iterator.next().eval(namespace).assertType("function");
+        return function.call(namespace, iterator);
     }
 
     public String toString() {
@@ -94,5 +85,9 @@ public final class Sexp extends LispObject implements Iterable<LispObject> {
 
     public boolean isSpecial() {
         return special;
+    }
+
+    public String type() {
+        return "sexp";
     }
 }

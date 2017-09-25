@@ -8,11 +8,10 @@ import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.utils.FormalArguments;
 
 
-public abstract class LispBuiltinFunction extends LispObject {
+public abstract class LispBuiltinFunction extends LispDataObject {
 
     private FormalArguments formalArguments;
     protected String name;
-    protected HashMap<String, LispObject> arguments;
 
     public LispBuiltinFunction(String name, FormalArguments formalArguments) {
         this.name = name;
@@ -23,8 +22,8 @@ public abstract class LispBuiltinFunction extends LispObject {
         return arg.eval(namespace);
     }
 
-    public void setArguments(LispNamespace namespace, Iterator<LispObject> actual) throws LispException {
-        arguments = new HashMap<String, LispObject>();
+    protected LispNamespace parseArgs(LispNamespace namespace, Iterator<LispObject> actual) throws LispException {
+        HashMap<String, LispObject> arguments = new HashMap<String, LispObject>();
         Iterator<String> formal = formalArguments.positional().iterator();
         int argCount = 0;
         while (formal.hasNext() && actual.hasNext()) {
@@ -32,7 +31,7 @@ public abstract class LispBuiltinFunction extends LispObject {
             argCount++;
         }
         if (formal.hasNext()) {
-            throw new LispException(String.format("Too few arguments to %s: %d", name, argCount));
+            throw new LispException(String.format("Too few arguments for %s: %d", name, argCount));
         }
         if (formalArguments.rest() != null) {
             Sexp rest = Sexp.getInstance();
@@ -45,8 +44,17 @@ public abstract class LispBuiltinFunction extends LispObject {
                 actual.next();
                 argCount++;
             }
-            throw new LispException(String.format("Too many arguments to %s: %d", name, argCount));
+            throw new LispException(String.format("Too many arguments for %s: %d", name, argCount));
         }
+        return namespace.prepend(arguments);
+    }
+
+    public String type() {
+        return "function";
+    }
+
+    public String toString() {
+        return String.format("built-in function `%s'", name);
     }
 
 }

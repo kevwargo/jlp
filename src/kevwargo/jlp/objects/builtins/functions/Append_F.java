@@ -16,17 +16,12 @@ public class Append_F extends LispBuiltinFunction {
         super("append", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
         Sexp result = Sexp.getInstance();
-        Iterator<LispObject> argsIterator = ((Sexp)arguments.get("args")).iterator();
-        while (argsIterator.hasNext()) {
-            LispObject object = argsIterator.next();
-            if (!(object instanceof Sexp)) {
-                throw new LispException("Only lists can be appended");
-            }
-            Iterator<LispObject> iterator = ((Sexp)object).iterator();
-            while (iterator.hasNext()) {
-                result = result.add(iterator.next());
+        for (LispObject object : (Sexp)parseArgs(basicNamespace, arguments).resolve("args")) {
+            object.assertType("sexp");
+            for (LispObject element : (Sexp)object) {
+                result = result.add(element);
             }
         }
         return result;

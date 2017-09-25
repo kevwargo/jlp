@@ -17,54 +17,40 @@ public class Defun_M extends LispBuiltinMacro {
     }
 
     public Defun_M(String name) {
-        super(name, (new FormalArguments()).addPositional("name").addPositional("arglist").setRest("body"));
+        this(name, (new FormalArguments()).addPositional("name").addPositional("arglist").setRest("body"));
     }
 
-    protected String extractName() throws LispException {
-        LispObject nameObject = arguments.get("name");
-        if (!(nameObject instanceof LispSymbol)) {
-            throw new LispException("Wrong argument type: name must be a symbol");
-        }
-        return ((LispSymbol)nameObject).getName();
+    public Defun_M(String name, FormalArguments formalArguments) {
+        super(name, formalArguments);
     }
 
-    protected FormalArguments extractArgs() throws LispException {
-        LispObject arglist = arguments.get("arglist");
-        if (!(arglist instanceof Sexp)) {
-            throw new LispException("Wrong argument type: arglist must be a sexp");
-        }
+    protected FormalArguments extractArgs(Sexp arglist) throws LispException {
         FormalArguments args = new FormalArguments();
-        if (arglist instanceof Sexp) {
-            Sexp argsSexp = (Sexp)arglist;
-            Iterator<LispObject> iterator = argsSexp.iterator();
-            while (iterator.hasNext()) {
-                LispObject object = iterator.next();
-                if (!(object instanceof LispSymbol)) {
-                    throw new LispException(String.format("Formal argument must be a symbol (got %s)", object.toString()));
-                } else {
-                    LispSymbol symbol = (LispSymbol)object;
-                    if (symbol.getName().equals("&rest")) {
-                        if (!iterator.hasNext()) {
-                            throw new LispException("&rest keyword must be followed by a symbol");
-                        }
-                        LispObject restObject = iterator.next();
-                        if (!(restObject instanceof LispSymbol)) {
-                            throw new LispException(String.format("Formal argument must be a symbol (got %s)", restObject.toString()));
-                        }
-                        args.setRest(((LispSymbol)restObject).getName());
-                        break;
-                    }
-                    args.addPositional(symbol.getName());
+        Iterator<LispObject> iterator = arglist.iterator();
+        while (iterator.hasNext()) {
+            LispObject object = iterator.next().assertType("symbol");
+            LispSymbol symbol = (LispSymbol)object;
+            if (symbol.getName().equals("&rest")) {
+                if (!iterator.hasNext()) {
+                    throw new LispException("&rest keyword must be followed by a symbol");
                 }
+                LispObject restObject = iterator.next().assertType("symbol");
+                args.setRest(((LispSymbol)restObject).getName());
+                break;
             }
+            args.addPositional(symbol.getName());
         }
         return args;
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
-        String name = extractName();
-        namespace.bind(name, new LispFunction(name, extractArgs(), (Sexp)arguments.get("body")));
-        return new LispSymbol(name);
+    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
+        LispNamespace namespace = parseArgs(basicNamespace, arguments);
+        String name = ((LispSymbol)namespace.resolve("name").assertType("symbol")).getName();
+        Sexp arglist = (Sexp)namespace.resolve("arglist").assertType("sexp");
+        Sexp body = (Sexp)namespace.resolve("body").assertType("sexp");
+        LispFunction function = new LispFunction(name, extractArgs(arglist), body);
+        basicNamespace.bind(name, function);
+        return function;
     }
 
 }

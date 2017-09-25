@@ -12,5 +12,9 @@ public abstract class LispBuiltinMacro extends LispBuiltinFunction {
     protected LispObject evalArg(LispObject arg, LispNamespace namespace) {
         return arg;
     }
+
+    public String toString() {
+        return String.format("built-in macro `%s'", name);
+    }
     
 }
