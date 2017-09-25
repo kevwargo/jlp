@@ -74,6 +74,9 @@ public class LispParser {
                     }
             }
         }
+        if (!sexpStack.empty() || currentSexp != null) {
+            throw new LispException("End of file during parsing");
+        }
         return null;
     }
 
