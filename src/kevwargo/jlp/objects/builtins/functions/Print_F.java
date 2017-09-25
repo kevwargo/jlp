@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.utils.FormalArguments;

@@ -3,7 +3,7 @@ package kevwargo.jlp.objects;
 import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.utils.FormalArguments;
 
 public class LispFunction extends LispBuiltinFunction {

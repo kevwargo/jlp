@@ -2,7 +2,7 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinMacro;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;

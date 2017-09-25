@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispBuiltinMacro;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.utils.FormalArguments;

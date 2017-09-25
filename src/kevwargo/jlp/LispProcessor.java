@@ -18,6 +18,7 @@ import kevwargo.jlp.objects.builtins.macros.Let_M;
 import kevwargo.jlp.objects.builtins.macros.Progn_M;
 import kevwargo.jlp.objects.builtins.macros.Quote_M;
 import kevwargo.jlp.parser.LispParser;
+import kevwargo.jlp.utils.LispNamespace;
 
 public class LispProcessor {
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public final class Sexp extends LispObject implements Iterable<LispObject> {

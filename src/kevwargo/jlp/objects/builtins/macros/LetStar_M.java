@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.HashMap;
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispObject;
 
 

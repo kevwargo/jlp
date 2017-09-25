@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.utils.FormalArguments;
 
 public abstract class LispBuiltinMacro extends LispBuiltinFunction {

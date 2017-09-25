@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.LispNamespace;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public abstract class LispObject {

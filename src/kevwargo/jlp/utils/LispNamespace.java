@@ -1,11 +1,13 @@
-package kevwargo.jlp;
+package kevwargo.jlp.utils;
 
 import java.util.HashMap;
+
+import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.*;
 
 public class LispNamespace {
 
-    private HashMap[] elements;
+    private HashMap<String, LispObject>[] elements;
 
     public LispNamespace() {
         elements = new HashMap[0];
@@ -16,12 +18,12 @@ public class LispNamespace {
         elements[0] = basicNamespace;
     }
 
-    public LispNamespace(HashMap[] namespace) {
+    public LispNamespace(HashMap<String, LispObject>[] namespace) {
         elements = namespace;
     }
 
     public LispNamespace append(HashMap<String, LispObject> namespace) {
-        HashMap[] elements = new HashMap[this.elements.length + 1];
+        HashMap<String, LispObject>[] elements = new HashMap[this.elements.length + 1];
         for (int i = 0; i < this.elements.length; i++) {
             elements[i] = this.elements[i];
         }
@@ -30,7 +32,7 @@ public class LispNamespace {
     }
     
     public LispNamespace prepend(HashMap<String, LispObject> namespace) {
-        HashMap[] elements = new HashMap[this.elements.length + 1];
+        HashMap<String, LispObject>[] elements = new HashMap[this.elements.length + 1];
         elements[0] = namespace;
         for (int i = 1; i < elements.length; i++) {
             elements[i] = this.elements[i - 1];
