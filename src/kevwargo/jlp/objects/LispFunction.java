@@ -9,16 +9,18 @@ import kevwargo.jlp.utils.FormalArguments;
 public class LispFunction extends LispBuiltinFunction {
 
     private Sexp body;
+    private LispNamespace closureNamespace;
 
-    public LispFunction(String name, FormalArguments formalArguments, Sexp body) {
+    public LispFunction(String name, FormalArguments formalArguments, Sexp body, LispNamespace closureNamespace) {
         super(name, formalArguments);
         this.body = body;
+        this.closureNamespace = closureNamespace;
     }
 
     public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
         HashMap<String, LispObject> returnMap = new HashMap();
         returnMap.put("return", new ReturnFunction());
-        LispNamespace namespace = parseArgs(basicNamespace, arguments).prepend(returnMap);
+        LispNamespace namespace = parseArgs(closureNamespace, arguments).prepend(returnMap);
         LispObject result = Sexp.getInstance();
         Iterator<LispObject> iterator = body.iterator();
         while (iterator.hasNext()) {
@@ -32,7 +34,7 @@ public class LispFunction extends LispBuiltinFunction {
     }
 
     public String toString() {
-        return String.format("function `%s'", name);
+        return String.format("Lisp function `%s'", name);
     }
 
 
@@ -54,7 +56,7 @@ public class LispFunction extends LispBuiltinFunction {
     private class ReturnFunction extends LispBuiltinFunction {
 
         public ReturnFunction() {
-            super("name", new FormalArguments().addPositional("value"));
+            super("return", new FormalArguments().addPositional("value"));
         }
 
         public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {

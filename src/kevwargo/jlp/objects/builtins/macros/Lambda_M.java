@@ -20,7 +20,7 @@ public class Lambda_M extends Defun_M {
         LispNamespace namespace = parseArgs(basicNamespace, arguments);
         Sexp arglist = (Sexp)namespace.resolve("arglist").assertType("sexp");
         Sexp body = (Sexp)namespace.resolve("body").assertType("sexp");
-        LispFunction function = new LispFunction("<lambda>", extractArgs(arglist), body);
+        LispFunction function = new LispFunction("<lambda>", extractArgs(arglist), body, basicNamespace);
         return function;
     }
     

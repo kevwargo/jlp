@@ -11,6 +11,7 @@ import kevwargo.jlp.objects.builtins.functions.Concat_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
+import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
 import kevwargo.jlp.objects.builtins.macros.Defun_M;
 import kevwargo.jlp.objects.builtins.macros.If_M;
@@ -51,6 +52,7 @@ public class LispProcessor {
         namespace.put("lambda", new Lambda_M());
         namespace.put("setq", new Setq_M());
         namespace.put("eval", new Eval_F());
+        namespace.put("print-namespace", new PrintNamespace_F());
         basicNamespace = new LispNamespace(namespace);
     }
 

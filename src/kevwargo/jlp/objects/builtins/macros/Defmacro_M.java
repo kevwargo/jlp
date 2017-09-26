@@ -20,7 +20,7 @@ public class Defmacro_M extends Defun_M {
         String name = ((LispSymbol)namespace.resolve("name").assertType("symbol")).getName();
         Sexp arglist = (Sexp)namespace.resolve("arglist").assertType("sexp");
         Sexp body = (Sexp)namespace.resolve("body").assertType("sexp");
-        LispMacro macro = new LispMacro(name, extractArgs(arglist), body);
+        LispMacro macro = new LispMacro(name, extractArgs(arglist), body, basicNamespace);
         basicNamespace.bind(name, macro);
         return macro;
     }

@@ -8,14 +8,16 @@ import kevwargo.jlp.utils.FormalArguments;
 public class LispMacro extends LispBuiltinMacro {
 
     private Sexp body;
+    private LispNamespace closureNamespace;
 
-    public LispMacro(String name, FormalArguments formalArguments, Sexp body) {
+    public LispMacro(String name, FormalArguments formalArguments, Sexp body, LispNamespace closureNamespace) {
         super(name, formalArguments);
         this.body = body;
+        this.closureNamespace = closureNamespace;
     }
 
     public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        LispNamespace namespace = parseArgs(basicNamespace, arguments);
+        LispNamespace namespace = parseArgs(closureNamespace, arguments);
         LispObject result = Sexp.getInstance();
         Iterator<LispObject> iterator = body.iterator();
         while (iterator.hasNext()) {
@@ -25,7 +27,7 @@ public class LispMacro extends LispBuiltinMacro {
     }
 
     public String toString() {
-        return String.format("macro `%s'", name);
+        return String.format("Lisp macro `%s'", name);
     }
     
 }
