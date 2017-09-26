@@ -13,6 +13,9 @@ public class LispSymbol extends LispObject {
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
+        if (name.startsWith(":")) {
+            return this;
+        }
         return namespace.resolve(name);
     }
 
