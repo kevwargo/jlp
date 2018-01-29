@@ -3,7 +3,7 @@ package kevwargo.jlp.utils;
 import java.util.HashMap;
 
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.*;
+import kevwargo.jlp.objects.LispObject;
 
 public class LispNamespace {
 
@@ -13,27 +13,27 @@ public class LispNamespace {
         components = new HashMap[0];
     }
 
-    public LispNamespace(HashMap<String, LispObject> basicNamespace) {
+    public LispNamespace(HashMap<String, LispObject> map) {
         components = new HashMap[1];
-        components[0] = basicNamespace;
+        components[0] = map;
     }
 
-    public LispNamespace(HashMap<String, LispObject>[] namespace) {
-        components = namespace;
+    public LispNamespace(HashMap<String, LispObject>[] components) {
+        this.components = components;
     }
 
-    public LispNamespace append(HashMap<String, LispObject> namespace) {
+    public LispNamespace append(HashMap<String, LispObject> map) {
         HashMap<String, LispObject>[] components = new HashMap[this.components.length + 1];
         for (int i = 0; i < this.components.length; i++) {
             components[i] = this.components[i];
         }
-        components[this.components.length] = namespace;
+        components[this.components.length] = map;
         return new LispNamespace(components);
     }
     
-    public LispNamespace prepend(HashMap<String, LispObject> namespace) {
+    public LispNamespace prepend(HashMap<String, LispObject> map) {
         HashMap<String, LispObject>[] components = new HashMap[this.components.length + 1];
-        components[0] = namespace;
+        components[0] = map;
         for (int i = 1; i < components.length; i++) {
             components[i] = this.components[i - 1];
         }

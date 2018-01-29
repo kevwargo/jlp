@@ -1,30 +1,39 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinFunction;
+import kevwargo.jlp.objects.LispBool;
+import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Append_F extends LispBuiltinFunction {
+public class Append_F extends LispFunction {
 
     public Append_F() {
-        super("append", new FormalArguments(new ArrayList<String>(), "args"));
+        super(LispType.FUNCTION, "append", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        Sexp result = Sexp.getInstance();
-        for (LispObject object : (Sexp)parseArgs(basicNamespace, arguments).resolve("args")) {
-            object.assertType("sexp");
-            for (LispObject element : (Sexp)object) {
-                result = result.add(element);
+    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        ArrayList<LispObject> result = new ArrayList<LispObject>();
+        Iterator<LispObject> argsIterator = ((LispList)arguments.get("args")).iterator();
+        while (argsIterator.hasNext()) {
+            LispObject list = argsIterator.next();
+            list.assertType(LispType.LIST);
+            Iterator<LispObject> listIterator = ((LispList)list).iterator();
+            while (listIterator.hasNext()) {
+                result.add(listIterator.next());
             }
         }
-        return result;
+        if (result.isEmpty()) {
+            return LispBool.FALSE;
+        }
+        return new LispList(result);
     }
     
 }

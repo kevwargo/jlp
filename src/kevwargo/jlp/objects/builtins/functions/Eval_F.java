@@ -1,21 +1,22 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinFunction;
+import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Eval_F extends LispBuiltinFunction {
+public class Eval_F extends LispFunction {
 
     public Eval_F() {
-        super("eval", (new FormalArguments()).addPositional("object"));
+        super(LispType.FUNCTION, "eval", (new FormalArguments()).pos("object"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        return parseArgs(basicNamespace, arguments).resolve("object").eval(basicNamespace);
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        return arguments.get("object").eval(namespace);
     }
     
 }

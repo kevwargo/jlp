@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.LispNamespace;
 
 
@@ -9,6 +10,7 @@ public class LispSymbol extends LispObject {
     private String name;
 
     public LispSymbol(String name) {
+        super(LispType.SYMBOL);
         this.name = name;
     }
 
@@ -23,16 +25,8 @@ public class LispSymbol extends LispObject {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String toString() {
-        return name.replaceAll("[ \"'#(),.;?\\[\\]\\\\`]", "\\\\$0");
+        return name;
     }
-
-    public String type() {
-        return "symbol";
-    }
-
+    
 }

@@ -4,20 +4,22 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
-
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.LispNumber;
+import kevwargo.jlp.objects.LispBool;
+import kevwargo.jlp.objects.LispFloat;
+import kevwargo.jlp.objects.LispInt;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispT;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
+
 
 public class LispParser {
 
     private LispScanner scanner;
-    private Stack<Sexp> sexpStack;
-    private Sexp currentSexp;
+    private Stack<LispList> sexpStack;
+    private LispList currentSexp;
     
 
     public LispParser(String filename) throws IOException {
@@ -26,22 +28,30 @@ public class LispParser {
 
     public LispParser(InputStream stream) {
         scanner = new LispScanner(stream);
-        sexpStack = new Stack<Sexp>();
+        sexpStack = new Stack<LispList>();
     }
 
     public LispObject read() throws LispException {
+        LispObject object = readInternal();
+        if (object != null && object.isInstance(LispType.LIST) && ! ((LispList)object).iterator().hasNext()) {
+            return LispBool.FALSE;
+        }
+        return object;
+    }
+
+    private LispObject readInternal() throws LispException {
         currentSexp = null;
         LispToken token;
         while ((token = scanner.nextLispToken()) != null) {
             LispObject object;
-            Sexp sexp;
+            LispList sexp;
             String specialName;
             switch (token.getType()) {
                 case OPEN_PAREN:
                     if (currentSexp != null) {
                         sexpStack.push(currentSexp);
                     }
-                    currentSexp = Sexp.getInstance();
+                    currentSexp = new LispList();
                     break;
                 case CLOSE_PAREN:
                     if (currentSexp == null) {
@@ -66,7 +76,7 @@ public class LispParser {
                     if (specialName.equals("'")) {
                         specialName = "quote";
                     }
-                    currentSexp = Sexp.getSpecialInstance().add(new LispSymbol(specialName));
+                    currentSexp = (new LispList(true)).add(new LispSymbol(specialName));
                     break;
                 default:
                     if ((object = processToken(token)) != null) {
@@ -85,14 +95,18 @@ public class LispParser {
         switch (token.getType()) {
             case SYMBOL:
                 if (token.getValue().equals("t")) {
-                    object = LispT.getInstance();
+                    object = LispBool.TRUE;
                 } else if (token.getValue().equals("nil")) {
-                    object = Sexp.getInstance();
+                    object = LispBool.FALSE;
                 } else {
                     try {
-                        object = new LispNumber(token.getValue());
+                        object = new LispInt(Long.parseLong(token.getValue()));
                     } catch (NumberFormatException nfe) {
-                        object = new LispSymbol(token.getValue());
+                        try {
+                            object = new LispFloat(Double.parseDouble(token.getValue()));
+                        } catch (NumberFormatException nfe1) {
+                            object = new LispSymbol(token.getValue());
+                        }
                     }
                 }
                 break;
@@ -116,7 +130,7 @@ public class LispParser {
 
     private String stackToString() {
         StringBuffer sb = new StringBuffer();
-        for (Sexp s : sexpStack) {
+        for (LispList s : sexpStack) {
             sb.append(String.format("Sexp %d: %s\n", s.hashCode(), s.toString()));
         }
         return sb.toString();

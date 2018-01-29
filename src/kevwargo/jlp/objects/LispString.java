@@ -1,11 +1,14 @@
 package kevwargo.jlp.objects;
 
+import kevwargo.jlp.objects.types.LispType;
 
-public class LispString extends LispDataObject {
+
+public class LispString extends LispObject {
 
     private String value;
 
     public LispString(String value) {
+        super(LispType.STRING);
         this.value = value;
     }
 
@@ -13,15 +16,11 @@ public class LispString extends LispDataObject {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public String toString() {
-        return "\"" + value.replaceAll("[\\\\\"]", "\\\\$0").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r").replaceAll("\t", "\\\\t") + "\"";
+        return value;
     }
 
-    public String type() {
-        return "string";
+    public String repr() {
+        return "\"" + value + "\"";
     }
 }

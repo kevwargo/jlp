@@ -1,32 +1,34 @@
 package kevwargo.jlp.objects.builtins.macros;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinMacro;
+import kevwargo.jlp.objects.LispBool;
+import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Setq_M extends LispBuiltinMacro {
+public class Setq_M extends LispFunction {
 
     public Setq_M() {
-        super("setq", (new FormalArguments()).setRest("defs"));
+        super(LispType.MACRO, "setq", (new FormalArguments()).setRest("defs"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        LispNamespace namespace = parseArgs(basicNamespace, arguments);
-        Iterator<LispObject> iterator = ((Sexp)namespace.resolve("defs").assertType("sexp")).iterator();
-        LispObject result = Sexp.getInstance();
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        Iterator<LispObject> iterator = ((LispList)arguments.get("defs").assertType(LispType.LIST)).iterator();
+        LispObject result = LispBool.FALSE;
         while (iterator.hasNext()) {
-            LispSymbol var = (LispSymbol)iterator.next().assertType("symbol");
-            LispObject val = Sexp.getInstance();
+            LispSymbol var = (LispSymbol)iterator.next().assertType(LispType.SYMBOL);
+            LispObject val = LispBool.FALSE;
             if (iterator.hasNext()) {
-                val = iterator.next().eval(basicNamespace);
+                val = iterator.next().eval(namespace);
             }
-            basicNamespace.bind(var.getName(), val);
+            namespace.bind(var.getName(), val);
             result = val;
         }
         return result;

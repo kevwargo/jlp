@@ -17,11 +17,11 @@ public class FormalArguments {
         this.rest = rest;
     }
 
-    public List<String> positional() {
+    public List<String> pos() {
         return positional;
     }
 
-    public FormalArguments addPositional(String arg) {
+    public FormalArguments pos(String arg) {
         positional.add(arg);
         return this;
     }

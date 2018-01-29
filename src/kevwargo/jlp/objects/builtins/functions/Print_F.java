@@ -1,20 +1,21 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinFunction;
+import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
-public class Print_F extends LispBuiltinFunction {
+public class Print_F extends LispFunction {
 
     public Print_F() {
-        super("print", new FormalArguments().addPositional("obj"));
+        super(LispType.FUNCTION, "print", new FormalArguments().pos("obj"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        LispObject object = parseArgs(basicNamespace, arguments).resolve("obj");
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        LispObject object = arguments.get("obj");
         System.out.println(object.toString());
         return object;
     }

@@ -1,24 +1,24 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinFunction;
+import kevwargo.jlp.objects.LispBool;
+import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
 
-public class PrintNamespace_F extends LispBuiltinFunction {
+public class PrintNamespace_F extends LispFunction {
 
     public PrintNamespace_F() {
-        super("print-namespace", new FormalArguments());
+        super(LispType.FUNCTION, "print-namespace", new FormalArguments());
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        HashMap<String, LispObject> components[] = basicNamespace.getComponents();
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        HashMap<String, LispObject> components[] = namespace.getComponents();
         System.out.println("NAMESPACE BEGIN");
         for (HashMap<String, LispObject> component : components) {
             System.out.println("{");
@@ -28,6 +28,6 @@ public class PrintNamespace_F extends LispBuiltinFunction {
             System.out.println("}");
         }
         System.out.println("NAMESPACE END");
-        return Sexp.getInstance();
+        return LispBool.FALSE;
     }
 }

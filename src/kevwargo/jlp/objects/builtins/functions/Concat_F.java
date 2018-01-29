@@ -1,28 +1,32 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinFunction;
+import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
 
-public class Concat_F extends LispBuiltinFunction {
+public class Concat_F extends LispFunction {
 
     public Concat_F() {
-        super("concat", new FormalArguments(new ArrayList<String>(), "args"));
+        super(LispType.FUNCTION, "concat", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        String result = "";
-        for (LispObject object : (Sexp)parseArgs(basicNamespace, arguments).resolve("args")) {
-            object.assertType("string");
-            result += ((LispString)object).getValue();
+    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        StringBuffer sb = new StringBuffer();
+        Iterator<LispObject> iterator = ((LispList)arguments.get("args")).iterator();
+        while (iterator.hasNext()) {
+            LispObject object = iterator.next();
+            object.assertType(LispType.STRING);
+            sb.append(((LispString)object).getValue());
         }
-        return new LispString(result);
+        return new LispString(sb.toString());
     }
     
 }

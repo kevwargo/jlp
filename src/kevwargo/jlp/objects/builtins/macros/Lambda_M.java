@@ -1,26 +1,27 @@
 package kevwargo.jlp.objects.builtins.macros;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBuiltinMacro;
 import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.Sexp;
+import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
+
 
 public class Lambda_M extends Defun_M {
 
     public Lambda_M() {
-        super("lambda", (new FormalArguments()).addPositional("arglist").setRest("body"));
+        super("lambda", (new FormalArguments()).pos("arglist").setRest("body"));
     }
 
-    public LispObject call(LispNamespace basicNamespace, Iterator<LispObject> arguments) throws LispException {
-        LispNamespace namespace = parseArgs(basicNamespace, arguments);
-        Sexp arglist = (Sexp)namespace.resolve("arglist").assertType("sexp");
-        Sexp body = (Sexp)namespace.resolve("body").assertType("sexp");
-        LispFunction function = new LispFunction("<lambda>", extractArgs(arglist), body, basicNamespace);
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        LispList arglist = (LispList)arguments.get("arglist").assertType(LispType.LIST);
+        LispList body = (LispList)arguments.get("body").assertType(LispType.LIST);
+        LispFunction function = createFunction("<lambda>", buildArgs(arglist), body, namespace);
         return function;
     }
     
