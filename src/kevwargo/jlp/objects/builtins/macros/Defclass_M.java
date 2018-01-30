@@ -26,14 +26,16 @@ public class Defclass_M extends LispFunction {
         LispType bases[] = new LispType[basesList.size()];
         int pos = 0;
         for (LispObject base : basesList) {
-            bases[pos++] = (LispType)base.assertType(LispType.TYPE);
+            bases[pos++] = (LispType)base.eval(namespace).assertType(LispType.TYPE);
         }
         Overlay overlay = new Overlay();
         LispNamespace classNamespace = namespace.prepend(overlay);
         for (LispObject form : (LispList)arguments.get("body")) {
             form.eval(classNamespace);
         }
-        LispClass klass = new LispClass(name, bases, overlay);
+        HashMap<String, LispObject> dict = new HashMap<String, LispObject>();
+        dict.putAll(overlay);
+        LispClass klass = new LispClass(name, bases, dict);
         namespace.bind(name, klass);
         return klass;
     }
