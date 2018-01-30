@@ -98,4 +98,8 @@ public class LispObject {
         return repr();
     }
 
+    public Object format() {
+        return toString();
+    }
+
 }

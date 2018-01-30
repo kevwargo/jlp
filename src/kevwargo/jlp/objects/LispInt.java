@@ -20,4 +20,8 @@ public class LispInt extends LispObject {
         return Long.toString(value);
     }
 
+    public Object format() {
+        return new Long(value);
+    }
+
 }

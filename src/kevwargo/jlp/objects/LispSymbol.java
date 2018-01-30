@@ -25,7 +25,7 @@ public class LispSymbol extends LispObject {
         return name;
     }
 
-    public String toString() {
+    public String repr() {
         return name;
     }
     

@@ -19,5 +19,9 @@ public class LispFloat extends LispObject {
     public String repr() {
         return Double.toString(value);
     }
+
+    public Object format() {
+        return new Double(value);
+    }
     
 }

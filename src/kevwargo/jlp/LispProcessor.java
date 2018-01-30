@@ -9,6 +9,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
+import kevwargo.jlp.objects.builtins.functions.Format_F;
 import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
@@ -58,6 +59,7 @@ public class LispProcessor {
         map.put("method", LispType.METHOD);
         
         map.put("print", new Print_F());
+        map.put("%", new Format_F());
         map.put("quote", new Quote_M());
         map.put("concat", new Concat_F());
         map.put("defun", new Defun_M());
