@@ -96,7 +96,7 @@ public class LispType extends LispObject {
         for (LispObject base : basesList) {
             bases[pos++] = (LispType)base.assertType(TYPE);
         }
-        return new LispType(TYPE, name, bases);
+        return new LispType(this, name, bases);
     }
 
 
