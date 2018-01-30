@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class Dot_M extends LispFunction {
 
     public Dot_M() {
-        super(LispType.MACRO, ".", new FormalArguments().pos("obj").pos("attr"));
+        super(LispType.MACRO, ".", new FormalArguments("rest").pos("obj").pos("attr"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
@@ -27,11 +27,17 @@ public class Dot_M extends LispFunction {
         } else {
             attrName = attrObj.eval(namespace).toString();
         }
-        LispObject attr = obj.getAttr(attrName, true);
-        if (attr == null) {
-            throw new LispException(String.format("'%s' object has no attribute '%s'", obj.getType().getName(), attrName));
+        if (((LispList)arguments.get("rest")).size() > 0) {
+            LispObject value = ((LispList)arguments.get("rest")).iterator().next().eval(namespace);
+            obj.setAttr(attrName, value);
+            return value;
+        } else {
+            LispObject attr = obj.getAttr(attrName, true);
+            if (attr == null) {
+                throw new LispException(String.format("'%s' object has no attribute '%s'", obj.getType().getName(), attrName));
+            }
+            return attr;
         }
-        return attr;
     }
     
 }

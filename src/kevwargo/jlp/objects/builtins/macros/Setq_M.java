@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class Setq_M extends LispFunction {
 
     public Setq_M() {
-        super(LispType.MACRO, "setq", (new FormalArguments()).setRest("defs"));
+        super(LispType.MACRO, "setq", (new FormalArguments()).rest("defs"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {

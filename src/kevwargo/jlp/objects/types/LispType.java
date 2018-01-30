@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
@@ -36,7 +38,11 @@ public class LispType extends LispObject {
     protected LispType(LispType typeType, String name, LispType baseTypes[]) {
         super(typeType);
         this.name = name;
-        this.baseTypes = baseTypes;
+        if (baseTypes != null && baseTypes.length == 0) {
+            this.baseTypes = new LispType[] { OBJECT };
+        } else {
+            this.baseTypes = baseTypes;
+        }
         init();
     }
 
@@ -44,8 +50,16 @@ public class LispType extends LispObject {
         this(null, name, null);
     }
 
+    void init() {
+        
+    }
+
     public String getName() {
         return name;
+    }
+
+    public LispType[] getBaseTypes() {
+        return baseTypes;
     }
 
     public boolean isSubtype(LispType baseType) {
@@ -60,16 +74,29 @@ public class LispType extends LispObject {
         return false;
     }
 
-    public LispType[] getBaseTypes() {
-        return baseTypes;
-    }
-
     public String repr() {
         return String.format("<type '%s'>", name);
     }
 
-    void init() {
-        
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (this == TYPE && arguments.getLength() == 1) {
+            return arguments.next().getType();
+        }
+        return makeInstance(namespace, arguments);
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (arguments.getLength() != 2) {
+            throw new LispException(String.format("(%s) takes 1 or 2 arguments", name));
+        }
+        String name = ((LispString)arguments.next().assertType(STRING)).getValue();
+        LispList basesList = (LispList)arguments.next().assertType(LIST);
+        LispType bases[] = new LispType[basesList.size()];
+        int pos = 0;
+        for (LispObject base : basesList) {
+            bases[pos++] = (LispType)base.assertType(TYPE);
+        }
+        return new LispType(TYPE, name, bases);
     }
 
 

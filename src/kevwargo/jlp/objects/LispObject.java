@@ -30,6 +30,10 @@ public class LispObject {
         return type;
     }
 
+    public void setType(LispType type) {
+        this.type = type;
+    }
+
     public boolean isInstance(LispType type) {
         return this.type.isSubtype(type);
     }
@@ -41,7 +45,7 @@ public class LispObject {
         return this;
     }
 
-    public LispObject getAttr(String name, boolean withDict) throws LispException {
+    public LispObject getAttr(String name, boolean withDict) {
         LispObject attr;
         if (withDict) {
             attr = dict.get(name);
@@ -56,7 +60,7 @@ public class LispObject {
         return attr;
     }
 
-    private LispObject getAttr(String name, LispType type) throws LispException {
+    private LispObject getAttr(String name, LispType type) {
         if (type.dict.containsKey(name)) {
             return type.dict.get(name);
         }

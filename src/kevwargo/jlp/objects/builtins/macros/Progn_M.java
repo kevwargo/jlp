@@ -17,7 +17,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class Progn_M extends LispFunction {
 
     public Progn_M() {
-        super(LispType.MACRO, "progn", new FormalArguments().setRest("body"));
+        super(LispType.MACRO, "progn", new FormalArguments().rest("body"));
     }
 
     public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {

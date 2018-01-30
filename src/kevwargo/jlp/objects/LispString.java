@@ -21,6 +21,11 @@ public class LispString extends LispObject {
     }
 
     public String repr() {
-        return "\"" + value + "\"";
+        return "\"" +
+            value.replaceAll("\"", "\\\\\"")
+            	.replaceAll("\n", "\\\\n")
+            	.replaceAll("\r", "\\\\r")
+            	.replaceAll("\t", "\\\\t") +
+            "\"";
     }
 }

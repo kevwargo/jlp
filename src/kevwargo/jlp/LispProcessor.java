@@ -12,7 +12,7 @@ import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
-import kevwargo.jlp.objects.builtins.functions.TypeOf_F;
+import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
 import kevwargo.jlp.objects.builtins.macros.Defun_M;
 import kevwargo.jlp.objects.builtins.macros.Dot_M;
@@ -43,25 +43,26 @@ public class LispProcessor {
         
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
 
-        map.put("*object*", LispType.OBJECT);
-        map.put("*type*", LispType.TYPE);
-        map.put("*builtin-function*", LispType.FUNCTION);
-        map.put("*builtin-macro*", LispType.MACRO);
-        map.put("*function*", LispType.FUNCTION);
-        map.put("*macro*", LispType.MACRO);
-        map.put("*str*", LispType.STRING);
-        map.put("*bool*", LispType.BOOL);
-        map.put("*int*", LispType.INT);
-        map.put("*float*", LispType.FLOAT);
-        map.put("*list*", LispType.LIST);
-        map.put("*symbol*", LispType.SYMBOL);
-        map.put("*method*", LispType.METHOD);
+        map.put("object", LispType.OBJECT);
+        map.put("type", LispType.TYPE);
+        map.put("builtin-function", LispType.FUNCTION);
+        map.put("builtin-macro", LispType.MACRO);
+        map.put("function", LispType.FUNCTION);
+        map.put("macro", LispType.MACRO);
+        map.put("str", LispType.STRING);
+        map.put("bool", LispType.BOOL);
+        map.put("int", LispType.INT);
+        map.put("float", LispType.FLOAT);
+        map.put("list", LispType.LIST);
+        map.put("symbol", LispType.SYMBOL);
+        map.put("method", LispType.METHOD);
         
         map.put("print", new Print_F());
         map.put("quote", new Quote_M());
         map.put("concat", new Concat_F());
         map.put("defun", new Defun_M());
         map.put("defmacro", new Defmacro_M());
+        map.put("defclass", new Defclass_M());
         map.put("let", new Let_M());
         map.put("let*", new LetStar_M());
         map.put("list", new List_F());
@@ -72,7 +73,6 @@ public class LispProcessor {
         map.put("setq", new Setq_M());
         map.put("eval", new Eval_F());
         map.put("print-namespace", new PrintNamespace_F());
-        map.put("type-of", new TypeOf_F());
         map.put(".", new Dot_M());
 
         namespace = new LispNamespace(map);
@@ -82,7 +82,7 @@ public class LispProcessor {
         LispObject lispObject;
         while ((lispObject = parser.read()) != null) {
             LispObject result = lispObject.eval(namespace);
-            System.out.printf("%s (%s)%n", result.toString(), result.repr());
+            System.out.println(result.repr());
         }
     }
 

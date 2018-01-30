@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class Lambda_M extends Defun_M {
 
     public Lambda_M() {
-        super("lambda", (new FormalArguments()).pos("arglist").setRest("body"));
+        super("lambda", (new FormalArguments()).pos("arglist").rest("body"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {

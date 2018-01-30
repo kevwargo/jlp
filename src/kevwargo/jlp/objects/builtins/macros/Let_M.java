@@ -20,7 +20,7 @@ public class Let_M extends LispFunction {
     }
 
     public Let_M(String name) {
-        super(LispType.MACRO, name, new FormalArguments().pos("mappings").setRest("body"));
+        super(LispType.MACRO, name, new FormalArguments().pos("mappings").rest("body"));
     }
 
     protected LispNamespace getVarValNamespace(LispNamespace namespace, HashMap<String, LispObject> prevDefs) {

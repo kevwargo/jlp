@@ -10,18 +10,16 @@ public class ArgumentsIterator {
     private Iterator<LispObject> iterator;
     private LispNamespace evalNamespace;
     private LispObject first;
+    private int length;
 
-    public ArgumentsIterator(Iterator<LispObject> iterator, LispNamespace evalNamespace) {
+    public ArgumentsIterator(Iterator<LispObject> iterator, LispNamespace evalNamespace, int length) {
         this.iterator = iterator;
         this.evalNamespace = evalNamespace;
+        this.length = length;
     }
 
     public boolean hasNext() {
         return first != null || iterator.hasNext();
-    }
-
-    public void setFirst(LispObject first) {
-        this.first = first;
     }
 
     public LispObject next() throws LispException {
@@ -32,10 +30,23 @@ public class ArgumentsIterator {
         } else {
             object = iterator.next();
         }
+        length--;
         if (evalNamespace != null) {
             return object.eval(evalNamespace);
         } else {
             return object;
         }
     }
+
+    public int getLength() {
+        return length;
+    }
+    
+    public void setFirst(LispObject first) {
+        if (this.first == null) {
+            length++;
+        }
+        this.first = first;
+    }
+
 }

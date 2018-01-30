@@ -20,7 +20,7 @@ public class Defun_M extends LispFunction {
     }
 
     public Defun_M(String name) {
-        this(name, (new FormalArguments()).pos("name").pos("arglist").setRest("body"));
+        this(name, (new FormalArguments()).pos("name").pos("arglist").rest("body"));
     }
 
     public Defun_M(String name, FormalArguments formalArguments) {
@@ -38,7 +38,7 @@ public class Defun_M extends LispFunction {
                     throw new LispException("&rest keyword must be followed by a symbol");
                 }
                 LispObject restObject = iterator.next().assertType(LispType.SYMBOL);
-                args.setRest(((LispSymbol)restObject).getName());
+                args.rest(((LispSymbol)restObject).getName());
                 break;
             }
             args.pos(symbol.getName());

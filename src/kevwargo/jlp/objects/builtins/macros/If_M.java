@@ -14,7 +14,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class If_M extends LispFunction {
 
     public If_M() {
-        super(LispType.MACRO, "if", new FormalArguments().pos("condition").pos("true").setRest("false"));
+        super(LispType.MACRO, "if", new FormalArguments().pos("condition").pos("true").rest("false"));
     }
 
     public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {

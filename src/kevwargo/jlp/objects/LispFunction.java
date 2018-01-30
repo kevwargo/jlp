@@ -8,6 +8,7 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
+import java.util.List;
 
 
 public abstract class LispFunction extends LispObject {
@@ -28,14 +29,13 @@ public abstract class LispFunction extends LispObject {
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         HashMap<String, LispObject> argMap = new HashMap<String, LispObject>();
-        Iterator<String> formal = formalArguments.pos().iterator();
-        int argCount = 0;
-        while (formal.hasNext() && arguments.hasNext()) {
-            argMap.put(formal.next(), arguments.next());
-            argCount++;
+        int al = arguments.getLength();
+        int fl = formalArguments.pos().size();
+        if (fl > al || (formalArguments.rest() == null && fl < al)) {
+            throw new LispException(String.format("'%s' requires %d positional arguments, %d provided", name, fl, al));
         }
-        if (formal.hasNext()) {
-            throw new LispException(String.format("Too few arguments for %s: %d", name, argCount));
+        for (String argName : formalArguments.pos()) {
+            argMap.put(argName, arguments.next());
         }
         if (formalArguments.rest() != null) {
             LispList rest = new LispList();
@@ -43,14 +43,7 @@ public abstract class LispFunction extends LispObject {
                 rest.add(arguments.next());
             }
             argMap.put(formalArguments.rest(), rest);
-        } else if (arguments.hasNext()) {
-            while (arguments.hasNext()) {
-                arguments.next();
-                argCount++;
-            }
-            throw new LispException(String.format("Too many arguments for %s: %d", name, argCount));
         }
-
         return callInternal(namespace, argMap);
     }
 

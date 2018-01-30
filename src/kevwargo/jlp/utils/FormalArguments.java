@@ -9,7 +9,11 @@ public class FormalArguments {
     private String rest;
 
     public FormalArguments() {
-        positional = new ArrayList<String>();
+        this(null);
+    }
+
+    public FormalArguments(String rest) {
+        this(new ArrayList<String>(), rest);
     }
 
     public FormalArguments(List<String> positional, String rest) {
@@ -30,7 +34,7 @@ public class FormalArguments {
         return rest;
     }
 
-    public FormalArguments setRest(String rest) {
+    public FormalArguments rest(String rest) {
         this.rest = rest;
         return this;
     }

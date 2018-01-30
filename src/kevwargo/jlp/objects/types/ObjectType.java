@@ -6,6 +6,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -46,5 +47,8 @@ public class ObjectType extends LispType {
 
     }
 
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        return new LispObject();
+    }
 
 }

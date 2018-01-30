@@ -8,7 +8,7 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
-public class LispList extends LispObject {
+public class LispList extends LispObject implements Iterable<LispObject> {
 
     private List<LispObject> contents;
     private boolean special;
@@ -48,6 +48,10 @@ public class LispList extends LispObject {
         return this;
     }
 
+    public int size() {
+        return contents.size();
+    }
+
     public boolean isSpecial() {
         return special;
     }
@@ -59,7 +63,7 @@ public class LispList extends LispObject {
         }
         LispObject function = iterator.next().eval(namespace);
         boolean isMacro = function.isInstance(LispType.MACRO);
-        ArgumentsIterator args = new ArgumentsIterator(iterator, isMacro ? null : namespace);
+        ArgumentsIterator args = new ArgumentsIterator(iterator, isMacro ? null : namespace, contents.size() - 1);
         return function.call(namespace, args);
     }
 
