@@ -10,7 +10,6 @@ import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.Format_F;
-import kevwargo.jlp.objects.builtins.functions.List_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
@@ -67,7 +66,6 @@ public class LispProcessor {
         map.put("defclass", new Defclass_M());
         map.put("let", new Let_M());
         map.put("let*", new LetStar_M());
-        map.put("list", new List_F());
         map.put("append", new Append_F());
         map.put("if", new If_M());
         map.put("progn", new Progn_M());
