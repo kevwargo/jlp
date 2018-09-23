@@ -13,18 +13,18 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
-public class Plus_F extends ArithmeticFunction {
+public class Multiply_F extends ArithmeticFunction {
 
-    public Plus_F() {
-        super("+", new FormalArguments());
+    public Multiply_F() {
+        super("*", new FormalArguments());
     }
 
     protected long addLong(long result, long value) {
-        return result + value;
+        return result * value;
     }
 
     protected double addDouble(double result, double value) {
-        return result + value;
+        return result * value;
     }
 
 }

@@ -7,9 +7,17 @@ public class LispFloat extends LispObject {
 
     private double value;
 
-    public LispFloat(double value) {
+    LispFloat(double value, LispInt longValue) {
         super(LispType.FLOAT);
         this.value = value;
+        if (longValue != null) {
+            defineCast(LispType.INT, longValue);
+            longValue.defineCast(LispType.FLOAT, this);
+        }
+    }
+
+    public LispFloat(double value) {
+        this(value, new LispInt((long)value, null));
     }
 
     public double getValue() {

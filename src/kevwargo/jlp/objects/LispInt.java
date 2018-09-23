@@ -7,9 +7,17 @@ public class LispInt extends LispObject {
 
     private long value;
 
-    public LispInt(long value) {
+    LispInt(long value, LispFloat floatCast) {
         super(LispType.INT);
         this.value = value;
+        if (floatCast != null) {
+            defineCast(LispType.FLOAT, floatCast);
+            floatCast.defineCast(LispType.INT, this);
+        }
+    }
+
+    public LispInt(long value) {
+        this(value, new LispFloat((double)value, null));
     }
 
     public long getValue() {

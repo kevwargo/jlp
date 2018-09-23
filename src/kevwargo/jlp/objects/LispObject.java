@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.types.LispCastException;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
@@ -78,10 +79,10 @@ public class LispObject {
         castMap.put(type, instance);
     }
 
-    public LispObject cast(LispType type) throws LispException {
+    public LispObject cast(LispType type) throws LispCastException {
         LispObject instance = castMap.get(type);
         if (instance == null) {
-            throw new LispException(String.format("object '%s' cannot be converted to '%s'", toString(), type.getName()));
+            throw new LispCastException(String.format("object '%s' cannot be converted to '%s'", toString(), type.getName()));
         }
         return instance;
     }
