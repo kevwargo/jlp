@@ -14,7 +14,7 @@ public class ListType extends LispType {
         super(LispType.TYPE, "list", new LispType[] { LispType.OBJECT });
     }
 
-    protected LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         while (arguments.hasNext()) {
             result.add(arguments.next());

@@ -18,12 +18,11 @@ public class Concat_F extends LispFunction {
         super(LispType.FUNCTION, "concat", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         StringBuffer sb = new StringBuffer();
         Iterator<LispObject> iterator = ((LispList)arguments.get("args")).iterator();
         while (iterator.hasNext()) {
-            LispObject object = iterator.next();
-            object.cast(LispType.STRING);
+            LispObject object = iterator.next().cast(LispType.STRING);
             sb.append(((LispString)object).getValue());
         }
         return new LispString(sb.toString());

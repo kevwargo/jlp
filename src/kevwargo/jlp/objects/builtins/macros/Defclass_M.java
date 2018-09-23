@@ -2,6 +2,7 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -11,7 +12,6 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-import java.util.Map;
 
 
 public class Defclass_M extends LispFunction {
@@ -55,17 +55,24 @@ public class Defclass_M extends LispFunction {
         }
 
         @Override
-        protected LispObject makeInstance(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-            LispObject instance = baseTypes[0].instantiate(baseInstance, namespace, arguments);
-            instance.setType(this);
-            for (int i = 1; i < baseTypes.length; i++) {
-                baseTypes[i].instantiate(instance, namespace, arguments);
-            }
+        public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+            LispObject instance = new LispObject(this);
+            defineCastsRecursively(namespace, instance);
             LispObject constructor = instance.getAttr("@init@", false);
             if (constructor != null) {
                 constructor.call(namespace, arguments);
             }
             return instance;
+        }
+
+        private void defineCastsRecursively(LispNamespace namespace, LispObject instance) throws LispException {
+            for (LispType type : baseTypes) {
+                if (type instanceof LispClass) {
+                    ((LispClass)type).defineCastsRecursively(namespace, instance);
+                } else {
+                    instance.defineCast(type, type.makeInstance(namespace, new ArgumentsIterator()));
+                }
+            }
         }
 
     }

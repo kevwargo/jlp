@@ -82,26 +82,10 @@ public class LispType extends LispObject {
         if (this == TYPE && arguments.getLength() == 1) {
             return arguments.next().getType();
         }
-        return makeInstance(null, namespace, arguments);
+        return makeInstance(namespace, arguments);
     }
 
-    public LispObject instantiate(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        System.out.printf("instantiate null%n");
-        return instantiate(null, namespace, arguments);
-    }
-
-    public LispObject instantiate(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        System.out.printf("instantiate baseInstance: %s (%s)%n", baseInstance.toString(), baseInstance.getType().getName());
-        LispObject instance = makeInstance(baseInstance, namespace, arguments);
-        if (baseInstance != null) {
-            baseInstance.defineCast(this, instance);
-            return baseInstance;
-        }
-        instance.defineCast(this, instance);
-        return instance;
-    }
-
-    protected LispObject makeInstance(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() != 2) {
             throw new LispException(String.format("(%s) takes 1 or 2 arguments", name));
         }

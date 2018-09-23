@@ -19,12 +19,11 @@ public class Append_F extends LispFunction {
         super(LispType.FUNCTION, "append", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
-    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         Iterator<LispObject> argsIterator = ((LispList)arguments.get("args")).iterator();
         while (argsIterator.hasNext()) {
-            LispObject list = argsIterator.next();
-            list.cast(LispType.LIST);
+            LispObject list = argsIterator.next().cast(LispType.LIST);
             Iterator<LispObject> listIterator = ((LispList)list).iterator();
             while (listIterator.hasNext()) {
                 result.add(listIterator.next());

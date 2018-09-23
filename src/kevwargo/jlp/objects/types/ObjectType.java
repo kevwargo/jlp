@@ -47,7 +47,7 @@ public class ObjectType extends LispType {
 
     }
 
-    protected LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         return new LispObject();
     }
 

@@ -20,7 +20,7 @@ public class Progn_M extends LispFunction {
         super(LispType.MACRO, "progn", new FormalArguments().rest("body"));
     }
 
-    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject result = LispBool.FALSE;
         Iterator<LispObject> iterator = ((LispList)arguments.get("body")).iterator();
         while (iterator.hasNext()) {

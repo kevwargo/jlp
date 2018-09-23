@@ -12,7 +12,7 @@ public class StringType extends LispType {
         super(LispType.TYPE, "str", new LispType[] { LispType.OBJECT });
     }
 
-    protected LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.hasNext()) {
             return new LispString(arguments.next().toString());
         } else {

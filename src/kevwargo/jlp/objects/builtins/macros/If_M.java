@@ -17,7 +17,7 @@ public class If_M extends LispFunction {
         super(LispType.MACRO, "if", new FormalArguments().pos("condition").pos("true").rest("false"));
     }
 
-    public LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject result;
         if (! arguments.get("condition").eval(namespace).equals(LispBool.FALSE)) {
             result = namespace.resolve("true").eval(namespace);

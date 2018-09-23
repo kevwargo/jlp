@@ -14,7 +14,7 @@ import kevwargo.jlp.objects.LispString;
 public class Format_F extends LispFunction {
 
     public Format_F() {
-        super(LispType.FUNCTION, "%", new FormalArguments("args").pos("fmt"));
+        super(LispType.FUNCTION, "format", new FormalArguments("args").pos("fmt"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
