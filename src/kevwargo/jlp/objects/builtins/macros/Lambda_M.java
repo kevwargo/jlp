@@ -19,8 +19,8 @@ public class Lambda_M extends Defun_M {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        LispList arglist = (LispList)arguments.get("arglist").assertType(LispType.LIST);
-        LispList body = (LispList)arguments.get("body").assertType(LispType.LIST);
+        LispList arglist = (LispList)arguments.get("arglist").cast(LispType.LIST);
+        LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
         LispFunction function = createFunction("<lambda>", buildArgs(arglist), body, namespace);
         return function;
     }

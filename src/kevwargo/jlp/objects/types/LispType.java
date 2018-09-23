@@ -82,19 +82,35 @@ public class LispType extends LispObject {
         if (this == TYPE && arguments.getLength() == 1) {
             return arguments.next().getType();
         }
-        return makeInstance(namespace, arguments);
+        return makeInstance(null, namespace, arguments);
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject instantiate(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        System.out.printf("instantiate null%n");
+        return instantiate(null, namespace, arguments);
+    }
+
+    public LispObject instantiate(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        System.out.printf("instantiate baseInstance: %s (%s)%n", baseInstance.toString(), baseInstance.getType().getName());
+        LispObject instance = makeInstance(baseInstance, namespace, arguments);
+        if (baseInstance != null) {
+            baseInstance.defineCast(this, instance);
+            return baseInstance;
+        }
+        instance.defineCast(this, instance);
+        return instance;
+    }
+
+    protected LispObject makeInstance(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() != 2) {
             throw new LispException(String.format("(%s) takes 1 or 2 arguments", name));
         }
-        String name = ((LispString)arguments.next().assertType(STRING)).getValue();
-        LispList basesList = (LispList)arguments.next().assertType(LIST);
+        String name = ((LispString)arguments.next().cast(STRING)).getValue();
+        LispList basesList = (LispList)arguments.next().cast(LIST);
         LispType bases[] = new LispType[basesList.size()];
         int pos = 0;
         for (LispObject base : basesList) {
-            bases[pos++] = (LispType)base.assertType(TYPE);
+            bases[pos++] = (LispType)base.cast(TYPE);
         }
         return new LispType(this, name, bases);
     }

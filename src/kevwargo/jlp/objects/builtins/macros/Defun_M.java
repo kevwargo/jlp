@@ -31,13 +31,13 @@ public class Defun_M extends LispFunction {
         FormalArguments args = new FormalArguments();
         Iterator<LispObject> iterator = arglist.iterator();
         while (iterator.hasNext()) {
-            LispObject object = iterator.next().assertType(LispType.SYMBOL);
+            LispObject object = iterator.next().cast(LispType.SYMBOL);
             LispSymbol symbol = (LispSymbol)object;
             if (symbol.getName().equals("&rest")) {
                 if (!iterator.hasNext()) {
                     throw new LispException("&rest keyword must be followed by a symbol");
                 }
-                LispObject restObject = iterator.next().assertType(LispType.SYMBOL);
+                LispObject restObject = iterator.next().cast(LispType.SYMBOL);
                 args.rest(((LispSymbol)restObject).getName());
                 break;
             }
@@ -51,9 +51,9 @@ public class Defun_M extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        String name = ((LispSymbol)arguments.get("name").assertType(LispType.SYMBOL)).getName();
-        LispList arglist = (LispList)arguments.get("arglist").assertType(LispType.LIST);
-        LispList body = (LispList)arguments.get("body").assertType(LispType.LIST);
+        String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
+        LispList arglist = (LispList)arguments.get("arglist").cast(LispType.LIST);
+        LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
         LispFunction function = createFunction(name, buildArgs(arglist), body, namespace);
         namespace.bind(name, function);
         return function;

@@ -15,10 +15,14 @@ public class LispObject {
     protected LispType type;
     protected Map<String, LispObject> dict;
 
+    private Map<LispType, LispObject> castMap;
+
 
     public LispObject(LispType type) {
         this.type = type;
         dict = new HashMap<String, LispObject>();
+        castMap = new HashMap<LispType, LispObject>();
+        defineCast(type, this);
     }
 
     public LispObject() {
@@ -36,13 +40,6 @@ public class LispObject {
 
     public boolean isInstance(LispType type) {
         return this.type.isSubtype(type);
-    }
-
-    public LispObject assertType(LispType type) throws LispException {
-        if (! isInstance(type)) {
-            throw new LispException(String.format("object '%s' is not a '%s'", toString(), type.getName()));
-        }
-        return this;
     }
 
     public LispObject getAttr(String name, boolean withDict) {
@@ -75,6 +72,18 @@ public class LispObject {
 
     public void setAttr(String name, LispObject value) {
         dict.put(name, value);
+    }
+
+    public void defineCast(LispType type, LispObject instance) {
+        castMap.put(type, instance);
+    }
+
+    public LispObject cast(LispType type) throws LispException {
+        LispObject instance = castMap.get(type);
+        if (instance == null) {
+            throw new LispException(String.format("object '%s' cannot be converted to '%s'", toString(), type.getName()));
+        }
+        return instance;
     }
 
 

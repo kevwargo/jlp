@@ -28,7 +28,7 @@ public class Let_M extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        LispObject mappingsObject = arguments.get("mappings").assertType(LispType.LIST);
+        LispObject mappingsObject = arguments.get("mappings").cast(LispType.LIST);
         HashMap<String, LispObject> mappings = new HashMap<String, LispObject>();
         Iterator<LispObject> iterator = ((LispList)mappingsObject).iterator();
         while (iterator.hasNext()) {
@@ -37,7 +37,7 @@ public class Let_M extends LispFunction {
                 mappings.put(((LispSymbol)mapping).getName(), LispBool.FALSE);
             } else if (mapping.isInstance(LispType.LIST)) {
                 Iterator<LispObject> mappingIterator = ((LispList)mapping).iterator();
-                LispObject varObject = mappingIterator.next().assertType(LispType.SYMBOL);
+                LispObject varObject = mappingIterator.next().cast(LispType.SYMBOL);
                 LispObject valObject = LispBool.FALSE;
                 if (mappingIterator.hasNext()) {
                     valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));

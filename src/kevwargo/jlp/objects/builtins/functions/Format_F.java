@@ -24,7 +24,7 @@ public class Format_F extends LispFunction {
         for (LispObject arg : argsList) {
             args[pos++] = arg.format();
         }
-        String fmt = ((LispString)arguments.get("fmt").assertType(LispType.STRING)).getValue();
+        String fmt = ((LispString)arguments.get("fmt").cast(LispType.STRING)).getValue();
         return new LispString(String.format(fmt, args));
     }
 

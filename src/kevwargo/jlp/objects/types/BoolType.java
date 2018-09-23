@@ -13,7 +13,7 @@ public class BoolType extends LispType {
         super(LispType.TYPE, "bool", new LispType[] { LispType.OBJECT });
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    protected LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() != 1) {
             throw new LispException("bool() takes 1 argument");
         }

@@ -21,12 +21,12 @@ public class Defclass_M extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        String name = ((LispSymbol)arguments.get("name").assertType(LispType.SYMBOL)).getName();
-        LispList basesList = (LispList)arguments.get("bases").assertType(LispType.LIST);
+        String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
+        LispList basesList = (LispList)arguments.get("bases").cast(LispType.LIST);
         LispType bases[] = new LispType[basesList.size()];
         int pos = 0;
         for (LispObject base : basesList) {
-            bases[pos++] = (LispType)base.eval(namespace).assertType(LispType.TYPE);
+            bases[pos++] = (LispType)base.eval(namespace).cast(LispType.TYPE);
         }
         Overlay overlay = new Overlay();
         LispNamespace classNamespace = namespace.prepend(overlay);
@@ -54,9 +54,13 @@ public class Defclass_M extends LispFunction {
             this.dict = dict;
         }
 
-        public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-            LispObject instance = baseTypes[0].makeInstance(namespace, arguments);
+        @Override
+        protected LispObject makeInstance(LispObject baseInstance, LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+            LispObject instance = baseTypes[0].instantiate(baseInstance, namespace, arguments);
             instance.setType(this);
+            for (int i = 1; i < baseTypes.length; i++) {
+                baseTypes[i].instantiate(instance, namespace, arguments);
+            }
             LispObject constructor = instance.getAttr("@init@", false);
             if (constructor != null) {
                 constructor.call(namespace, arguments);

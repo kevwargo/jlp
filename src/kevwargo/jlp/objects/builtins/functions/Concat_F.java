@@ -23,7 +23,7 @@ public class Concat_F extends LispFunction {
         Iterator<LispObject> iterator = ((LispList)arguments.get("args")).iterator();
         while (iterator.hasNext()) {
             LispObject object = iterator.next();
-            object.assertType(LispType.STRING);
+            object.cast(LispType.STRING);
             sb.append(((LispString)object).getValue());
         }
         return new LispString(sb.toString());

@@ -24,7 +24,7 @@ public class Append_F extends LispFunction {
         Iterator<LispObject> argsIterator = ((LispList)arguments.get("args")).iterator();
         while (argsIterator.hasNext()) {
             LispObject list = argsIterator.next();
-            list.assertType(LispType.LIST);
+            list.cast(LispType.LIST);
             Iterator<LispObject> listIterator = ((LispList)list).iterator();
             while (listIterator.hasNext()) {
                 result.add(listIterator.next());
