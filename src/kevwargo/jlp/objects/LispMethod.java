@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -15,7 +16,8 @@ public class LispMethod extends LispObject {
     protected String name;
 
     public LispMethod(LispObject object, LispFunction function) {
-        super(LispType.METHOD);
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "method");
         this.object = object;
         this.function = function;
         name = function.getName();

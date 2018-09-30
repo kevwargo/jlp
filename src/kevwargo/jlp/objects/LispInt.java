@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 
 
 public class LispInt extends LispObject {
@@ -8,11 +9,12 @@ public class LispInt extends LispObject {
     private long value;
 
     LispInt(long value, LispFloat floatCast) {
-        super(LispType.INT);
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "int");
         this.value = value;
         if (floatCast != null) {
-            defineCast(LispType.FLOAT, floatCast);
-            floatCast.defineCast(LispType.INT, this);
+            TypeInitializer.instance().deferCastDefine(this, "float", floatCast);
+            TypeInitializer.instance().deferCastDefine(floatCast, "int", this);
         }
     }
 

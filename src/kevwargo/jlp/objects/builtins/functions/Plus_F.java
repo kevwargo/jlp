@@ -19,6 +19,14 @@ public class Plus_F extends ArithmeticFunction {
         super("+", new FormalArguments());
     }
 
+    protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException {
+        return 0;
+    }
+
+    protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException {
+        return 0.0;
+    }
+
     protected long addLong(long result, long value) {
         return result + value;
     }

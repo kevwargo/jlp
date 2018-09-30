@@ -1,18 +1,20 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 
 
 public class LispFloat extends LispObject {
 
     private double value;
 
-    LispFloat(double value, LispInt longValue) {
-        super(LispType.FLOAT);
+    LispFloat(double value, LispInt intCast) {
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "float");
         this.value = value;
-        if (longValue != null) {
-            defineCast(LispType.INT, longValue);
-            longValue.defineCast(LispType.FLOAT, this);
+        if (intCast != null) {
+            TypeInitializer.instance().deferCastDefine(this, "int", intCast);
+            TypeInitializer.instance().deferCastDefine(intCast, "float", this);
         }
     }
 

@@ -11,7 +11,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class FloatType extends LispType {
 
     FloatType() {
-        super(LispType.TYPE, "float", new LispType[] { LispType.OBJECT });
+        super("float");
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
@@ -24,7 +24,7 @@ public class FloatType extends LispType {
             } else if (object.isInstance(STRING)) {
                 return new LispFloat(Double.parseDouble(((LispString)object.cast(STRING)).getValue()));
             } else {
-                throw new LispException(String.format("Object '%s' cannot be converted to float", object.toString()));
+                throw new LispException("Object '%s' cannot be converted to float", object.toString());
             }
         } else {
             return new LispFloat(0.0);

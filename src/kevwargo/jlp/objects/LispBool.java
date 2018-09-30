@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 
 
 public class LispBool extends LispObject {
@@ -13,7 +14,8 @@ public class LispBool extends LispObject {
 
 
     private LispBool(boolean value) {
-        super(LispType.BOOL);
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "bool");
         this.value = value;
     }
 

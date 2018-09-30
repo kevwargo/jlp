@@ -62,7 +62,7 @@ public class LispNamespace {
                 return object;
             }
         }
-        throw new LispException("Symbol's definition is void: " + name);
+        throw new LispException("Symbol's definition is void: '%s'", name);
     }
 
     public HashMap<String, LispObject>[] getComponents() {

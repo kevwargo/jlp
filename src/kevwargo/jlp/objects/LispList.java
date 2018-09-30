@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -14,7 +15,8 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     private boolean special;
 
     public LispList(List<LispObject> contents, boolean special) {
-        super(LispType.LIST);
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "list");
         this.contents = contents;
         this.special = special;
     }
@@ -46,6 +48,10 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     public LispList add(LispObject object) {
         contents.add(object);
         return this;
+    }
+
+    public LispObject get(int index) {
+        return this.contents.get(index);
     }
 
     public int size() {

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.LispBool;
+import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
@@ -35,23 +37,9 @@ public class LispType extends LispObject {
     protected String name;
 
 
-    protected LispType(LispType typeType, String name, LispType baseTypes[]) {
-        super(typeType);
+    public LispType(String name) {
         this.name = name;
-        if (baseTypes != null && baseTypes.length == 0) {
-            this.baseTypes = new LispType[] { OBJECT };
-        } else {
-            this.baseTypes = baseTypes;
-        }
-        init();
-    }
-
-    protected LispType(String name) {
-        this(null, name, null);
-    }
-
-    void init() {
-        
+        dict.put("@init@", new DefaultConstructor());
     }
 
     public String getName() {
@@ -60,6 +48,10 @@ public class LispType extends LispObject {
 
     public LispType[] getBaseTypes() {
         return baseTypes;
+    }
+
+    public void setBaseTypes(LispType types[]) {
+        baseTypes = types;
     }
 
     public boolean isSubtype(LispType baseType) {
@@ -87,7 +79,7 @@ public class LispType extends LispObject {
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() != 2) {
-            throw new LispException(String.format("(%s) takes 1 or 2 arguments", name));
+            throw new LispException("(%s) takes 1 or 2 arguments", name);
         }
         String name = ((LispString)arguments.next().cast(STRING)).getValue();
         LispList basesList = (LispList)arguments.next().cast(LIST);
@@ -96,31 +88,49 @@ public class LispType extends LispObject {
         for (LispObject base : basesList) {
             bases[pos++] = (LispType)base.cast(TYPE);
         }
-        return new LispType(this, name, bases);
+        LispType type = new LispType(name);
+        type.setType(TYPE);
+        type.setBaseTypes(bases);
+        return type;
     }
 
+    private class DefaultConstructor extends LispFunction {
+
+        DefaultConstructor() {
+            super("@init@", new FormalArguments().pos("self").rest("args"));
+            TypeInitializer.instance().deferTypeSet(this, "builtin-function");
+        }
+
+        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+            LispObject self = arguments.get("self");
+            LispList args = (LispList)arguments.get("args").cast(LispType.LIST);
+            ArgumentsIterator it = new ArgumentsIterator(args.iterator(), namespace, args.size());
+            LispObject cast = LispType.this.makeInstance(namespace, it);
+            self.defineCast(LispType.this, cast);
+            return LispBool.FALSE;
+        }
+
+    }
 
     static {
-        TYPE = new LispType("type");
-        OBJECT = new ObjectType();
-        OBJECT.type = TYPE;
-        OBJECT.baseTypes = new LispType[0];
-        TYPE.type = TYPE;
-        TYPE.baseTypes = new LispType[] { OBJECT };
+        try {
+            TYPE = TypeInitializer.instance().initType("type");
+            OBJECT = TypeInitializer.instance().initType("object");
+            BOOL = TypeInitializer.instance().initType("bool");
+            FLOAT = TypeInitializer.instance().initType("float");
+            FUNCTION = TypeInitializer.instance().initType("builtin-function");
+            METHOD = TypeInitializer.instance().initType("method");
+            MACRO = TypeInitializer.instance().initType("builtin-macro");
+            LISP_FUNCTION = TypeInitializer.instance().initType("function");
+            LISP_MACRO = TypeInitializer.instance().initType("macro");
+            INT = TypeInitializer.instance().initType("int");
+            LIST = TypeInitializer.instance().initType("list");
+            STRING = TypeInitializer.instance().initType("string");
+            SYMBOL = TypeInitializer.instance().initType("symbol");
 
-        BOOL = new BoolType();
-        FLOAT = new FloatType();
-        FUNCTION = new FunctionType();
-        METHOD = new FunctionType("method", new LispType[] { FUNCTION });
-        MACRO = new FunctionType("builtin-macro", new LispType[] { FUNCTION });
-        LISP_FUNCTION = new FunctionType("function", new LispType[] { FUNCTION });
-        LISP_MACRO = new FunctionType("macro", new LispType[] { MACRO, LISP_FUNCTION });
-        INT = new IntType();
-        LIST = new ListType();
-        STRING = new StringType();
-        SYMBOL = new SymbolType();
-
-        OBJECT.init();
-        TYPE.init();
+            TypeInitializer.instance().check();
+        } catch (LispException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 }

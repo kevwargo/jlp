@@ -8,12 +8,16 @@ import java.util.List;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
+import kevwargo.jlp.objects.builtins.functions.Divide_F;
+import kevwargo.jlp.objects.builtins.functions.Eq_F;
+import kevwargo.jlp.objects.builtins.functions.Equalp_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.Format_F;
-import kevwargo.jlp.objects.builtins.functions.Plus_F;
+import kevwargo.jlp.objects.builtins.functions.Isinstance_F;
 import kevwargo.jlp.objects.builtins.functions.Minus_F;
 import kevwargo.jlp.objects.builtins.functions.Multiply_F;
-import kevwargo.jlp.objects.builtins.functions.Divide_F;
+import kevwargo.jlp.objects.builtins.functions.Not_F;
+import kevwargo.jlp.objects.builtins.functions.Plus_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
@@ -27,6 +31,7 @@ import kevwargo.jlp.objects.builtins.macros.Let_M;
 import kevwargo.jlp.objects.builtins.macros.Progn_M;
 import kevwargo.jlp.objects.builtins.macros.Quote_M;
 import kevwargo.jlp.objects.builtins.macros.Setq_M;
+import kevwargo.jlp.objects.builtins.macros.While_M;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
@@ -72,6 +77,7 @@ public class LispProcessor {
         map.put("let*", new LetStar_M());
         map.put("append", new Append_F());
         map.put("if", new If_M());
+        map.put("while", new While_M());
         map.put("progn", new Progn_M());
         map.put("lambda", new Lambda_M());
         map.put("setq", new Setq_M());
@@ -83,6 +89,11 @@ public class LispProcessor {
         map.put("-", new Minus_F());
         map.put("*", new Multiply_F());
         map.put("/", new Divide_F());
+
+        map.put("not", new Not_F());
+        map.put("eq", new Eq_F());
+        map.put("equalp", new Equalp_F());
+        map.put("isinstance", new Isinstance_F());
 
         namespace = new LispNamespace(map);
     }

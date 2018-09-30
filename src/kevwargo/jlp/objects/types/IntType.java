@@ -11,7 +11,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class IntType extends LispType {
 
     IntType() {
-        super(LispType.TYPE, "int", new LispType[] { OBJECT });
+        super("int");
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
@@ -28,7 +28,7 @@ public class IntType extends LispType {
                 }
                 return new LispInt(Long.parseLong(((LispString)object.cast(STRING)).getValue(), radix));
             } else {
-                throw new LispException(String.format("Object '%s' cannot be converted to int", object.toString()));
+                throw new LispException("Object '%s' cannot be converted to int", object.toString());
             }
         } else {
             return new LispInt(0);

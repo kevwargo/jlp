@@ -34,7 +34,7 @@ public class Dot_M extends LispFunction {
         } else {
             LispObject attr = obj.getAttr(attrName, true);
             if (attr == null) {
-                throw new LispException(String.format("'%s' object has no attribute '%s'", obj.getType().getName(), attrName));
+                throw new LispException("'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
             }
             return attr;
         }

@@ -4,8 +4,8 @@ import kevwargo.jlp.LispException;
 
 public class LispCastException extends LispException {
 
-    public LispCastException(String message) {
-        super(message);
+    public LispCastException(String fmt, Object ...args) {
+        super(String.format(fmt, args));
     }
-    
+
 }

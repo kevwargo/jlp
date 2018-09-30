@@ -10,12 +10,12 @@ import kevwargo.jlp.utils.LispNamespace;
 public class BoolType extends LispType {
 
     BoolType() {
-        super(LispType.TYPE, "bool", new LispType[] { LispType.OBJECT });
+        super("bool");
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        if (arguments.getLength() != 1) {
-            throw new LispException("bool() takes 1 argument");
+        if (arguments.getLength() < 1) {
+            return LispBool.FALSE;
         }
         return arguments.next() == LispBool.FALSE ? LispBool.FALSE : LispBool.TRUE;
     }

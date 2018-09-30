@@ -43,11 +43,11 @@ public class Let_M extends LispFunction {
                     valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));
                 }
                 if (mappingIterator.hasNext()) {
-                    throw new LispException("Mapping must be of structure (var val): " + mapping.toString());
+                    throw new LispException("Mapping must be of structure (var val), not '%s'", mapping.toString());
                 }
                 mappings.put(((LispSymbol)varObject).getName(), valObject);
             } else {
-                throw new LispException("Mapping must be a symbol or a list: " + mapping.toString());
+                throw new LispException("Mapping must be a symbol or a list, not '%s'", mapping.toString());
             }
         }
         LispNamespace localNamespace = namespace.prepend(mappings);

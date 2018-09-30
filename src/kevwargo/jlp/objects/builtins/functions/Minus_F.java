@@ -18,6 +18,20 @@ public class Minus_F extends ArithmeticFunction {
     public Minus_F() {
         super("-", new FormalArguments());
     }
+    
+    protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException {
+        if (((LispList)arguments.get("numbers")).size() > 0) {
+            return ((LispInt)((LispList)arguments.get("numbers")).get(0).cast(LispType.INT)).getValue();
+        }
+        return 0;
+    }
+
+    protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException {
+        if (((LispList)arguments.get("numbers")).size() > 0) {
+            return ((LispFloat)((LispList)arguments.get("numbers")).get(0).cast(LispType.FLOAT)).getValue();
+        }
+        return 0.0;
+    }
 
     protected long addLong(long result, long value) {
         return result - value;

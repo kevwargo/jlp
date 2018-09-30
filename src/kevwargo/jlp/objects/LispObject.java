@@ -19,17 +19,10 @@ public class LispObject {
     private Map<LispType, LispObject> castMap;
 
 
-    public LispObject(LispType type) {
-        this.type = type;
+    public LispObject() {
         dict = new HashMap<String, LispObject>();
         castMap = new HashMap<LispType, LispObject>();
-        defineCast(type, this);
     }
-
-    public LispObject() {
-        this(LispType.OBJECT);
-    }
-
 
     public LispType getType() {
         return type;
@@ -37,6 +30,7 @@ public class LispObject {
 
     public void setType(LispType type) {
         this.type = type;
+        defineCast(type, this);
     }
 
     public boolean isInstance(LispType type) {
@@ -53,7 +47,12 @@ public class LispObject {
         }
         attr = getAttr(name, type);
         if (attr != null && attr.isInstance(LispType.FUNCTION)) {
-            return new LispMethod(this, (LispFunction)attr);
+            try {
+                return new LispMethod(this, (LispFunction)attr.cast(LispType.FUNCTION));
+            } catch (LispCastException e) {
+                // should not happen
+                return null;
+            }
         }
         return attr;
     }
@@ -79,10 +78,14 @@ public class LispObject {
         castMap.put(type, instance);
     }
 
+    public boolean isCastDefined(LispType type) {
+        return castMap.containsKey(type);
+    }
+
     public LispObject cast(LispType type) throws LispCastException {
         LispObject instance = castMap.get(type);
         if (instance == null) {
-            throw new LispCastException(String.format("object '%s' cannot be converted to '%s'", toString(), type.getName()));
+            throw new LispCastException("object '%s' cannot be converted to '%s'", toString(), type.getName());
         }
         return instance;
     }
@@ -97,7 +100,7 @@ public class LispObject {
         if (callable != null) {
             return callable.call(namespace, arguments);
         }
-        throw new LispException(String.format("'%s' object is not callable", type.getName()));
+        throw new LispException("'%s' object is not callable", type.getName());
     }
 
     public String repr() {

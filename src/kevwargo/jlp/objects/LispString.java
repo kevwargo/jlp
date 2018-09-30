@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.types.TypeInitializer;
 
 
 public class LispString extends LispObject {
@@ -8,7 +9,8 @@ public class LispString extends LispObject {
     private String value;
 
     public LispString(String value) {
-        super(LispType.STRING);
+        super();
+        TypeInitializer.instance().deferTypeSet(this, "string");
         this.value = value;
     }
 

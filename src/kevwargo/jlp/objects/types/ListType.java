@@ -11,7 +11,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class ListType extends LispType {
 
     ListType() {
-        super(LispType.TYPE, "list", new LispType[] { LispType.OBJECT });
+        super("list");
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {

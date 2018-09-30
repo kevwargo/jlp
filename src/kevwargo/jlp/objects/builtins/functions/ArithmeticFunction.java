@@ -18,20 +18,21 @@ abstract public class ArithmeticFunction extends LispFunction {
 
     abstract protected long addLong(long result, long value);
     abstract protected double addDouble(double result, double value);
+    abstract protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException;
+    abstract protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException;
 
     protected ArithmeticFunction(String name, FormalArguments args) {
         super(LispType.FUNCTION, name, args.rest("numbers"));
     }
 
-    protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        return 0;
-    }
-
-    protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        return 0.0;
-    }
-
     protected boolean isDouble(HashMap<String, LispObject> arguments) throws LispCastException {
+        LispList numbers = (LispList)arguments.get("numbers");
+        if (numbers.size() > 0) {
+            LispObject first = numbers.get(0);
+            if (first.isInstance(LispType.FLOAT)) {
+                return true;
+            }
+        }
         return false;
     }
     
@@ -42,7 +43,7 @@ abstract public class ArithmeticFunction extends LispFunction {
         LispList numbers = (LispList)arguments.get("numbers").cast(LispType.LIST);
         for (LispObject number : numbers) {
             if (!number.isInstance(LispType.INT) && !number.isInstance(LispType.FLOAT)) {
-                throw new LispException(String.format("'%s' is not a number", number));
+                throw new LispException("'%s' is not a number", number);
             }
             if (isDouble) {
                 double value;

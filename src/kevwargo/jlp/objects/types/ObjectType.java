@@ -15,9 +15,6 @@ public class ObjectType extends LispType {
 
     ObjectType() {
         super("object");
-    }
-
-    void init() {
         dict.put("@str@", new StrMethod());
         dict.put("@repr@", new ReprMethod());
     }
@@ -26,7 +23,8 @@ public class ObjectType extends LispType {
     private static class StrMethod extends LispFunction {
 
         StrMethod() {
-            super(LispType.FUNCTION, "@str@", new FormalArguments().pos("self"));
+            super("@str@", new FormalArguments().pos("self"));
+            TypeInitializer.instance().deferTypeSet(this, "builtin-function");
         }
 
         protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
@@ -38,7 +36,8 @@ public class ObjectType extends LispType {
     private static class ReprMethod extends LispFunction {
 
         ReprMethod() {
-            super(LispType.FUNCTION, "@repr@", new FormalArguments().pos("self"));
+            super("@repr@", new FormalArguments().pos("self"));
+            TypeInitializer.instance().deferTypeSet(this, "builtin-function");
         }
 
         protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {

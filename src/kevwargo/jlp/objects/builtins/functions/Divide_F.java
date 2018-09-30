@@ -29,12 +29,12 @@ public class Divide_F extends ArithmeticFunction {
 
     protected boolean isDouble(HashMap<String, LispObject> arguments) throws LispCastException {
         LispObject first = arguments.get("first");
-        if (first.isInstance(LispType.INT)) {
-            return false;
-        } else if (first.isInstance(LispType.FLOAT)) {
+        if (first.isInstance(LispType.FLOAT)) {
             return true;
+        } else if (first.isInstance(LispType.INT)) {
+            return false;
         }
-        throw new LispCastException(String.format("'%s' is not a number", first.toString()));
+        throw new LispCastException("'%s' is not a number", first.toString());
     }
 
     protected long addLong(long result, long value) {

@@ -9,7 +9,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class StringType extends LispType {
 
     StringType() {
-        super(LispType.TYPE, "str", new LispType[] { LispType.OBJECT });
+        super("str");
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {

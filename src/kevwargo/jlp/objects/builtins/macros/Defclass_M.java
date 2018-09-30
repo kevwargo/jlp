@@ -23,7 +23,12 @@ public class Defclass_M extends LispFunction {
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
         LispList basesList = (LispList)arguments.get("bases").cast(LispType.LIST);
-        LispType bases[] = new LispType[basesList.size()];
+        LispType bases[];
+        if (basesList.size() > 0) {
+            bases = new LispType[basesList.size()];
+        } else {
+            bases = new LispType[] { LispType.OBJECT };
+        }
         int pos = 0;
         for (LispObject base : basesList) {
             bases[pos++] = (LispType)base.eval(namespace).cast(LispType.TYPE);
@@ -50,18 +55,22 @@ public class Defclass_M extends LispFunction {
     private static class LispClass extends LispType {
 
         LispClass(String name, LispType bases[], HashMap<String, LispObject> dict) {
-            super(LispType.TYPE, name, bases);
+            super(name);
+            setType(LispType.TYPE);
+            setBaseTypes(bases);
             this.dict = dict;
         }
 
         @Override
         public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-            LispObject instance = new LispObject(this);
-            defineCastsRecursively(namespace, instance);
-            LispObject constructor = instance.getAttr("@init@", false);
+            LispObject instance = new LispObject();
+            instance.setType(this);
+            LispObject constructor = dict.get("@init@");
             if (constructor != null) {
+                arguments.setFirst(instance);
                 constructor.call(namespace, arguments);
             }
+            defineCastsRecursively(namespace, instance);
             return instance;
         }
 
@@ -69,7 +78,7 @@ public class Defclass_M extends LispFunction {
             for (LispType type : baseTypes) {
                 if (type instanceof LispClass) {
                     ((LispClass)type).defineCastsRecursively(namespace, instance);
-                } else {
+                } else if (! instance.isCastDefined(type)) {
                     instance.defineCast(type, type.makeInstance(namespace, new ArgumentsIterator()));
                 }
             }
