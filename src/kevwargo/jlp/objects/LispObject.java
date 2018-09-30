@@ -83,7 +83,16 @@ public class LispObject {
     }
 
     public LispObject cast(LispType type) throws LispCastException {
-        LispObject instance = castMap.get(type);
+        LispObject instance = null;
+        for (Map.Entry<LispType, LispObject> e : castMap.entrySet()) {
+            if (e.getKey().isSubtype(type)) {
+                if (instance != null) {
+                    System.err.printf("Warning: '%s' cast to '%s' is ambiguous\n", this.toString(), type.toString());
+                } else {
+                    instance = e.getValue();
+                }
+            }
+        }
         if (instance == null) {
             throw new LispCastException("object '%s' cannot be converted to '%s'", toString(), type.getName());
         }
