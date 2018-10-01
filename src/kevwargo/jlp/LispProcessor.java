@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
+import kevwargo.jlp.objects.builtins.functions.Apply_F;
 import kevwargo.jlp.objects.builtins.functions.Concat_F;
 import kevwargo.jlp.objects.builtins.functions.Divide_F;
 import kevwargo.jlp.objects.builtins.functions.Eq_F;
@@ -20,7 +21,7 @@ import kevwargo.jlp.objects.builtins.functions.Not_F;
 import kevwargo.jlp.objects.builtins.functions.Plus_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
-import kevwargo.jlp.objects.builtins.functions.Apply_F;
+import kevwargo.jlp.objects.builtins.macros.Collect_M;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
 import kevwargo.jlp.objects.builtins.macros.Defun_M;
@@ -96,6 +97,7 @@ public class LispProcessor {
         map.put("eq", new Eq_F());
         map.put("equalp", new Equalp_F());
         map.put("isinstance", new Isinstance_F());
+        map.put("collect", new Collect_M());
 
         namespace = new LispNamespace(map);
     }

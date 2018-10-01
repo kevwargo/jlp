@@ -6,12 +6,12 @@ import kevwargo.jlp.LispException;
 import kevwargo.jlp.LispLoopException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispInt;
 
 public class While_M extends LispFunction {
 
