@@ -20,6 +20,7 @@ import kevwargo.jlp.objects.builtins.functions.Not_F;
 import kevwargo.jlp.objects.builtins.functions.Plus_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
+import kevwargo.jlp.objects.builtins.functions.Apply_F;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
 import kevwargo.jlp.objects.builtins.macros.Defun_M;
@@ -69,6 +70,7 @@ public class LispProcessor {
         map.put("print", new Print_F());
         map.put("format", new Format_F());
         map.put("quote", new Quote_M());
+        map.put("apply", new Apply_F());
         map.put("concat", new Concat_F());
         map.put("defun", new Defun_M());
         map.put("defmacro", new Defmacro_M());
