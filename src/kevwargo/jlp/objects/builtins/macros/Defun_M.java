@@ -63,23 +63,52 @@ public class Defun_M extends LispFunction {
     protected static class Function extends LispFunction {
 
         LispList body;
-        LispNamespace namespace;
+        LispNamespace defNamespace;
 
 
         Function(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
             super(type, name, formalArguments);
             this.body = body;
-            this.namespace = namespace;
+            defNamespace = namespace;
         }
 
         protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
             Iterator<LispObject> bodyIterator = body.iterator();
             LispObject result = LispBool.FALSE;
-            LispNamespace bodyNamespace = this.namespace.prepend(arguments);
-            while (bodyIterator.hasNext()) {
-                result = bodyIterator.next().eval(bodyNamespace);
+            HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+            map.put("return", new ReturnFunction());
+            LispNamespace bodyNamespace = defNamespace.prepend(arguments).prepend(map);
+            try {
+                while (bodyIterator.hasNext()) {
+                    result = bodyIterator.next().eval(bodyNamespace);
+                }
+            } catch (ReturnException re) {
+                return re.object;
             }
             return result;
+        }
+
+    }
+
+    private static class ReturnException extends LispException {
+
+        public LispObject object;
+
+        public ReturnException(LispObject object) {
+            super("'return' is used outside of a function");
+            this.object = object;
+        }
+
+    }
+
+    private static class ReturnFunction extends LispFunction {
+
+        public ReturnFunction() {
+            super(LispType.FUNCTION, "return", new FormalArguments().pos("obj"));
+        }
+
+        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+            throw new ReturnException(arguments.get("obj"));
         }
 
     }

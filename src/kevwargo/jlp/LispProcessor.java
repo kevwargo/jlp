@@ -101,8 +101,10 @@ public class LispProcessor {
     public void process(LispParser parser) throws IOException, LispException {
         LispObject lispObject;
         while ((lispObject = parser.read()) != null) {
-            LispObject result = lispObject.eval(namespace);
-            System.out.println(result.repr());
+            try {
+                LispObject result = lispObject.eval(namespace);
+                System.out.println(result.repr());
+            } catch (LispLoopException e) {}
         }
     }
 

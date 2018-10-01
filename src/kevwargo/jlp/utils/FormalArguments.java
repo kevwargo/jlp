@@ -7,6 +7,7 @@ public class FormalArguments {
 
     private List<String> positional;
     private String rest;
+    private List<String> optional;
 
     public FormalArguments() {
         this(null);
@@ -19,6 +20,7 @@ public class FormalArguments {
     public FormalArguments(List<String> positional, String rest) {
         this.positional = positional;
         this.rest = rest;
+        this.optional = new ArrayList<String>();
     }
 
     public List<String> pos() {
@@ -27,6 +29,15 @@ public class FormalArguments {
 
     public FormalArguments pos(String arg) {
         positional.add(arg);
+        return this;
+    }
+
+    public List<String> opt() {
+        return optional;
+    }
+
+    public FormalArguments opt(String arg) {
+        optional.add(arg);
         return this;
     }
 

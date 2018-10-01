@@ -20,7 +20,7 @@ public class If_M extends LispFunction {
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject result;
         if (! arguments.get("condition").eval(namespace).equals(LispBool.FALSE)) {
-            result = namespace.resolve("true").eval(namespace);
+            result = arguments.get("true").eval(namespace);
         } else {
             result = LispBool.FALSE;
             Iterator<LispObject> iterator = ((LispList)arguments.get("false")).iterator();

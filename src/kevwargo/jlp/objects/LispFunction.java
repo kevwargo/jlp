@@ -38,12 +38,18 @@ public abstract class LispFunction extends LispObject {
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         HashMap<String, LispObject> argMap = new HashMap<String, LispObject>();
         int al = arguments.getLength();
-        int fl = formalArguments.pos().size();
-        if (fl > al || (formalArguments.rest() == null && fl < al)) {
-            throw new LispException("'%s' requires %d positional arguments, %d provided", name, fl, al);
+        int min = formalArguments.pos().size();
+        int max = min + formalArguments.opt().size();
+        if (al < min || (formalArguments.rest() == null && al > max)) {
+            throw new LispException("'%s' requires [%d..%d] positional arguments, %d provided", name, min, max, al);
         }
         for (String argName : formalArguments.pos()) {
             argMap.put(argName, arguments.next());
+        }
+        if (arguments.hasNext()) {
+            for (String argName : formalArguments.opt()) {
+                argMap.put(argName, arguments.next());
+            }
         }
         if (formalArguments.rest() != null) {
             LispList rest = new LispList();
