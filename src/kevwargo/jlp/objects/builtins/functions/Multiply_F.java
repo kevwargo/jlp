@@ -19,6 +19,11 @@ public class Multiply_F extends ArithmeticFunction {
         super("*", new FormalArguments());
     }
 
+    protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException {
+        Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
+        return new Params(1, 1.0, it);
+    }
+
     protected long addLong(long result, long value) {
         return result * value;
     }

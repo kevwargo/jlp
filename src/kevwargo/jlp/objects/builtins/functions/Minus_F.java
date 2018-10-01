@@ -18,19 +18,17 @@ public class Minus_F extends ArithmeticFunction {
     public Minus_F() {
         super("-", new FormalArguments());
     }
-    
-    protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        if (((LispList)arguments.get("numbers")).size() > 0) {
-            return ((LispInt)((LispList)arguments.get("numbers")).get(0).cast(LispType.INT)).getValue();
-        }
-        return 0;
-    }
 
-    protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        if (((LispList)arguments.get("numbers")).size() > 0) {
-            return ((LispFloat)((LispList)arguments.get("numbers")).get(0).cast(LispType.FLOAT)).getValue();
+    protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException {
+        LispList numbers = (LispList)arguments.get("numbers").cast(LispType.LIST);
+        Iterator<LispObject> it = numbers.iterator();
+        if (it.hasNext()) {
+            LispObject first = it.next();
+            long lv = ((LispInt)first.cast(LispType.INT)).getValue();
+            double dv = ((LispFloat)first.cast(LispType.FLOAT)).getValue();
+            return new Params(lv, dv, it);
         }
-        return 0.0;
+        return new Params(0, 0.0, it);
     }
 
     protected long addLong(long result, long value) {

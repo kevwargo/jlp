@@ -18,8 +18,21 @@ abstract public class ArithmeticFunction extends LispFunction {
 
     abstract protected long addLong(long result, long value);
     abstract protected double addDouble(double result, double value);
-    abstract protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException;
-    abstract protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException;
+    abstract protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException;
+
+    protected static class Params {
+
+        public long longInitial;
+        public double doubleInitial;
+        public Iterator<LispObject> numbers;
+
+        public Params(long li, double di, Iterator<LispObject> n) {
+            longInitial = li;
+            doubleInitial = di;
+            numbers = n;
+        }
+
+    }
 
     protected ArithmeticFunction(String name, FormalArguments args) {
         super(LispType.FUNCTION, name, args.rest("numbers"));
@@ -37,11 +50,12 @@ abstract public class ArithmeticFunction extends LispFunction {
     }
     
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        long longResult = getLongInitial(arguments);
-        double doubleResult = getDoubleInitial(arguments);
+        Params params = parseParams(arguments);
         boolean isDouble = isDouble(arguments);
-        LispList numbers = (LispList)arguments.get("numbers").cast(LispType.LIST);
-        for (LispObject number : numbers) {
+        long longResult = params.longInitial;
+        double doubleResult = params.doubleInitial;
+        while (params.numbers.hasNext()) {
+            LispObject number = params.numbers.next();
             if (!number.isInstance(LispType.INT) && !number.isInstance(LispType.FLOAT)) {
                 throw new LispException("'%s' is not a number", number);
             }

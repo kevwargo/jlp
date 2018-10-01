@@ -19,12 +19,12 @@ public class Divide_F extends ArithmeticFunction {
         super("/", new FormalArguments().pos("first"));
     }
 
-    protected long getLongInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        return ((LispInt)arguments.get("first").cast(LispType.INT)).getValue();
-    }
-
-    protected double getDoubleInitial(HashMap<String, LispObject> arguments) throws LispCastException {
-        return ((LispFloat)arguments.get("first").cast(LispType.FLOAT)).getValue();
+    protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException {
+        LispObject first = arguments.get("first");
+        long lv = ((LispInt)first.cast(LispType.INT)).getValue();
+        double dv = ((LispFloat)first.cast(LispType.FLOAT)).getValue();
+        Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
+        return new Params(lv, dv, it);
     }
 
     protected boolean isDouble(HashMap<String, LispObject> arguments) throws LispCastException {
