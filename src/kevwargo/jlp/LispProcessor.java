@@ -43,6 +43,7 @@ public class LispProcessor {
     private static LispProcessor instance;
     private LispNamespace namespace;
 
+    private boolean verbose;
     public static LispProcessor getInstance() {
         if (instance == null) {
             instance = new LispProcessor();
@@ -100,6 +101,11 @@ public class LispProcessor {
         map.put("collect", new Collect_M());
 
         namespace = new LispNamespace(map);
+
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     public void process(LispParser parser) throws IOException, LispException {
@@ -107,7 +113,9 @@ public class LispProcessor {
         while ((lispObject = parser.read()) != null) {
             try {
                 LispObject result = lispObject.eval(namespace);
-                System.out.println(result.repr());
+                if (verbose) {
+                    System.out.println(result.repr());
+                }
             } catch (LispLoopException e) {}
         }
     }

@@ -12,7 +12,9 @@ public class Main {
         } else {
             parser = new LispParser(System.in);
         }
-        LispProcessor.getInstance().process(parser);
+        LispProcessor proc = LispProcessor.getInstance();
+        proc.setVerbose(true);
+        proc.process(parser);
     }
 
 
