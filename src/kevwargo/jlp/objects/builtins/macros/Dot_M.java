@@ -23,7 +23,7 @@ public class Dot_M extends LispFunction {
         LispObject attrObj = arguments.get("attr");
         String attrName;
         if (attrObj.isInstance(LispType.SYMBOL)) {
-            attrName = ((LispSymbol)attrObj).getName();
+            attrName = ((LispSymbol)attrObj.cast(LispType.SYMBOL)).getName();
         } else {
             attrName = attrObj.eval(namespace).toString();
         }
