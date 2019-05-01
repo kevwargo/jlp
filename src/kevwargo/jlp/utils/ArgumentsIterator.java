@@ -1,5 +1,6 @@
 package kevwargo.jlp.utils;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import kevwargo.jlp.LispException;
@@ -20,19 +21,7 @@ public class ArgumentsIterator {
     }
 
     public ArgumentsIterator() {
-        this(
-                new Iterator<LispObject>() {
-                    public boolean hasNext() {
-                        return false;
-                    }
-
-                    public LispObject next() throws NoSuchElementException {
-                        throw new NoSuchElementException();
-                    }
-                },
-                null,
-                0
-            );
+        this(Collections.emptyIterator(), null, 0);
     }
 
     public boolean hasNext() {
