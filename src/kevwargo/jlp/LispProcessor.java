@@ -38,7 +38,9 @@ import kevwargo.jlp.objects.builtins.macros.Let_M;
 import kevwargo.jlp.objects.builtins.macros.Progn_M;
 import kevwargo.jlp.objects.builtins.macros.Quote_M;
 import kevwargo.jlp.objects.builtins.macros.Setq_M;
-import kevwargo.jlp.objects.builtins.macros.While_M;
+import kevwargo.jlp.objects.builtins.macros.loop.For_M;
+import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
+import kevwargo.jlp.objects.builtins.macros.loop.While_M;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
@@ -49,6 +51,8 @@ public class LispProcessor {
     private LispNamespace namespace;
 
     private boolean verbose;
+
+
     public static LispProcessor getInstance() {
         if (instance == null) {
             instance = new LispProcessor();
@@ -88,6 +92,7 @@ public class LispProcessor {
         map.put("append", new Append_F());
         map.put("if", new If_M());
         map.put("while", new While_M());
+        map.put("for", new For_M());
         map.put("progn", new Progn_M());
         map.put("lambda", new Lambda_M());
         map.put("setq", new Setq_M());

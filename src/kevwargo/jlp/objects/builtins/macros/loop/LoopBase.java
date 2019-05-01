@@ -1,9 +1,8 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.objects.builtins.macros.loop;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.LispLoopException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
@@ -13,43 +12,34 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
-public class While_M extends LispFunction {
 
-    public While_M() {
-        super(LispType.MACRO, "while", new FormalArguments().pos("condition").rest("body"));
+public abstract class LoopBase extends LispFunction {
+
+    public LoopBase(String name, FormalArguments formalArguments) {
+        super(LispType.MACRO, name, formalArguments);
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        LispObject condition = arguments.get("condition");
+    protected boolean executeBody(LispNamespace namespace, LispList body) throws LispException {
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
         map.put("break", new LoopExit(false));
         map.put("continue", new LoopExit(true));
         LispNamespace bodyNamespace = namespace.prepend(map);
-        boolean finished = false;
-        while (condition.eval(bodyNamespace) != LispBool.FALSE) {
-            for (LispObject form : (LispList)arguments.get("body")) {
-                LispLoopException exc = null;
-                try {
-                    form.eval(bodyNamespace);
-                } catch (LispLoopException lle) {
-                    if (lle.getLevel() > 1) {
-                        exc = new LispLoopException(lle);
-                    } else if (lle.getLevel() == 1) {
-                        if (!lle.isContinue()) {
-                            finished = true;
-                        }
-                        break;
-                    }
-                }
-                if (exc != null) {
-                    throw exc;
+        for (LispObject form : body) {
+            LispLoopException exc = null;
+            try {
+                form.eval(bodyNamespace);
+            } catch (LispLoopException lle) {
+                if (lle.getLevel() > 1) {
+                    exc = new LispLoopException(lle);
+                } else if (lle.getLevel() == 1 && !lle.isContinue()) {
+                    return true;
                 }
             }
-            if (finished) {
-                break;
+            if (exc != null) {
+                throw exc;
             }
         }
-        return LispBool.FALSE;
+        return false;
     }
 
 
