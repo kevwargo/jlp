@@ -57,7 +57,7 @@ public class CallMethod extends Caller {
             Method method = clazz.getMethod(methodName, classes);
             Object result = method.invoke(obj, args);
             if (result == null) {
-                return LispBool.FALSE;
+                return LispBool.NIL;
             }
             return new LispJavaObject(result);
         } catch (Exception e) {

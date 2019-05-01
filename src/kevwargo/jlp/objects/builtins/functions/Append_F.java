@@ -30,7 +30,7 @@ public class Append_F extends LispFunction {
             }
         }
         if (result.isEmpty()) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
         return new LispList(result);
     }

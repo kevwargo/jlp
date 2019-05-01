@@ -108,7 +108,7 @@ public class LispType extends LispObject {
             ArgumentsIterator it = new ArgumentsIterator(args.iterator(), namespace, args.size());
             LispObject cast = LispType.this.makeInstance(namespace, it);
             self.defineCast(LispType.this, cast);
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
 
     }

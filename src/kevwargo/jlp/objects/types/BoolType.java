@@ -15,9 +15,9 @@ public class BoolType extends LispType {
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() < 1) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
-        return arguments.next() == LispBool.FALSE ? LispBool.FALSE : LispBool.TRUE;
+        return arguments.next() == LispBool.NIL ? LispBool.NIL : LispBool.T;
     }
 
 }

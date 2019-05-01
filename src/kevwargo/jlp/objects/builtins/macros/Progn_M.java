@@ -21,7 +21,7 @@ public class Progn_M extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        LispObject result = LispBool.FALSE;
+        LispObject result = LispBool.NIL;
         Iterator<LispObject> iterator = ((LispList)arguments.get("body")).iterator();
         while (iterator.hasNext()) {
             result = iterator.next().eval(namespace);

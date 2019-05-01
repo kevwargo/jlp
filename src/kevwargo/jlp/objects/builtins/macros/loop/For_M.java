@@ -42,13 +42,13 @@ public class For_M extends LoopBase {
         LispObject cond = forCond.get(1);
         LispObject incr = forCond.get(2);
         init.eval(namespace);
-        while (cond.eval(namespace) != LispBool.FALSE) {
+        while (cond.eval(namespace) != LispBool.NIL) {
             if (executeBody(namespace, body)) {
                 break;
             }
             incr.eval(namespace);
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
     private LispObject executeIterator(LispList cond, LispList body, LispNamespace namespace) throws LispException {
@@ -75,7 +75,7 @@ public class For_M extends LoopBase {
                 break;
             }
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
     private LispObject executeString(String var, LispString lispString, LispList body, LispNamespace namespace) throws LispException {
@@ -88,7 +88,7 @@ public class For_M extends LoopBase {
                 break;
             }
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
     @SuppressWarnings("unchecked")
@@ -113,7 +113,7 @@ public class For_M extends LoopBase {
                 break;
             }
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
     private LispObject executeJavaArray(String var, Object array[], LispList body, LispNamespace namespace) throws LispException {
@@ -124,7 +124,7 @@ public class For_M extends LoopBase {
                 break;
             }
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
 }

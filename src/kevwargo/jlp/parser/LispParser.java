@@ -37,7 +37,7 @@ public class LispParser {
     public LispObject read() throws LispException {
         LispObject object = readInternal();
         if (object != null && object.isInstance(LispType.LIST) && ! ((LispList)object).iterator().hasNext()) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
         return object;
     }
@@ -107,9 +107,9 @@ public class LispParser {
         switch (token.getType()) {
             case SYMBOL:
                 if (token.getValue().equals("t")) {
-                    object = LispBool.TRUE;
+                    object = LispBool.T;
                 } else if (token.getValue().equals("nil")) {
-                    object = LispBool.FALSE;
+                    object = LispBool.NIL;
                 } else {
                     try {
                         object = new LispInt(Long.parseLong(token.getValue()));

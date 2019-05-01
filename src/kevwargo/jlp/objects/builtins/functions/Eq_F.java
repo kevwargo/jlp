@@ -24,8 +24,8 @@ public class Eq_F extends LispFunction {
         LispObject obj1 = arguments.get("arg1");
         LispObject obj2 = arguments.get("arg2");
         if (obj1 == obj2) {
-            return LispBool.TRUE;
+            return LispBool.T;
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 }

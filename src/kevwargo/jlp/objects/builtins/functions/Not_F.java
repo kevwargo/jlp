@@ -17,10 +17,10 @@ public class Not_F extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        if (arguments.get("obj") == LispBool.FALSE) {
-            return LispBool.TRUE;
+        if (arguments.get("obj") == LispBool.NIL) {
+            return LispBool.T;
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
 }

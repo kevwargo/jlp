@@ -74,7 +74,7 @@ public class Defun_M extends LispFunction {
 
         protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
             Iterator<LispObject> bodyIterator = body.iterator();
-            LispObject result = LispBool.FALSE;
+            LispObject result = LispBool.NIL;
             HashMap<String, LispObject> map = new HashMap<String, LispObject>();
             map.put("return", new ReturnFunction());
             LispNamespace bodyNamespace = defNamespace.prepend(arguments).prepend(map);

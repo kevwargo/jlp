@@ -6,8 +6,8 @@ import kevwargo.jlp.objects.types.TypeInitializer;
 
 public class LispBool extends LispObject {
 
-    public static final LispBool TRUE = new LispBool(true);
-    public static final LispBool FALSE = new LispBool(false);
+    public static final LispBool T = new LispBool(true);
+    public static final LispBool NIL = new LispBool(false);
 
 
     private boolean value;

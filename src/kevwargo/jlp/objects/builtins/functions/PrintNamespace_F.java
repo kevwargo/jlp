@@ -31,6 +31,6 @@ public class PrintNamespace_F extends LispFunction {
             out.println("}");
         }
         out.println("NAMESPACE END");
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 }

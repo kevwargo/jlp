@@ -25,13 +25,13 @@ public class Equalp_F extends Eq_F {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        if (super.callInternal(namespace, arguments) == LispBool.TRUE) {
-            return LispBool.TRUE;
+        if (super.callInternal(namespace, arguments) == LispBool.T) {
+            return LispBool.T;
         }
         if (equalp(arguments.get("arg1"), arguments.get("arg2"))) {
-            return LispBool.TRUE;
+            return LispBool.T;
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
     private boolean equalp(LispObject obj1, LispObject obj2) throws LispException {

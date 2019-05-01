@@ -34,11 +34,11 @@ public class Let_M extends LispFunction {
         while (iterator.hasNext()) {
             LispObject mapping = iterator.next();
             if (mapping.isInstance(LispType.SYMBOL)) {
-                mappings.put(((LispSymbol)mapping).getName(), LispBool.FALSE);
+                mappings.put(((LispSymbol)mapping).getName(), LispBool.NIL);
             } else if (mapping.isInstance(LispType.LIST)) {
                 Iterator<LispObject> mappingIterator = ((LispList)mapping).iterator();
                 LispObject varObject = mappingIterator.next().cast(LispType.SYMBOL);
-                LispObject valObject = LispBool.FALSE;
+                LispObject valObject = LispBool.NIL;
                 if (mappingIterator.hasNext()) {
                     valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));
                 }
@@ -51,7 +51,7 @@ public class Let_M extends LispFunction {
             }
         }
         LispNamespace localNamespace = namespace.prepend(mappings);
-        LispObject result = LispBool.FALSE;
+        LispObject result = LispBool.NIL;
         Iterator<LispObject> bodyIterator = ((LispList)arguments.get("body")).iterator();
         while (bodyIterator.hasNext()) {
             result = bodyIterator.next().eval(localNamespace);

@@ -65,7 +65,7 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     public LispObject eval(LispNamespace namespace) throws LispException {
         Iterator<LispObject> iterator = iterator();
         if (! iterator.hasNext()) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
         LispObject function = iterator.next().eval(namespace);
         boolean isMacro = function.isInstance(LispType.MACRO);

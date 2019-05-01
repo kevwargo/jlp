@@ -22,12 +22,12 @@ public class While_M extends LoopBase {
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject cond = arguments.get("cond");
         LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
-        while (cond.eval(namespace) != LispBool.FALSE) {
+        while (cond.eval(namespace) != LispBool.NIL) {
             if (executeBody(namespace, body)) {
                 break;
             }
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
 }

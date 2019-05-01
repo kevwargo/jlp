@@ -50,7 +50,7 @@ public abstract class Caller extends LispFunction {
             return ((LispFloat)lispObject.cast(LispType.FLOAT)).getValue();
         }
         if (lispObject.isInstance(LispType.BOOL)) {
-            return lispObject == LispBool.TRUE;
+            return lispObject == LispBool.T;
         }
         if (lispObject.isInstance(LispType.LIST)) {
             LispList lispList = (LispList)lispObject.cast(LispType.LIST);

@@ -20,7 +20,7 @@ public class ListType extends LispType {
             result.add(arguments.next());
         }
         if (result.isEmpty()) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
         return new LispList(result);
     }

@@ -23,7 +23,7 @@ public class LoadClass extends LispFunction {
         try {
             return new LispJavaObject(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            return LispBool.FALSE;
+            return LispBool.NIL;
         }
     }
 

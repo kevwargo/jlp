@@ -21,10 +21,10 @@ public class Setq_M extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         Iterator<LispObject> iterator = ((LispList)arguments.get("defs").cast(LispType.LIST)).iterator();
-        LispObject result = LispBool.FALSE;
+        LispObject result = LispBool.NIL;
         while (iterator.hasNext()) {
             LispSymbol var = (LispSymbol)iterator.next().cast(LispType.SYMBOL);
-            LispObject val = LispBool.FALSE;
+            LispObject val = LispBool.NIL;
             if (iterator.hasNext()) {
                 val = iterator.next().eval(namespace);
             }

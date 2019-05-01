@@ -21,9 +21,9 @@ public class IsInstance_F extends LispFunction {
         LispObject obj = arguments.get("obj");
         LispType type = (LispType)arguments.get("type").cast(LispType.TYPE);
         if (obj.isInstance(type)) {
-            return LispBool.TRUE;
+            return LispBool.T;
         }
-        return LispBool.FALSE;
+        return LispBool.NIL;
     }
 
 }
