@@ -77,6 +77,7 @@ public class Defun_M extends LispFunction {
             LispObject result = LispBool.NIL;
             HashMap<String, LispObject> map = new HashMap<String, LispObject>();
             map.put("return", new ReturnFunction());
+            map.put("$", this);
             LispNamespace bodyNamespace = defNamespace.prepend(arguments).prepend(map);
             try {
                 while (bodyIterator.hasNext()) {
