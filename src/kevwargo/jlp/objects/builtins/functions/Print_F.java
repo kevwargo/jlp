@@ -16,7 +16,7 @@ public class Print_F extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject object = arguments.get("obj");
-        System.out.println(object.toString());
+        namespace.getOutput().println(object.toString());
         return object;
     }
     

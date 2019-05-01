@@ -2,6 +2,7 @@ package kevwargo.jlp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -126,7 +127,14 @@ public class LispProcessor {
     }
 
     public void process(LispParser parser) throws IOException, LispException {
+        process(parser, System.out);
+    }
+    
+    public void process(LispParser parser, PrintStream outStream) throws IOException, LispException {
         LispObject lispObject;
+        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        map.put("*out*", new LispJavaObject(outStream));
+        LispNamespace namespace = this.namespace.prepend(map);
         while ((lispObject = parser.read()) != null) {
             try {
                 LispObject result = lispObject.eval(namespace);

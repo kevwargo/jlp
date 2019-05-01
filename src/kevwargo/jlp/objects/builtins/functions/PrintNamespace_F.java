@@ -1,7 +1,9 @@
 package kevwargo.jlp.objects.builtins.functions;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -19,15 +21,16 @@ public class PrintNamespace_F extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         HashMap<String, LispObject> components[] = namespace.getComponents();
-        System.out.println("NAMESPACE BEGIN");
+        PrintStream out = namespace.getOutput();
+        out.println("NAMESPACE BEGIN");
         for (HashMap<String, LispObject> component : components) {
-            System.out.println("{");
+            out.println("{");
             for (Map.Entry<String, LispObject> entry : component.entrySet()) {
-                System.out.printf("\t%s: %s\n", entry.getKey(), entry.getValue().toString());
+                out.printf("\t%s: %s\n", entry.getKey(), entry.getValue().toString());
             }
-            System.out.println("}");
+            out.println("}");
         }
-        System.out.println("NAMESPACE END");
+        out.println("NAMESPACE END");
         return LispBool.FALSE;
     }
 }
