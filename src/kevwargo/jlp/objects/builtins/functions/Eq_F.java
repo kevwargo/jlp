@@ -23,7 +23,7 @@ public class Eq_F extends LispFunction {
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject obj1 = arguments.get("arg1");
         LispObject obj2 = arguments.get("arg2");
-        if (obj1.equals(obj2)) {
+        if (obj1 == obj2) {
             return LispBool.TRUE;
         }
         return LispBool.FALSE;

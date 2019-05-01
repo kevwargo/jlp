@@ -3,6 +3,7 @@ package kevwargo.jlp.parser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Stack;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
@@ -20,15 +21,17 @@ public class LispParser {
     private LispScanner scanner;
     private Stack<LispList> sexpStack;
     private LispList currentSexp;
+    private HashMap<String, LispSymbol> symbolMap;
     
 
     public LispParser(String filename) throws IOException {
         this(new FileInputStream(filename));
     }
-
+    
     public LispParser(InputStream stream) {
         scanner = new LispScanner(stream);
         sexpStack = new Stack<LispList>();
+        symbolMap = new HashMap<String, LispSymbol>();
     }
 
     public LispObject read() throws LispException {
@@ -76,7 +79,7 @@ public class LispParser {
                     if (specialName.equals("'")) {
                         specialName = "quote";
                     }
-                    currentSexp = (new LispList(true)).add(new LispSymbol(specialName));
+                    currentSexp = (new LispList(true)).add(getSymbol(specialName));
                     break;
                 default:
                     if ((object = processToken(token)) != null) {
@@ -88,6 +91,15 @@ public class LispParser {
             throw new LispException("End of file during parsing");
         }
         return null;
+    }
+
+    private LispSymbol getSymbol(String name) {
+        LispSymbol symbol = symbolMap.get(name);
+        if (symbol == null) {
+            symbol = new LispSymbol(name);
+            symbolMap.put(name, symbol);
+        }
+        return symbol;
     }
 
     private LispObject processToken(LispToken token) throws LispException {
@@ -105,7 +117,7 @@ public class LispParser {
                         try {
                             object = new LispFloat(Double.parseDouble(token.getValue()));
                         } catch (NumberFormatException nfe1) {
-                            object = new LispSymbol(token.getValue());
+                            object = getSymbol(token.getValue());
                         }
                     }
                 }

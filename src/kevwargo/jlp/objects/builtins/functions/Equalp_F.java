@@ -25,7 +25,7 @@ public class Equalp_F extends Eq_F {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        if (super.callInternal(namespace, arguments).equals(LispBool.TRUE)) {
+        if (super.callInternal(namespace, arguments) == LispBool.TRUE) {
             return LispBool.TRUE;
         }
         if (equalp(arguments.get("arg1"), arguments.get("arg2"))) {
