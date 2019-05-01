@@ -21,7 +21,7 @@ public class Append_F extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
-        Iterator<LispObject> argsIterator = ((LispList)arguments.get("args")).iterator();
+        Iterator<LispObject> argsIterator = ((LispList)arguments.get("args").cast(LispType.LIST)).iterator();
         while (argsIterator.hasNext()) {
             LispObject list = argsIterator.next().cast(LispType.LIST);
             Iterator<LispObject> listIterator = ((LispList)list).iterator();

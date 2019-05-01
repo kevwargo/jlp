@@ -16,6 +16,7 @@
 	<target name="dist" depends="compile">
 		<jar destfile="${package-name}">
 			<fileset dir="build" />
+			<fileset dir="resource" />
 			<manifest>
 				<attribute name="Main-Class" value="kevwargo.jlp.Main"/>
 			</manifest>

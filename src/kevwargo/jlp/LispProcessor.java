@@ -20,6 +20,7 @@ import kevwargo.jlp.objects.builtins.functions.IsInstance_F;
 import kevwargo.jlp.objects.builtins.functions.Minus_F;
 import kevwargo.jlp.objects.builtins.functions.Multiply_F;
 import kevwargo.jlp.objects.builtins.functions.Not_F;
+import kevwargo.jlp.objects.builtins.functions.Nth_F;
 import kevwargo.jlp.objects.builtins.functions.Plus_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
@@ -62,7 +63,11 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
-        
+        initNamespace();
+        loadInitFile();
+    }
+
+    private void initNamespace() {
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
 
         map.put("object", LispType.OBJECT);
@@ -95,6 +100,7 @@ public class LispProcessor {
         map.put("while", new While_M());
         map.put("for", new For_M());
         map.put("progn", new Progn_M());
+        map.put("nth", new Nth_F());
         map.put("lambda", new Lambda_M());
         map.put("setq", new Setq_M());
         map.put("eval", new Eval_F());
@@ -119,7 +125,20 @@ public class LispProcessor {
         map.put("%set", new AccessField(true));
 
         namespace = new LispNamespace(map);
+    }
 
+    private void loadInitFile() {
+        InputStream is = getClass().getResourceAsStream("/jlp/init.lisp");
+        if (is == null) {
+            return;
+        }
+
+        LispParser parser = new LispParser(is);
+        try {
+            process(parser);
+        } catch (LispException e) {
+            e.printStackTrace();
+        }
     }
 
     public void define(String name, LispObject definition) {

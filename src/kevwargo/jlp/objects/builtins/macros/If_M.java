@@ -19,11 +19,11 @@ public class If_M extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject result;
-        if (! arguments.get("condition").eval(namespace).equals(LispBool.NIL)) {
+        if (arguments.get("condition").eval(namespace) != LispBool.NIL) {
             result = arguments.get("true").eval(namespace);
         } else {
             result = LispBool.NIL;
-            Iterator<LispObject> iterator = ((LispList)arguments.get("false")).iterator();
+            Iterator<LispObject> iterator = ((LispList)arguments.get("false").cast(LispType.LIST)).iterator();
             while (iterator.hasNext()) {
                 result = iterator.next().eval(namespace);
             }
