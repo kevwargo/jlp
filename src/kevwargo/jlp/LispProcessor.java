@@ -16,7 +16,7 @@ import kevwargo.jlp.objects.builtins.functions.Eq_F;
 import kevwargo.jlp.objects.builtins.functions.Equalp_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.Format_F;
-import kevwargo.jlp.objects.builtins.functions.Isinstance_F;
+import kevwargo.jlp.objects.builtins.functions.IsInstance_F;
 import kevwargo.jlp.objects.builtins.functions.Minus_F;
 import kevwargo.jlp.objects.builtins.functions.Multiply_F;
 import kevwargo.jlp.objects.builtins.functions.Not_F;
@@ -109,7 +109,7 @@ public class LispProcessor {
         map.put("not", new Not_F());
         map.put("eq", new Eq_F());
         map.put("equalp", new Equalp_F());
-        map.put("isinstance", new Isinstance_F());
+        map.put("isinstance", new IsInstance_F());
         map.put("collect", new Collect_M());
 
         map.put("%class", new LoadClass());

@@ -11,9 +11,9 @@ import kevwargo.jlp.objects.types.LispType;
 import java.util.HashMap;
 
 
-public class Isinstance_F extends LispFunction {
+public class IsInstance_F extends LispFunction {
 
-    public Isinstance_F() {
+    public IsInstance_F() {
         super(LispType.FUNCTION, "isinstance", new FormalArguments().pos("obj").pos("type"));
     }
 
