@@ -6,4 +6,8 @@ public class LispException extends Exception {
         super(String.format(fmt, args));
     }
 
+    public LispException(Throwable t) {
+        super(t);
+    }
+
 }

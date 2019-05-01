@@ -73,6 +73,7 @@ public class TypeInitializer {
         case "float":
         case "int":
         case "builtin-function":
+        case "java-object":
             objectTypeDeferMap.defer(type, "type");
             baseTypesDeferMap.defer(type, new String[] { "object" });
             break;
@@ -94,6 +95,7 @@ public class TypeInitializer {
         case "bool":    return new BoolType();
         case "float":   return new FloatType();
         case "int":     return new IntType();
+        case "java-object": return new JavaObjectType();
 
         case "builtin-function":
         case "macro":

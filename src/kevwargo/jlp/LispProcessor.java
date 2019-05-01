@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
 import kevwargo.jlp.objects.builtins.functions.Apply_F;
@@ -21,6 +22,10 @@ import kevwargo.jlp.objects.builtins.functions.Not_F;
 import kevwargo.jlp.objects.builtins.functions.Plus_F;
 import kevwargo.jlp.objects.builtins.functions.PrintNamespace_F;
 import kevwargo.jlp.objects.builtins.functions.Print_F;
+import kevwargo.jlp.objects.builtins.javareflect.AccessField;
+import kevwargo.jlp.objects.builtins.javareflect.CallMethod;
+import kevwargo.jlp.objects.builtins.javareflect.CreateInstance;
+import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
 import kevwargo.jlp.objects.builtins.macros.Collect_M;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
@@ -68,6 +73,7 @@ public class LispProcessor {
         map.put("list", LispType.LIST);
         map.put("symbol", LispType.SYMBOL);
         map.put("method", LispType.METHOD);
+        map.put("java-object", LispType.JAVA_OBJECT);
         
         map.put("print", new Print_F());
         map.put("format", new Format_F());
@@ -99,6 +105,12 @@ public class LispProcessor {
         map.put("equalp", new Equalp_F());
         map.put("isinstance", new Isinstance_F());
         map.put("collect", new Collect_M());
+
+        map.put("%class", new LoadClass());
+        map.put("%new", new CreateInstance());
+        map.put("%call", new CallMethod());
+        map.put("%get", new AccessField(false));
+        map.put("%set", new AccessField(true));
 
         namespace = new LispNamespace(map);
 
