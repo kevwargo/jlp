@@ -122,6 +122,10 @@ public class LispProcessor {
 
     }
 
+    public void define(String name, LispObject definition) {
+        namespace.bind(name, definition);
+    }
+
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
