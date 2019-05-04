@@ -1,6 +1,5 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.objects.types.TypeInitializer;
 
 

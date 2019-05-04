@@ -16,9 +16,11 @@ import kevwargo.jlp.objects.builtins.functions.Eq_F;
 import kevwargo.jlp.objects.builtins.functions.Equalp_F;
 import kevwargo.jlp.objects.builtins.functions.Eval_F;
 import kevwargo.jlp.objects.builtins.functions.Format_F;
+import kevwargo.jlp.objects.builtins.functions.HasNext_F;
 import kevwargo.jlp.objects.builtins.functions.IsInstance_F;
 import kevwargo.jlp.objects.builtins.functions.Minus_F;
 import kevwargo.jlp.objects.builtins.functions.Multiply_F;
+import kevwargo.jlp.objects.builtins.functions.Next_F;
 import kevwargo.jlp.objects.builtins.functions.Not_F;
 import kevwargo.jlp.objects.builtins.functions.Nth_F;
 import kevwargo.jlp.objects.builtins.functions.Plus_F;
@@ -84,6 +86,7 @@ public class LispProcessor {
         map.put("symbol", LispType.SYMBOL);
         map.put("method", LispType.METHOD);
         map.put("java-object", LispType.JAVA_OBJECT);
+        map.put("iterator", LispType.ITERATOR);
         
         map.put("print", new Print_F());
         map.put("format", new Format_F());
@@ -106,6 +109,8 @@ public class LispProcessor {
         map.put("eval", new Eval_F());
         map.put("print-namespace", new PrintNamespace_F());
         map.put(".", new Dot_M());
+        map.put("next", new Next_F());
+        map.put("has-next", new HasNext_F());
 
         map.put("+", new Plus_F());
         map.put("-", new Minus_F());

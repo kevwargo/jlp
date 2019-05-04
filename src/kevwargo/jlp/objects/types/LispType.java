@@ -32,6 +32,7 @@ public class LispType extends LispObject {
     public static final LispType STRING;
     public static final LispType SYMBOL;
     public static final LispType JAVA_OBJECT;
+    public static final LispType ITERATOR;
     
 
     protected LispType baseTypes[];
@@ -129,6 +130,7 @@ public class LispType extends LispObject {
             STRING = TypeInitializer.instance().initType("string");
             SYMBOL = TypeInitializer.instance().initType("symbol");
             JAVA_OBJECT = TypeInitializer.instance().initType("java-object");
+            ITERATOR = TypeInitializer.instance().initType("iterator");
 
             TypeInitializer.instance().check();
         } catch (LispException e) {

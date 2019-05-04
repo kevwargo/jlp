@@ -40,7 +40,7 @@ public class TypeInitializer {
         return instance;
     }
 
-    public LispType initType(String name) throws LispException {
+    LispType initType(String name) throws LispException {
         LispType type = typeMap.get(name);
         if (type != null) {
             return type;
@@ -74,6 +74,7 @@ public class TypeInitializer {
         case "int":
         case "builtin-function":
         case "java-object":
+        case "iterator":
             objectTypeDeferMap.defer(type, "type");
             baseTypesDeferMap.defer(type, new String[] { "object" });
             break;
@@ -96,6 +97,7 @@ public class TypeInitializer {
         case "float":   return new FloatType();
         case "int":     return new IntType();
         case "java-object": return new JavaObjectType();
+        case "iterator": return new IteratorType();
 
         case "builtin-function":
         case "macro":
