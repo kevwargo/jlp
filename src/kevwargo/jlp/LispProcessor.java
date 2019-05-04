@@ -136,7 +136,7 @@ public class LispProcessor {
         LispParser parser = new LispParser(is);
         try {
             process(parser);
-        } catch (LispException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
