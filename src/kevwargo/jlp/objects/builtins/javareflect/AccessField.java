@@ -10,6 +10,7 @@ import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
+import kevwargo.jlp.objects.LispInt;
 
 
 public class AccessField extends LispFunction {
@@ -22,7 +23,7 @@ public class AccessField extends LispFunction {
     }
 
     private static FormalArguments buildArgs(boolean write) {
-        FormalArguments args = new FormalArguments().pos("object").pos("field");
+        FormalArguments args = new FormalArguments().pos("object").pos("attr");
         if (write) {
             args.pos("value");
         }
@@ -37,7 +38,17 @@ public class AccessField extends LispFunction {
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         LispObject object = arguments.get("object");
-        String fieldName = ((LispString)arguments.get("field").cast(LispType.STRING)).getValue();
+        LispObject attr = arguments.get("attr");
+        if (attr.isInstance(LispType.INT)) {
+            return handleIndex(object, (int)((LispInt)attr.cast(LispType.INT)).getValue(), arguments);
+        }
+        if (attr.isInstance(LispType.STRING)) {
+            return handleField(object, ((LispString)attr.cast(LispType.STRING)).getValue(), arguments);
+        }
+        throw new LispException("attr argument must be an int or a string");
+    }
+
+    private LispObject handleField(LispObject object, String fieldName, HashMap<String, LispObject> arguments) throws LispException {
         Object obj;
         Class<?> clazz;
 
@@ -69,5 +80,22 @@ public class AccessField extends LispFunction {
             throw new LispException(e);
         }
     }
-    
+
+    private LispObject handleIndex(LispObject object, int index, HashMap<String, LispObject> arguments) throws LispException {
+        Object obj = ((LispJavaObject)object.cast(LispType.JAVA_OBJECT)).getObject();
+        if (!obj.getClass().isArray()) {
+            throw new LispException("java-object '%s' is not an array", obj);
+        }
+        Object array[] = (Object[])obj;
+        Object value;
+        if (write) {
+            LispObject valueObj = arguments.get("value");
+            value = ((LispJavaObject)valueObj.cast(LispType.JAVA_OBJECT)).getObject();
+            array[index] = value;
+        } else {
+            value = array[index];
+        }
+        return new LispJavaObject(value);
+    }
+
 }
