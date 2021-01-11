@@ -1,0 +1,17 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>kevwargo.jlp</groupId>
+    <artifactId>jlp</artifactId>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
+    <name>${project.artifactId}</name>
+
+    <build>
+		<sourceDirectory>src</sourceDirectory>
+    </build>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+</project>
