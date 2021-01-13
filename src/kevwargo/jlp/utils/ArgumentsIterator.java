@@ -21,7 +21,7 @@ public class ArgumentsIterator {
     }
 
     public ArgumentsIterator() {
-        this(Collections.emptyIterator(), null, 0);
+        this(new EmptyIterator(), null, 0);
     }
 
     public boolean hasNext() {
@@ -47,12 +47,23 @@ public class ArgumentsIterator {
     public int getLength() {
         return length;
     }
-    
+
     public void setFirst(LispObject first) {
         if (this.first == null) {
             length++;
         }
         this.first = first;
+    }
+
+    private static class EmptyIterator implements Iterator<LispObject> {
+
+        public boolean hasNext() {
+            return false;
+        }
+        public LispObject next() throws NoSuchElementException {
+            throw new NoSuchElementException();
+        }
+
     }
 
 }
