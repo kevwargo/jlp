@@ -15,12 +15,18 @@ import kevwargo.jlp.utils.LispNamespace;
 
 public class Defun_M extends LispFunction {
 
+    public static String NAME = "defun";
+    public static String ARG_NAME = "name";
+    public static String ARG_ARGLIST = "arglist";
+    public static String ARG_BODY = "body";
+
+
     public Defun_M() {
-        this("defun");
+        this(NAME);
     }
 
     public Defun_M(String name) {
-        this(name, (new FormalArguments()).pos("name").pos("arglist").rest("body"));
+        this(name, (new FormalArguments()).pos(ARG_NAME).pos(ARG_ARGLIST).rest(ARG_BODY));
     }
 
     public Defun_M(String name, FormalArguments formalArguments) {
@@ -51,9 +57,9 @@ public class Defun_M extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
-        LispList arglist = (LispList)arguments.get("arglist").cast(LispType.LIST);
-        LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
+        String name = ((LispSymbol)arguments.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
+        LispList arglist = (LispList)arguments.get(ARG_ARGLIST).cast(LispType.LIST);
+        LispList body = (LispList)arguments.get(ARG_BODY).cast(LispType.LIST);
         LispFunction function = createFunction(name, buildArgs(arglist), body, namespace);
         namespace.bind(name, function);
         return function;
