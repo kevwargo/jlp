@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 
 
@@ -22,6 +23,10 @@ public class ArgumentsIterator {
 
     public ArgumentsIterator() {
         this(new EmptyIterator(), null, 0);
+    }
+
+    public ArgumentsIterator(LispList list) {
+        this(list.iterator(), null, list.size());
     }
 
     public boolean hasNext() {

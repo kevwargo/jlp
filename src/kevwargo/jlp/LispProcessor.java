@@ -48,6 +48,7 @@ import kevwargo.jlp.objects.builtins.macros.loop.While_M;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
+import kevwargo.jlp.objects.LispFunction;
 
 public class LispProcessor {
 
@@ -87,7 +88,7 @@ public class LispProcessor {
         map.put("method", LispType.METHOD);
         map.put("java-object", LispType.JAVA_OBJECT);
         map.put("iterator", LispType.ITERATOR);
-        
+
         map.put("print", new Print_F());
         map.put("format", new Format_F());
         map.put("quote", new Quote_M());
@@ -150,6 +151,10 @@ public class LispProcessor {
         namespace.bind(name, definition);
     }
 
+    public void define(LispFunction function) {
+        define(function.getName(), function);
+    }
+
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
@@ -157,7 +162,7 @@ public class LispProcessor {
     public void process(LispParser parser) throws IOException, LispException {
         process(parser, System.out);
     }
-    
+
     public void process(LispParser parser, PrintStream outStream) throws IOException, LispException {
         LispObject lispObject;
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
