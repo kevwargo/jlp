@@ -17,14 +17,13 @@ public abstract class LispFunction extends LispObject {
 
 
     public LispFunction(String name, FormalArguments formalArguments) {
-        super();
-        this.name = name;
-        this.formalArguments = formalArguments;
+        this(LispType.FUNCTION, name, formalArguments);
     }
 
     public LispFunction(LispType type, String name, FormalArguments formalArguments) {
-        this(name, formalArguments);
         setType(type);
+        this.name = name;
+        this.formalArguments = formalArguments;
     }
 
     public String getName() {
