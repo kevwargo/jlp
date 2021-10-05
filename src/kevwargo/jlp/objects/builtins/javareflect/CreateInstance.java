@@ -26,7 +26,7 @@ public class CreateInstance extends LispFunction {
             cls = (Class<?>)((LispJavaObject)classArg.cast(LispType.JAVA_OBJECT)).getObject();
         } else if (classArg.isInstance(LispType.STRING)) {
             try {
-                cls = Class.forName(((LispString)classArg.cast(LispType.STRING)).getValue());
+                cls = DefaultClassLoader.load(((LispString)classArg.cast(LispType.STRING)).getValue());
             } catch (ClassNotFoundException e) {
                 throw new LispException(e);
             }

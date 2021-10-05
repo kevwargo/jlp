@@ -51,14 +51,14 @@ public class AccessField extends LispFunction {
 
     private LispObject handleField(LispObject object, String fieldName, HashMap<String, LispObject> arguments) throws LispException {
         Object obj;
-        Class<?> clazz;
+        Class<?> cls;
 
         if (object.isInstance(LispType.JAVA_OBJECT)) {
             obj = ((LispJavaObject)object.cast(LispType.JAVA_OBJECT)).getObject();
-            clazz = obj.getClass();
+            cls = obj.getClass();
         } else if (object.isInstance(LispType.STRING)) {
             try {
-                clazz = Class.forName(((LispString)object.cast(LispType.STRING)).getValue());
+                cls = DefaultClassLoader.load(((LispString)object.cast(LispType.STRING)).getValue());
             } catch (ClassNotFoundException e) {
                 throw new LispException(e);
             }
@@ -68,7 +68,7 @@ public class AccessField extends LispFunction {
         }
 
         try {
-            Field field = clazz.getField(fieldName);
+            Field field = cls.getField(fieldName);
             if (write) {
                 LispObject valueObj = arguments.get("value");
                 Object value = ((LispJavaObject)valueObj.cast(LispType.JAVA_OBJECT)).getObject();

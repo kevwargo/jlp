@@ -31,7 +31,7 @@ public class CallMethod extends LispFunction {
             cls = object.getClass();
         } else if (lispObject.isInstance(LispType.STRING)) {
             try {
-                cls = Class.forName(((LispString)lispObject.cast(LispType.STRING)).getValue());
+                cls = DefaultClassLoader.load(((LispString)lispObject.cast(LispType.STRING)).getValue());
             } catch (ClassNotFoundException e) {
                 throw new LispException(e);
             }

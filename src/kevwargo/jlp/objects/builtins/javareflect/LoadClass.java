@@ -21,7 +21,7 @@ public class LoadClass extends LispFunction {
     protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
         String className = ((LispString)arguments.get("name").cast(LispType.STRING)).getValue();
         try {
-            return new LispJavaObject(Class.forName(className));
+            return new LispJavaObject(DefaultClassLoader.load(className));
         } catch (ClassNotFoundException e) {
             return LispBool.NIL;
         }
