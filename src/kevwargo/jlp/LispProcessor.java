@@ -30,6 +30,8 @@ import kevwargo.jlp.objects.builtins.javareflect.AccessField;
 import kevwargo.jlp.objects.builtins.javareflect.CallMethod;
 import kevwargo.jlp.objects.builtins.javareflect.CreateInstance;
 import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
+import kevwargo.jlp.objects.builtins.javareflect.LFLong;
+import kevwargo.jlp.objects.builtins.javareflect.LFFloat;
 import kevwargo.jlp.objects.builtins.macros.Collect_M;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
@@ -129,6 +131,8 @@ public class LispProcessor {
         map.put("%call", new CallMethod());
         map.put("%get", new AccessField(false));
         map.put("%set", new AccessField(true));
+        map.put(LFLong.NAME, new LFLong());
+        map.put(LFFloat.NAME, new LFFloat());
 
         namespace = new LispNamespace(map);
     }
