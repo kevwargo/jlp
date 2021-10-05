@@ -13,7 +13,6 @@ public class Main {
             parser = new LispParser(System.in);
         }
         LispProcessor proc = LispProcessor.getInstance();
-        proc.setVerbose(true);
         proc.process(parser);
     }
 
