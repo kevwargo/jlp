@@ -50,4 +50,13 @@ public class LispString extends LispObject {
             return false;
         }
     }
+
+    public Object getJavaObject() {
+        return value;
+    }
+
+    public Class<?> getJavaClass() {
+        return String.class;
+    }
+
 }

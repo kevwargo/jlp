@@ -2,15 +2,16 @@ package kevwargo.jlp.objects.builtins.javareflect;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispInt;
 
 
 public class AccessField extends LispFunction {

@@ -25,4 +25,12 @@ public class LispJavaObject extends LispObject {
         return object.toString();
     }
 
+    public Object getJavaObject() {
+        return object;
+    }
+
+    public Class<?> getJavaClass() {
+        return object.getClass();
+    }
+
 }

@@ -34,4 +34,12 @@ public class LispInt extends LispObject {
         return new Long(value);
     }
 
+    public Object getJavaObject() {
+        return (int)value;
+    }
+
+    public Class<?> getJavaClass() {
+        return Integer.TYPE;
+    }
+
 }

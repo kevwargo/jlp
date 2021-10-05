@@ -26,5 +26,13 @@ public class LispBool extends LispObject {
     public String repr() {
         return value ? "t" : "nil";
     }
-    
+
+    public Object getJavaObject() {
+        return value;
+    }
+
+    public Class<?> getJavaClass() {
+        return Boolean.TYPE;
+    }
+
 }

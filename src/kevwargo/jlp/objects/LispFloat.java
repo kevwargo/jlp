@@ -33,5 +33,13 @@ public class LispFloat extends LispObject {
     public Object format() {
         return new Double(value);
     }
-    
+
+    public Object getJavaObject() {
+        return value;
+    }
+
+    public Class<?> getJavaClass() {
+        return Double.TYPE;
+    }
+
 }

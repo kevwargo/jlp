@@ -124,4 +124,12 @@ public class LispObject {
         return toString();
     }
 
+    public Object getJavaObject() {
+        return this;
+    }
+
+    public Class<?> getJavaClass() {
+        return getClass();
+    }
+
 }
