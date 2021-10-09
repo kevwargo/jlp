@@ -19,3 +19,8 @@
        (if (eval (car clause))
            (return (append (list 'progn)
                            (cdr clause))))))
+
+(defun %~> (object &rest methods)
+  (for (method methods)
+       (setq object (%call object method)))
+  object)
