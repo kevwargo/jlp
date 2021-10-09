@@ -37,43 +37,6 @@ public class LispObject {
         return this.type.isSubtype(type);
     }
 
-    public LispObject getAttr(String name, boolean withDict) {
-        LispObject attr;
-        if (withDict) {
-            attr = dict.get(name);
-            if (attr != null) {
-                return attr;
-            }
-        }
-        attr = getAttr(name, type);
-        if (attr != null && attr.isInstance(LispType.FUNCTION)) {
-            try {
-                return new LispMethod(this, (LispFunction)attr.cast(LispType.FUNCTION));
-            } catch (LispCastException e) {
-                // should not happen
-                return null;
-            }
-        }
-        return attr;
-    }
-
-    private LispObject getAttr(String name, LispType type) {
-        if (type.dict.containsKey(name)) {
-            return type.dict.get(name);
-        }
-        for (LispType baseType : type.getBaseTypes()) {
-            LispObject attr = getAttr(name, baseType);
-            if (attr != null) {
-                return attr;
-            }
-        }
-        return null;
-    }
-
-    public void setAttr(String name, LispObject value) {
-        dict.put(name, value);
-    }
-
     public void defineCast(LispType type, LispObject instance) {
         castMap.put(type, instance);
     }
@@ -99,9 +62,29 @@ public class LispObject {
         return instance;
     }
 
-
     public LispObject eval(LispNamespace namespace) throws LispException {
         return this;
+    }
+
+    public LispObject getAttr(String name, boolean withDict) {
+        LispObject attr;
+        if (withDict) {
+            attr = dict.get(name);
+            if (attr != null) {
+                return attr;
+            }
+        }
+        attr = getAttr(name, type);
+        if (attr != null) {
+            try {
+                return new LispMethod(this, (LispFunction)attr.cast(LispType.FUNCTION));
+            } catch (LispCastException e) {}
+        }
+        return attr;
+    }
+
+    public void setAttr(String name, LispObject value) {
+        dict.put(name, value);
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
@@ -132,4 +115,16 @@ public class LispObject {
         return getClass();
     }
 
+    private LispObject getAttr(String name, LispType type) {
+        if (type.dict.containsKey(name)) {
+            return type.dict.get(name);
+        }
+        for (LispType baseType : type.getBaseTypes()) {
+            LispObject attr = getAttr(name, baseType);
+            if (attr != null) {
+                return attr;
+            }
+        }
+        return null;
+    }
 }
