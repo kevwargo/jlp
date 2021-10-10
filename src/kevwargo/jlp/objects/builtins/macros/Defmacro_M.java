@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -29,7 +30,7 @@ public class Defmacro_M extends Defun_M {
             super(type, name, formalArguments, body, namespace);
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             return super.callInternal(namespace, arguments).eval(namespace);
         }
 

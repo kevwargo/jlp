@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispObject;
 
@@ -11,7 +12,7 @@ public class LetStar_M extends Let_M {
         super("let*");
     }
 
-    protected LispNamespace getVarValNamespace(LispNamespace namespace, HashMap<String, LispObject> prevDefs) {
+    protected LispNamespace getVarValNamespace(LispNamespace namespace, Map<String, LispObject> prevDefs) {
         return namespace.prepend(prevDefs);
     }
     

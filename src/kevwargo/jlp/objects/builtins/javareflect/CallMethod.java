@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects.builtins.javareflect;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
@@ -21,7 +21,7 @@ public class CallMethod extends LispFunction {
         super(LispType.FUNCTION, "%call", new FormalArguments("args").pos("object").pos("method"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         Object object;
         Class<?> cls;
         LispObject lispObject = arguments.get("object");

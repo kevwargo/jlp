@@ -1,10 +1,10 @@
 package kevwargo.jlp.objects.types;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -33,7 +33,7 @@ public class LispType extends LispObject {
     public static final LispType SYMBOL;
     public static final LispType JAVA_OBJECT;
     public static final LispType ITERATOR;
-    
+
 
     protected LispType baseTypes[];
     protected String name;
@@ -103,7 +103,7 @@ public class LispType extends LispObject {
             TypeInitializer.instance().deferTypeSet(this, "builtin-function");
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             LispObject self = arguments.get("self");
             LispList args = (LispList)arguments.get("args").cast(LispType.LIST);
             ArgumentsIterator it = new ArgumentsIterator(args.iterator(), namespace, args.size());

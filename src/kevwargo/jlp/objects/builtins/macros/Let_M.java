@@ -2,6 +2,8 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -23,13 +25,13 @@ public class Let_M extends LispFunction {
         super(LispType.MACRO, name, new FormalArguments().pos("mappings").rest("body"));
     }
 
-    protected LispNamespace getVarValNamespace(LispNamespace namespace, HashMap<String, LispObject> prevDefs) {
+    protected LispNamespace getVarValNamespace(LispNamespace namespace, Map<String, LispObject> prevDefs) {
         return namespace;
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject mappingsObject = arguments.get("mappings").cast(LispType.LIST);
-        HashMap<String, LispObject> mappings = new HashMap<String, LispObject>();
+        Map<String, LispObject> mappings = new HashMap<String, LispObject>();
         Iterator<LispObject> iterator = ((LispList)mappingsObject).iterator();
         while (iterator.hasNext()) {
             LispObject mapping = iterator.next();
@@ -58,5 +60,5 @@ public class Let_M extends LispFunction {
         }
         return result;
     }
-    
+
 }

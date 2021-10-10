@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
@@ -10,13 +11,14 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
+import kevwargo.jlp.objects.LispString;
+import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.types.LispCastException;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispSymbol;
+
 
 public class Equalp_F extends Eq_F {
 
@@ -24,7 +26,7 @@ public class Equalp_F extends Eq_F {
         super("equalp");
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         if (super.callInternal(namespace, arguments) == LispBool.T) {
             return LispBool.T;
         }

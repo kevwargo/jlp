@@ -6,6 +6,9 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.Append_F;
@@ -29,9 +32,9 @@ import kevwargo.jlp.objects.builtins.functions.Print_F;
 import kevwargo.jlp.objects.builtins.javareflect.AccessField;
 import kevwargo.jlp.objects.builtins.javareflect.CallMethod;
 import kevwargo.jlp.objects.builtins.javareflect.CreateInstance;
-import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
-import kevwargo.jlp.objects.builtins.javareflect.LFLong;
 import kevwargo.jlp.objects.builtins.javareflect.LFFloat;
+import kevwargo.jlp.objects.builtins.javareflect.LFLong;
+import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
 import kevwargo.jlp.objects.builtins.macros.Collect_M;
 import kevwargo.jlp.objects.builtins.macros.Defclass_M;
 import kevwargo.jlp.objects.builtins.macros.Defmacro_M;
@@ -46,11 +49,10 @@ import kevwargo.jlp.objects.builtins.macros.Quote_M;
 import kevwargo.jlp.objects.builtins.macros.Setq_M;
 import kevwargo.jlp.objects.builtins.macros.loop.For_M;
 import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
-import kevwargo.jlp.objects.builtins.macros.loop.While_M;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispFunction;
+
 
 public class LispProcessor {
 
@@ -73,7 +75,7 @@ public class LispProcessor {
     }
 
     private void initNamespace() {
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
 
         map.put("object", LispType.OBJECT);
         map.put("type", LispType.TYPE);
@@ -103,7 +105,6 @@ public class LispProcessor {
         map.put("let*", new LetStar_M());
         map.put("append", new Append_F());
         map.put("if", new If_M());
-        map.put("while", new While_M());
         map.put("for", new For_M());
         map.put("progn", new Progn_M());
         map.put("nth", new Nth_F());
@@ -181,5 +182,4 @@ public class LispProcessor {
             } catch (LispLoopException e) {}
         }
     }
-
 }

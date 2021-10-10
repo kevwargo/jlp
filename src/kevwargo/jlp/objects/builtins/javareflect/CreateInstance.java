@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects.builtins.javareflect;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
+import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
@@ -19,7 +19,7 @@ public class CreateInstance extends LispFunction {
         super(LispType.FUNCTION, "%new", new FormalArguments("args").pos("class"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         Class<?> cls;
         LispObject classArg = arguments.get("class");
         if (classArg.isInstance(LispType.JAVA_OBJECT)) {

@@ -2,6 +2,8 @@ package kevwargo.jlp.objects.builtins.macros.loop;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -20,7 +22,7 @@ public abstract class LoopBase extends LispFunction {
     }
 
     protected boolean executeBody(LispNamespace namespace, LispList body) throws LispException {
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         map.put("break", new LoopExit(false));
         map.put("continue", new LoopExit(true));
         LispNamespace bodyNamespace = namespace.prepend(map);
@@ -52,7 +54,7 @@ public abstract class LoopBase extends LispFunction {
             this.isContinue = isContinue;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             long level = 1;
             LispObject levelObject = arguments.get("level");
             if (levelObject != null) {

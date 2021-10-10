@@ -3,6 +3,7 @@ package kevwargo.jlp.objects.builtins.macros;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -20,8 +21,9 @@ public class Defclass_M extends LispFunction {
         super(LispType.MACRO, "defclass", new FormalArguments().pos("name").pos("bases").rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
+
         LispList basesList = (LispList)arguments.get("bases").cast(LispType.LIST);
         LispType bases[];
         if (basesList.size() > 0) {
@@ -29,20 +31,21 @@ public class Defclass_M extends LispFunction {
         } else {
             bases = new LispType[] { LispType.OBJECT };
         }
-        int pos = 0;
-        for (LispObject base : basesList) {
-            bases[pos++] = (LispType)base.eval(namespace).cast(LispType.TYPE);
+        Iterator<LispObject> it = basesList.iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            bases[i] = (LispType)it.next().eval(namespace).cast(LispType.TYPE);
         }
+        
         Overlay overlay = new Overlay();
         LispNamespace classNamespace = namespace.prepend(overlay);
         for (LispObject form : (LispList)arguments.get("body")) {
             form.eval(classNamespace);
         }
-        HashMap<String, LispObject> dict = new HashMap<String, LispObject>();
+        Map<String, LispObject> dict = new HashMap<String, LispObject>();
         dict.putAll(overlay);
-        LispClass klass = new LispClass(name, bases, dict);
-        namespace.bind(name, klass);
-        return klass;
+        LispClass cls = new LispClass(name, bases, dict);
+        namespace.bind(name, cls);
+        return cls;
     }
 
 
@@ -54,7 +57,7 @@ public class Defclass_M extends LispFunction {
 
     private static class LispClass extends LispType {
 
-        LispClass(String name, LispType bases[], HashMap<String, LispObject> dict) {
+        LispClass(String name, LispType bases[], Map<String, LispObject> dict) {
             super(name);
             setType(LispType.TYPE);
             setBaseTypes(bases);
@@ -85,5 +88,5 @@ public class Defclass_M extends LispFunction {
         }
 
     }
-    
+
 }

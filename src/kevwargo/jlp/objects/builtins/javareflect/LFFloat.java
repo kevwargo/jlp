@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.builtins.javareflect;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
@@ -22,7 +23,7 @@ public class LFFloat extends LispFunction {
         super(LispType.FUNCTION, NAME, new FormalArguments().pos(ARG_NUMBER));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         float value;
         LispObject number = arguments.get(ARG_NUMBER);
 
@@ -42,6 +43,7 @@ public class LFFloat extends LispFunction {
 
         return new JavaFloat(value);
     }
+
 
     private static class JavaFloat extends LispJavaObject {
 

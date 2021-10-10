@@ -2,6 +2,8 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -17,9 +19,9 @@ public class Collect_M extends LispFunction {
         super(LispType.MACRO, "collect", new FormalArguments("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispList body = (LispList)arguments.get("body");
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         LispList result = new LispList();
         map.put("yield", new YieldFunction(result, false));
         map.put("yield-from", new YieldFunction(result, true));
@@ -42,7 +44,7 @@ public class Collect_M extends LispFunction {
             this.from = from;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             LispObject obj = arguments.get("obj");
             if (from) {
                 LispList list = (LispList)obj.cast(LispType.LIST);

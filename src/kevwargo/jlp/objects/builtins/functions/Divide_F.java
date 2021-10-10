@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
@@ -19,7 +20,7 @@ public class Divide_F extends ArithmeticFunction {
         super("/", new FormalArguments().pos("first"));
     }
 
-    protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException {
+    protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
         LispObject first = arguments.get("first");
         long lv = ((LispInt)first.cast(LispType.INT)).getValue();
         double dv = ((LispFloat)first.cast(LispType.FLOAT)).getValue();
@@ -27,7 +28,7 @@ public class Divide_F extends ArithmeticFunction {
         return new Params(lv, dv, it);
     }
 
-    protected boolean isDouble(HashMap<String, LispObject> arguments) throws LispCastException {
+    protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
         LispObject first = arguments.get("first");
         if (first.isInstance(LispType.FLOAT)) {
             return true;

@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.types;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
@@ -27,7 +28,7 @@ public class ObjectType extends LispType {
             TypeInitializer.instance().deferTypeSet(this, "builtin-function");
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             return new LispString(arguments.get("self").toString());
         }
 
@@ -40,7 +41,7 @@ public class ObjectType extends LispType {
             TypeInitializer.instance().deferTypeSet(this, "builtin-function");
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             return new LispString(arguments.get("self").repr());
         }
 

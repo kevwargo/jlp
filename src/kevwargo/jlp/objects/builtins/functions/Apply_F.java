@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -17,7 +18,7 @@ public class Apply_F extends LispFunction {
         super(LispType.FUNCTION, "apply", new FormalArguments().pos("func").pos("args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject func = arguments.get("func");
         LispList args = (LispList)arguments.get("args").cast(LispType.LIST);
         LispNamespace argsNamespace = func.isInstance(LispType.MACRO) ? null : namespace;

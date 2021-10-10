@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
@@ -16,8 +17,8 @@ public class Quote_M extends LispFunction {
         super(LispType.MACRO, "quote", new FormalArguments().pos("obj"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         return arguments.get("obj");
     }
-    
+
 }

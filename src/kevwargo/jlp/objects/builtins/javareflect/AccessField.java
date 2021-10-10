@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects.builtins.javareflect;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
@@ -37,7 +37,7 @@ public class AccessField extends LispFunction {
         this.write = write;
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject object = arguments.get("object");
         LispObject attr = arguments.get("attr");
         if (attr.isInstance(LispType.INT)) {
@@ -49,7 +49,7 @@ public class AccessField extends LispFunction {
         throw new LispException("attr argument must be an int or a string");
     }
 
-    private LispObject handleField(LispObject object, String fieldName, HashMap<String, LispObject> arguments) throws LispException {
+    private LispObject handleField(LispObject object, String fieldName, Map<String, LispObject> arguments) throws LispException {
         Object obj;
         Class<?> cls;
 
@@ -82,7 +82,7 @@ public class AccessField extends LispFunction {
         }
     }
 
-    private LispObject handleIndex(LispObject object, int index, HashMap<String, LispObject> arguments) throws LispException {
+    private LispObject handleIndex(LispObject object, int index, Map<String, LispObject> arguments) throws LispException {
         Object obj = ((LispJavaObject)object.cast(LispType.JAVA_OBJECT)).getObject();
         if (!obj.getClass().isArray()) {
             throw new LispException("java-object '%s' is not an array", obj);

@@ -1,12 +1,14 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
+import kevwargo.jlp.objects.types.LispCastException;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
@@ -14,21 +16,21 @@ import kevwargo.jlp.utils.LispNamespace;
 
 public class Dot_M extends LispFunction {
 
+    public static final String NAME = ".";
+    public static final String ARG_OBJ = "obj";
+    public static final String ARG_ATTR = "attr";
+    public static final String ARG_REST = "rest";
+
     public Dot_M() {
-        super(LispType.MACRO, ".", new FormalArguments("rest").pos("obj").pos("attr"));
+        super(LispType.MACRO, ".", new FormalArguments(ARG_REST).pos(ARG_OBJ).pos(ARG_ATTR));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-        LispObject obj = arguments.get("obj").eval(namespace);
-        LispObject attrObj = arguments.get("attr");
-        String attrName;
-        if (attrObj.isInstance(LispType.SYMBOL)) {
-            attrName = ((LispSymbol)attrObj.cast(LispType.SYMBOL)).getName();
-        } else {
-            attrName = attrObj.eval(namespace).toString();
-        }
-        if (((LispList)arguments.get("rest")).size() > 0) {
-            LispObject value = ((LispList)arguments.get("rest")).iterator().next().eval(namespace);
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        LispObject obj = arguments.get(ARG_OBJ).eval(namespace);
+        String attrName = getAttrName(namespace, arguments);
+
+        if (((LispList)arguments.get(ARG_REST)).size() > 0) {
+            LispObject value = ((LispList)arguments.get(ARG_REST)).iterator().next().eval(namespace);
             obj.setAttr(attrName, value);
             return value;
         } else {
@@ -39,5 +41,14 @@ public class Dot_M extends LispFunction {
             return attr;
         }
     }
-    
+
+    private String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        LispObject attrObj = arguments.get(ARG_ATTR);
+        try {
+            return ((LispSymbol)attrObj.cast(LispType.SYMBOL)).getName();
+        } catch (LispCastException e) {
+            return attrObj.eval(namespace).toString();
+        }
+    }
+
 }

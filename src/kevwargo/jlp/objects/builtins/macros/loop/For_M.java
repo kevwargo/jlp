@@ -2,7 +2,10 @@ package kevwargo.jlp.objects.builtins.macros.loop;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
+import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
@@ -14,7 +17,6 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-import kevwargo.jlp.objects.LispBool;
 
 
 public class For_M extends LoopBase {
@@ -23,18 +25,30 @@ public class For_M extends LoopBase {
         super("for", new FormalArguments("body").pos("cond"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispList cond = (LispList)arguments.get("cond").cast(LispType.LIST);
-        if (cond.size() != 2 && cond.size() != 3) {
-            throw new LispException("for loop condition must contain exactly two or three elements");
+        if (cond.size() < 1 || cond.size() > 3) {
+            throw new LispException("'for' loop condition must contain 1-3 elements");
         }
 
         LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
-        if (cond.size() == 2) {
+        switch (cond.size()) {
+        case 1:
+            return executeWhile(cond.iterator().next(), body, namespace);
+        case 2:
             return executeIterator(cond, body, namespace);
-        } else {
+        default:
             return executeSimple(cond, body, namespace);
         }
+    }
+
+    private LispObject executeWhile(LispObject cond, LispList body, LispNamespace namespace) throws LispException {
+        while (cond.eval(namespace) != LispBool.NIL) {
+            if (executeBody(namespace, body)) {
+                break;
+            }
+        }
+        return LispBool.NIL;
     }
 
     private LispObject executeSimple(LispList forCond, LispList body, LispNamespace namespace) throws LispException {
@@ -68,7 +82,7 @@ public class For_M extends LoopBase {
     }
 
     private LispObject executeList(String var, LispList list, LispList body, LispNamespace namespace) throws LispException {
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         for (LispObject val : list) {
             map.put(var, val);
             if (executeBody(namespace.prepend(map), body)) {
@@ -80,7 +94,7 @@ public class For_M extends LoopBase {
 
     private LispObject executeString(String var, LispString lispString, LispList body, LispNamespace namespace) throws LispException {
         String string = lispString.getValue();
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         int length = string.length();
         for (int i = 0; i < length; i++) {
             map.put(var, new LispInt(string.codePointAt(i)));
@@ -95,7 +109,7 @@ public class For_M extends LoopBase {
     private LispObject executeJavaIterator(String var, LispJavaObject javaObject, LispList body, LispNamespace namespace) throws LispException {
         Object object = javaObject.getObject();
         Iterator<Object> it;
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
 
         if (object instanceof Iterator) {
             it = (Iterator)object;
@@ -117,7 +131,7 @@ public class For_M extends LoopBase {
     }
 
     private LispObject executeJavaArray(String var, Object array[], LispList body, LispNamespace namespace) throws LispException {
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         for (Object object : array) {
             map.put(var, new LispJavaObject(object));
             if (executeBody(namespace.prepend(map), body)) {

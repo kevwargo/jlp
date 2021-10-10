@@ -3,6 +3,8 @@ package kevwargo.jlp.objects;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
@@ -61,6 +63,6 @@ public abstract class LispFunction extends LispObject {
     }
 
 
-    abstract protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException;
+    abstract protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException;
 
 }

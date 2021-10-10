@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
@@ -18,7 +18,7 @@ public class HasNext_F extends LispFunction {
         super(LispType.FUNCTION, "has-next", new FormalArguments().pos("obj"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject obj = arguments.get("obj");
         if (!obj.isInstance(LispType.ITERATOR)) {
             throw new LispException("object '%s' is not an iterator");

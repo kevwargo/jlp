@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import kevwargo.jlp.LispException;
@@ -19,7 +19,7 @@ public class Next_F extends LispFunction {
         super(LispType.FUNCTION, "next", new FormalArguments().pos("obj"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject obj = arguments.get("obj");
         if (!obj.isInstance(LispType.ITERATOR)) {
             throw new LispException("object '%s' is not an iterator");
@@ -30,5 +30,5 @@ public class Next_F extends LispFunction {
             return LispBool.NIL;
         }
     }
-    
+
 }

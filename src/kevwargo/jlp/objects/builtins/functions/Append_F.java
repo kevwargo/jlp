@@ -1,8 +1,9 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -19,7 +20,7 @@ public class Append_F extends LispFunction {
         super(LispType.FUNCTION, "append", new FormalArguments("args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         Iterator<LispObject> argsIterator = ((LispList)arguments.get("args").cast(LispType.LIST)).iterator();
         while (argsIterator.hasNext()) {

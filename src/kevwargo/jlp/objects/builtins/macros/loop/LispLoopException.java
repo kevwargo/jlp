@@ -9,7 +9,7 @@ public class LispLoopException extends LispException {
     private long level;
 
     public LispLoopException(boolean isContinue, long level) {
-        super("'break' or 'continue' called outside of a loop");
+        super("'break' or 'continue' used outside of a loop");
         this.isContinue = isContinue;
         this.level = level;
     }

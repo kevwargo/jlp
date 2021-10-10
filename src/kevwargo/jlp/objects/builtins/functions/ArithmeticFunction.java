@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFloat;
@@ -18,27 +18,13 @@ abstract public class ArithmeticFunction extends LispFunction {
 
     abstract protected long addLong(long result, long value);
     abstract protected double addDouble(double result, double value);
-    abstract protected Params parseParams(HashMap<String, LispObject> arguments) throws LispCastException;
-
-    protected static class Params {
-
-        public long longInitial;
-        public double doubleInitial;
-        public Iterator<LispObject> numbers;
-
-        public Params(long li, double di, Iterator<LispObject> n) {
-            longInitial = li;
-            doubleInitial = di;
-            numbers = n;
-        }
-
-    }
+    abstract protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException;
 
     protected ArithmeticFunction(String name, FormalArguments args) {
         super(LispType.FUNCTION, name, args.rest("numbers"));
     }
 
-    protected boolean isDouble(HashMap<String, LispObject> arguments) throws LispCastException {
+    protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
         LispList numbers = (LispList)arguments.get("numbers");
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
@@ -48,8 +34,8 @@ abstract public class ArithmeticFunction extends LispFunction {
         }
         return false;
     }
-    
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         Params params = parseParams(arguments);
         boolean isDouble = isDouble(arguments);
         long longResult = params.longInitial;
@@ -80,6 +66,21 @@ abstract public class ArithmeticFunction extends LispFunction {
         } else {
             return new LispInt(longResult);
         }
+    }
+
+
+    protected static class Params {
+
+        public long longInitial;
+        public double doubleInitial;
+        public Iterator<LispObject> numbers;
+
+        public Params(long li, double di, Iterator<LispObject> n) {
+            longInitial = li;
+            doubleInitial = di;
+            numbers = n;
+        }
+
     }
 
 }

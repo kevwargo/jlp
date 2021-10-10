@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.builtins.javareflect;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -18,7 +19,7 @@ public class LoadClass extends LispFunction {
         super(LispType.FUNCTION, "%class", new FormalArguments().pos("name"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         String className = ((LispString)arguments.get("name").cast(LispType.STRING)).getValue();
         try {
             return new LispJavaObject(DefaultClassLoader.load(className));

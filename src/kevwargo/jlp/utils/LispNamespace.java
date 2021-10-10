@@ -1,7 +1,7 @@
 package kevwargo.jlp.utils;
 
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispJavaObject;
@@ -11,36 +11,36 @@ import kevwargo.jlp.objects.types.LispType;
 
 public class LispNamespace {
 
-    private HashMap<String, LispObject>[] components;
+    private Map<String, LispObject>[] components;
 
     @SuppressWarnings("unchecked")
     public LispNamespace() {
-        components = new HashMap[0];
+        components = new Map[0];
     }
 
     @SuppressWarnings("unchecked")
-    public LispNamespace(HashMap<String, LispObject> map) {
-        components = new HashMap[1];
+    public LispNamespace(Map<String, LispObject> map) {
+        components = new Map[1];
         components[0] = map;
     }
 
-    public LispNamespace(HashMap<String, LispObject>[] components) {
+    public LispNamespace(Map<String, LispObject>[] components) {
         this.components = components;
     }
 
     @SuppressWarnings("unchecked")
-    public LispNamespace append(HashMap<String, LispObject> map) {
-        HashMap<String, LispObject>[] components = new HashMap[this.components.length + 1];
+    public LispNamespace append(Map<String, LispObject> map) {
+        Map<String, LispObject>[] components = new Map[this.components.length + 1];
         for (int i = 0; i < this.components.length; i++) {
             components[i] = this.components[i];
         }
         components[this.components.length] = map;
         return new LispNamespace(components);
     }
-    
+
     @SuppressWarnings("unchecked")
-    public LispNamespace prepend(HashMap<String, LispObject> map) {
-        HashMap<String, LispObject>[] components = new HashMap[this.components.length + 1];
+    public LispNamespace prepend(Map<String, LispObject> map) {
+        Map<String, LispObject>[] components = new Map[this.components.length + 1];
         components[0] = map;
         for (int i = 1; i < components.length; i++) {
             components[i] = this.components[i - 1];
@@ -64,7 +64,7 @@ public class LispNamespace {
     }
 
     public LispObject get(String name) {
-        for (HashMap<String, LispObject> component : components) {
+        for (Map<String, LispObject> component : components) {
             LispObject object = component.get(name);
             if (object != null) {
                 return object;
@@ -72,7 +72,7 @@ public class LispNamespace {
         }
         return null;
     }
-        
+
     public LispObject resolve(String name) throws LispException {
         LispObject object = get(name);
         if (object != null) {
@@ -81,7 +81,7 @@ public class LispNamespace {
         throw new LispException("Symbol's definition is void: '%s'", name);
     }
 
-    public HashMap<String, LispObject>[] getComponents() {
+    public Map<String, LispObject>[] getComponents() {
         return components;
     }
 
@@ -97,5 +97,5 @@ public class LispNamespace {
         }
         return System.out;
     }
-    
+
 }

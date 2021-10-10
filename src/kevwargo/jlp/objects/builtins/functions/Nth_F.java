@@ -1,6 +1,7 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.HashMap;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
@@ -17,7 +18,7 @@ public class Nth_F extends LispFunction {
         super(LispType.FUNCTION, "nth", new FormalArguments().pos("n").pos("list"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         long idx = ((LispInt)arguments.get("n").cast(LispType.INT)).getValue();
         LispList list = (LispList)arguments.get("list").cast(LispType.LIST);
 

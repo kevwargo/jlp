@@ -2,6 +2,8 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -56,7 +58,7 @@ public class Defun_M extends LispFunction {
         return new Function(LispType.LISP_FUNCTION, name, formalArguments, body, namespace);
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         String name = ((LispSymbol)arguments.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
         LispList arglist = (LispList)arguments.get(ARG_ARGLIST).cast(LispType.LIST);
         LispList body = (LispList)arguments.get(ARG_BODY).cast(LispType.LIST);
@@ -71,20 +73,20 @@ public class Defun_M extends LispFunction {
         LispList body;
         LispNamespace defNamespace;
 
-
         Function(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
             super(type, name, formalArguments);
             this.body = body;
             defNamespace = namespace;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
-            Iterator<LispObject> bodyIterator = body.iterator();
-            LispObject result = LispBool.NIL;
-            HashMap<String, LispObject> map = new HashMap<String, LispObject>();
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+            Map<String, LispObject> map = new HashMap<String, LispObject>();
             map.put("return", new ReturnFunction());
             map.put("$", this);
             LispNamespace bodyNamespace = defNamespace.prepend(arguments).prepend(map);
+
+            Iterator<LispObject> bodyIterator = body.iterator();
+            LispObject result = LispBool.NIL;
             try {
                 while (bodyIterator.hasNext()) {
                     result = bodyIterator.next().eval(bodyNamespace);
@@ -94,7 +96,6 @@ public class Defun_M extends LispFunction {
             }
             return result;
         }
-
     }
 
     private static class ReturnException extends LispException {
@@ -105,7 +106,6 @@ public class Defun_M extends LispFunction {
             super("'return' is used outside of a function");
             this.object = object;
         }
-
     }
 
     private static class ReturnFunction extends LispFunction {
@@ -114,10 +114,8 @@ public class Defun_M extends LispFunction {
             super(LispType.FUNCTION, "return", new FormalArguments().pos("obj"));
         }
 
-        protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             throw new ReturnException(arguments.get("obj"));
         }
-
     }
-
 }

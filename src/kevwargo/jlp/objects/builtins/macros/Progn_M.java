@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -20,7 +21,7 @@ public class Progn_M extends LispFunction {
         super(LispType.MACRO, "progn", new FormalArguments().rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, HashMap<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject result = LispBool.NIL;
         Iterator<LispObject> iterator = ((LispList)arguments.get("body")).iterator();
         while (iterator.hasNext()) {
@@ -28,5 +29,5 @@ public class Progn_M extends LispFunction {
         }
         return result;
     }
-    
+
 }
