@@ -12,9 +12,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Format_F extends LispFunction {
+public class LFFormat extends LispFunction {
 
-    public Format_F() {
+    public LFFormat() {
         super(LispType.FUNCTION, "format", new FormalArguments("args").pos("fmt"));
     }
 

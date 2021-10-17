@@ -13,9 +13,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Next_F extends LispFunction {
+public class LFNext extends LispFunction {
 
-    public Next_F() {
+    public LFNext() {
         super(LispType.FUNCTION, "next", new FormalArguments().pos("obj"));
     }
 

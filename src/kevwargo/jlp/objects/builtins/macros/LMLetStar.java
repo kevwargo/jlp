@@ -6,9 +6,9 @@ import kevwargo.jlp.utils.LispNamespace;
 import kevwargo.jlp.objects.LispObject;
 
 
-public class LetStar_M extends Let_M {
+public class LMLetStar extends LMLet {
 
-    public LetStar_M() {
+    public LMLetStar() {
         super("let*");
     }
 

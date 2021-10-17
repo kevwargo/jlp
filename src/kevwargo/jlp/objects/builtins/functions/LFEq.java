@@ -1,30 +1,33 @@
 package kevwargo.jlp.objects.builtins.functions;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.iterator.LispIterator;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class HasNext_F extends LispFunction {
+public class LFEq extends LispFunction {
 
-    public HasNext_F() {
-        super(LispType.FUNCTION, "has-next", new FormalArguments().pos("obj"));
+    LFEq(String name) {
+        super(LispType.FUNCTION, name, new FormalArguments().pos("arg1").pos("arg2"));
+    }
+
+    public LFEq() {
+        this("eq");
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        LispObject obj = arguments.get("obj");
-        if (!obj.isInstance(LispType.ITERATOR)) {
-            throw new LispException("object '%s' is not an iterator");
+        LispObject obj1 = arguments.get("arg1");
+        LispObject obj2 = arguments.get("arg2");
+        if (obj1 == obj2) {
+            return LispBool.T;
         }
-        boolean hasNext = ((LispIterator)obj.cast(LispType.ITERATOR)).hasNext();
-        return hasNext ? LispBool.T : LispBool.NIL;
+        return LispBool.NIL;
     }
-
 }

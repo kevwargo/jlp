@@ -12,9 +12,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Apply_F extends LispFunction {
+public class LFApply extends LispFunction {
 
-    public Apply_F() {
+    public LFApply() {
         super(LispType.FUNCTION, "apply", new FormalArguments().pos("func").pos("args"));
     }
 

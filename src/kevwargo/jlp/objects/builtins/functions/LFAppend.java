@@ -14,9 +14,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Append_F extends LispFunction {
+public class LFAppend extends LispFunction {
 
-    public Append_F() {
+    public LFAppend() {
         super(LispType.FUNCTION, "append", new FormalArguments("args"));
     }
 

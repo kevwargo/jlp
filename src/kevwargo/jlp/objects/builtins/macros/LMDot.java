@@ -14,14 +14,14 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Dot_M extends LispFunction {
+public class LMDot extends LispFunction {
 
     public static final String NAME = ".";
     public static final String ARG_OBJ = "obj";
     public static final String ARG_ATTR = "attr";
     public static final String ARG_REST = "rest";
 
-    public Dot_M() {
+    public LMDot() {
         super(LispType.MACRO, ".", new FormalArguments(ARG_REST).pos(ARG_OBJ).pos(ARG_ATTR));
     }
 

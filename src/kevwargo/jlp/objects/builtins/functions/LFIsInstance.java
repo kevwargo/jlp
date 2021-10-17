@@ -12,9 +12,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class IsInstance_F extends LispFunction {
+public class LFIsInstance extends LispFunction {
 
-    public IsInstance_F() {
+    public LFIsInstance() {
         super(LispType.FUNCTION, "isinstance", new FormalArguments().pos("obj").pos("type"));
     }
 

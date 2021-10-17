@@ -15,30 +15,23 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Minus_F extends ArithmeticFunction {
+public class LFPlus extends ArithmeticFunction {
 
-    public Minus_F() {
-        super("-", new FormalArguments());
+    public LFPlus() {
+        super("+", new FormalArguments());
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList)arguments.get("numbers").cast(LispType.LIST);
-        Iterator<LispObject> it = numbers.iterator();
-        if (it.hasNext()) {
-            LispObject first = it.next();
-            long lv = ((LispInt)first.cast(LispType.INT)).getValue();
-            double dv = ((LispFloat)first.cast(LispType.FLOAT)).getValue();
-            return new Params(lv, dv, it);
-        }
+        Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
         return new Params(0, 0.0, it);
     }
 
     protected long addLong(long result, long value) {
-        return result - value;
+        return result + value;
     }
 
     protected double addDouble(double result, double value) {
-        return result - value;
+        return result + value;
     }
 
 }

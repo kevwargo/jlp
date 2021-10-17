@@ -13,9 +13,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Collect_M extends LispFunction {
+public class LMCollect extends LispFunction {
 
-    public Collect_M() {
+    public LMCollect() {
         super(LispType.MACRO, "collect", new FormalArguments("body"));
     }
 

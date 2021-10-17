@@ -14,24 +14,36 @@ import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+public class LFDivide extends ArithmeticFunction {
 
-public class Plus_F extends ArithmeticFunction {
-
-    public Plus_F() {
-        super("+", new FormalArguments());
+    public LFDivide() {
+        super("/", new FormalArguments().pos("first"));
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
+        LispObject first = arguments.get("first");
+        long lv = ((LispInt)first.cast(LispType.INT)).getValue();
+        double dv = ((LispFloat)first.cast(LispType.FLOAT)).getValue();
         Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
-        return new Params(0, 0.0, it);
+        return new Params(lv, dv, it);
+    }
+
+    protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
+        LispObject first = arguments.get("first");
+        if (first.isInstance(LispType.FLOAT)) {
+            return true;
+        } else if (first.isInstance(LispType.INT)) {
+            return false;
+        }
+        throw new LispCastException("'%s' is not a number", first.toString());
     }
 
     protected long addLong(long result, long value) {
-        return result + value;
+        return result / value;
     }
 
     protected double addDouble(double result, double value) {
-        return result + value;
+        return result / value;
     }
 
 }

@@ -13,9 +13,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Lambda_M extends Defun_M {
+public class LMLambda extends LMDefun {
 
-    public Lambda_M() {
+    public LMLambda() {
         super("lambda", (new FormalArguments()).pos("arglist").rest("body"));
     }
 

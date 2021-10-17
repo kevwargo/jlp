@@ -4,25 +4,20 @@ import java.util.Map;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Nth_F extends LispFunction {
+public class LFEval extends LispFunction {
 
-    public Nth_F() {
-        super(LispType.FUNCTION, "nth", new FormalArguments().pos("n").pos("list"));
+    public LFEval() {
+        super(LispType.FUNCTION, "eval", (new FormalArguments()).pos("object"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        long idx = ((LispInt)arguments.get("n").cast(LispType.INT)).getValue();
-        LispList list = (LispList)arguments.get("list").cast(LispType.LIST);
-
-        return list.get((int)idx);
+        return arguments.get("object").eval(namespace);
     }
 
 }

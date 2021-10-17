@@ -15,13 +15,13 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Let_M extends LispFunction {
+public class LMLet extends LispFunction {
 
-    public Let_M() {
+    public LMLet() {
         this("let");
     }
 
-    public Let_M(String name) {
+    protected LMLet(String name) {
         super(LispType.MACRO, name, new FormalArguments().pos("mappings").rest("body"));
     }
 

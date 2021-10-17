@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Defun_M extends LispFunction {
+public class LMDefun extends LispFunction {
 
     public static String NAME = "defun";
     public static String ARG_NAME = "name";
@@ -23,15 +23,15 @@ public class Defun_M extends LispFunction {
     public static String ARG_BODY = "body";
 
 
-    public Defun_M() {
+    public LMDefun() {
         this(NAME);
     }
 
-    public Defun_M(String name) {
+    public LMDefun(String name) {
         this(name, (new FormalArguments()).pos(ARG_NAME).pos(ARG_ARGLIST).rest(ARG_BODY));
     }
 
-    public Defun_M(String name, FormalArguments formalArguments) {
+    public LMDefun(String name, FormalArguments formalArguments) {
         super(LispType.MACRO, name, formalArguments);
     }
 

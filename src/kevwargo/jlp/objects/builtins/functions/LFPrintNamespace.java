@@ -12,9 +12,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class PrintNamespace_F extends LispFunction {
+public class LFPrintNamespace extends LispFunction {
 
-    public PrintNamespace_F() {
+    public LFPrintNamespace() {
         super(LispType.FUNCTION, "print-namespace", new FormalArguments());
     }
 

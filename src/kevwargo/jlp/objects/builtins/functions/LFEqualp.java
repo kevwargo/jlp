@@ -20,9 +20,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Equalp_F extends Eq_F {
+public class LFEqualp extends LFEq {
 
-    public Equalp_F() {
+    public LFEqualp() {
         super("equalp");
     }
 

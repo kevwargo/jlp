@@ -14,13 +14,13 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Setq_M extends LispFunction {
+public class LMSetq extends LispFunction {
 
     public static final String NAME = "setq";
     public static final String ARG_DEFS = "defs";
 
 
-    public Setq_M() {
+    public LMSetq() {
         super(LispType.MACRO, NAME, (new FormalArguments()).rest(ARG_DEFS));
     }
 

@@ -13,9 +13,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class If_M extends LispFunction {
+public class LMIf extends LispFunction {
 
-    public If_M() {
+    public LMIf() {
         super(LispType.MACRO, "if", new FormalArguments().pos("condition").pos("true").rest("false"));
     }
 

@@ -15,9 +15,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Progn_M extends LispFunction {
+public class LMProgn extends LispFunction {
 
-    public Progn_M() {
+    public LMProgn() {
         super(LispType.MACRO, "progn", new FormalArguments().rest("body"));
     }
 

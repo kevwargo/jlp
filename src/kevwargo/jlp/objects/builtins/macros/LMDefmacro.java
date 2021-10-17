@@ -13,9 +13,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Defmacro_M extends Defun_M {
+public class LMDefmacro extends LMDefun {
 
-    public Defmacro_M() {
+    public LMDefmacro() {
         super("defmacro");
     }
 
@@ -24,7 +24,7 @@ public class Defmacro_M extends Defun_M {
     }
 
 
-    protected static class Macro extends Defun_M.Function {
+    protected static class Macro extends LMDefun.Function {
 
         Macro(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
             super(type, name, formalArguments, body, namespace);

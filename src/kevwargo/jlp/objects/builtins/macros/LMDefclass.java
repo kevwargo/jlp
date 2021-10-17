@@ -15,9 +15,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Defclass_M extends LispFunction {
+public class LMDefclass extends LispFunction {
 
-    public Defclass_M() {
+    public LMDefclass() {
         super(LispType.MACRO, "defclass", new FormalArguments().pos("name").pos("bases").rest("body"));
     }
 

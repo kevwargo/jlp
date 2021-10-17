@@ -19,9 +19,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class For_M extends LoopBase {
+public class LMFor extends LoopBase {
 
-    public For_M() {
+    public LMFor() {
         super("for", new FormalArguments("body").pos("cond"));
     }
 

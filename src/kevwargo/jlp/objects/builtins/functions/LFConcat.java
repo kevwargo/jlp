@@ -14,9 +14,9 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Concat_F extends LispFunction {
+public class LFConcat extends LispFunction {
 
-    public Concat_F() {
+    public LFConcat() {
         super(LispType.FUNCTION, "concat", new FormalArguments(new ArrayList<String>(), "args"));
     }
 
