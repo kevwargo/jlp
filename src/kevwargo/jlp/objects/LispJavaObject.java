@@ -25,6 +25,10 @@ public class LispJavaObject extends LispObject {
         return object.toString();
     }
 
+    public Object format() {
+        return object;
+    }
+
     public Object getJavaObject() {
         return object;
     }
