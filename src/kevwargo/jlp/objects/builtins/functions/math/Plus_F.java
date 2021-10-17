@@ -1,4 +1,4 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.objects.builtins.functions.math;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -15,23 +15,23 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-public class Multiply_F extends ArithmeticFunction {
+public class Plus_F extends ArithmeticFunction {
 
-    public Multiply_F() {
-        super("*", new FormalArguments());
+    public Plus_F() {
+        super("+", new FormalArguments());
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
         Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
-        return new Params(1, 1.0, it);
+        return new Params(0, 0.0, it);
     }
 
     protected long addLong(long result, long value) {
-        return result * value;
+        return result + value;
     }
 
     protected double addDouble(double result, double value) {
-        return result * value;
+        return result + value;
     }
 
 }

@@ -1,4 +1,4 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.objects.builtins.functions.math;
 
 import java.util.Iterator;
 import java.util.Map;

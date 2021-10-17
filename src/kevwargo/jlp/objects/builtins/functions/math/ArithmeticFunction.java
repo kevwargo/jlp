@@ -1,7 +1,8 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.objects.builtins.functions.math;
 
 import java.util.Map;
 import java.util.Iterator;
+
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
@@ -71,11 +72,11 @@ abstract public class ArithmeticFunction extends LispFunction {
 
     protected static class Params {
 
-        public long longInitial;
-        public double doubleInitial;
-        public Iterator<LispObject> numbers;
+        long longInitial;
+        double doubleInitial;
+        Iterator<LispObject> numbers;
 
-        public Params(long li, double di, Iterator<LispObject> n) {
+        Params(long li, double di, Iterator<LispObject> n) {
             longInitial = li;
             doubleInitial = di;
             numbers = n;
