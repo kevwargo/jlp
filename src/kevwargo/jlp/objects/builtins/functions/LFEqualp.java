@@ -8,6 +8,7 @@ import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
+import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
@@ -76,6 +77,11 @@ public class LFEqualp extends LFEq {
         }
         if (obj1.isInstance(LispType.SYMBOL) && obj2.isInstance(LispType.SYMBOL)) {
             if (((LispSymbol)obj1.cast(LispType.SYMBOL)).getName().equals(((LispSymbol)obj2.cast(LispType.SYMBOL)).getName())) {
+                return true;
+            }
+        }
+        if (obj1.isInstance(LispType.JAVA_OBJECT) && obj2.isInstance(LispType.JAVA_OBJECT)) {
+            if (((LispJavaObject)obj1.cast(LispType.JAVA_OBJECT)).getObject().equals(((LispJavaObject)obj2.cast(LispType.JAVA_OBJECT)).getObject())) {
                 return true;
             }
         }
