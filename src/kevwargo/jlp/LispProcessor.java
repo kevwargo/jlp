@@ -35,6 +35,7 @@ import kevwargo.jlp.objects.builtins.javareflect.CreateInstance;
 import kevwargo.jlp.objects.builtins.javareflect.LFFloat;
 import kevwargo.jlp.objects.builtins.javareflect.LFLong;
 import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
+import kevwargo.jlp.objects.builtins.macros.LMBackquote;
 import kevwargo.jlp.objects.builtins.macros.LMCollect;
 import kevwargo.jlp.objects.builtins.macros.LMDefclass;
 import kevwargo.jlp.objects.builtins.macros.LMDefmacro;
@@ -93,6 +94,7 @@ public class LispProcessor {
         map.put("java-object", LispType.JAVA_OBJECT);
         map.put("iterator", LispType.ITERATOR);
 
+        map.put("`", new LMBackquote());
         map.put("print", new LFPrint());
         map.put("format", new LFFormat());
         map.put("quote", new LMQuote());
