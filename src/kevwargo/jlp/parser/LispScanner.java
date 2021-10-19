@@ -22,7 +22,7 @@ public class LispScanner {
     public LispScanner(InputStream stream) {
         scanner = new Scanner(stream);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("(");
         sb.append("(\\()|");
         sb.append("(\\))|");
@@ -34,7 +34,7 @@ public class LispScanner {
         sb.append(")");
         regex = Pattern.compile(sb.toString());
 
-        sb = new StringBuffer();
+        sb = new StringBuilder();
         sb.append("(");
         sb.append("([^\\\\\"]+)|");
         sb.append("(\\\\n)|");
@@ -58,7 +58,7 @@ public class LispScanner {
             } else if (m.group(4) != null) {
                 return new LispToken(LispToken.Type.SPECIAL, token);
             } else if (m.group(5) != null) {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 boolean terminated = false;
                 while ((token = scanner.findWithinHorizon(inString, 0)) != null) {
                     m = scanner.match();
