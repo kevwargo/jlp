@@ -1,6 +1,4 @@
-package kevwargo.jlp.objects.types;
-
-import kevwargo.jlp.LispException;
+package kevwargo.jlp;
 
 public class LispCastException extends LispException {
 

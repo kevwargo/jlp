@@ -5,32 +5,38 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.LispCastException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
 
 public class LispObject {
 
-    protected LispType type;
-    protected Map<String, LispObject> dict;
-
+    private LispType type;
+    private Map<String, LispObject> dict;
     private Map<LispType, LispObject> castMap;
 
+    public LispObject(LispType type) {
+        this();
+        setType(type);
+    }
 
-    public LispObject() {
+    LispObject() {
         dict = new HashMap<String, LispObject>();
         castMap = new HashMap<LispType, LispObject>();
+    }
+
+    void setType(LispType type) {
+        this.type = type;
+        defineCast(type, this);
     }
 
     public LispType getType() {
         return type;
     }
 
-    public void setType(LispType type) {
-        this.type = type;
-        defineCast(type, this);
+    public Map<String, LispObject> getDict() {
+        return dict;
     }
 
     public boolean isInstance(LispType type) {
@@ -50,7 +56,7 @@ public class LispObject {
         for (Map.Entry<LispType, LispObject> e : castMap.entrySet()) {
             if (e.getKey().isSubtype(type)) {
                 if (instance != null) {
-                    System.err.printf("Warning: '%s' cast to '%s' is ambiguous\n", this.toString(), type.toString());
+                    System.err.printf("Warning: '%s' cast to '%s' is ambiguous\n", toString(), type.toString());
                 } else {
                     instance = e.getValue();
                 }
@@ -116,10 +122,10 @@ public class LispObject {
     }
 
     private LispObject getAttr(String name, LispType type) {
-        if (type.dict.containsKey(name)) {
-            return type.dict.get(name);
+        if (type.getDict().containsKey(name)) {
+            return type.getDict().get(name);
         }
-        for (LispType baseType : type.getBaseTypes()) {
+        for (LispType baseType : type.getBases()) {
             LispObject attr = getAttr(name, baseType);
             if (attr != null) {
                 return attr;
@@ -127,4 +133,16 @@ public class LispObject {
         }
         return null;
     }
+}
+
+class ObjectType extends LispType {
+
+    ObjectType() {
+        super("object");
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        return new LispObject(this);
+    }
+
 }

@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
+import kevwargo.jlp.LispException;
+import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public class LispInt extends LispObject {
@@ -9,12 +10,11 @@ public class LispInt extends LispObject {
     private long value;
 
     LispInt(long value, LispFloat floatCast) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "int");
+        super(LispType.INT);
         this.value = value;
         if (floatCast != null) {
-            TypeInitializer.instance().deferCastDefine(this, "float", floatCast);
-            TypeInitializer.instance().deferCastDefine(floatCast, "int", this);
+            defineCast(LispType.FLOAT, floatCast);
+            floatCast.defineCast(LispType.INT, this);
         }
     }
 
@@ -40,6 +40,55 @@ public class LispInt extends LispObject {
 
     public Class<?> getJavaClass() {
         return Integer.TYPE;
+    }
+
+}
+
+class IntType extends LispType {
+
+    IntType() {
+        super("int", new LispType[] { OBJECT });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (!arguments.hasNext()) {
+            return new LispInt(0);
+        }
+
+        LispObject object = arguments.next();
+        if (object.isInstance(INT)) {
+            return new LispInt(((LispInt)object.cast(INT)).getValue());
+        }
+
+        if (object.isInstance(FLOAT)) {
+            return new LispInt((long)((LispFloat)object.cast(FLOAT)).getValue());
+        }
+
+        if (object.isInstance(STRING)) {
+            int radix = 10;
+            if (arguments.hasNext()) {
+                radix = (int)((LispInt)arguments.next().cast(INT)).getValue();
+            }
+            return new LispInt(Long.parseLong(((LispString)object.cast(STRING)).getValue(), radix));
+        }
+
+        if (object.isInstance(JAVA_OBJECT)) {
+            Object javaNumber = ((LispJavaObject)object).getObject();
+            if (javaNumber instanceof Integer) {
+                return new LispInt(((Integer)javaNumber).longValue());
+            }
+            if (javaNumber instanceof Long) {
+                return new LispInt(((Long)javaNumber).longValue());
+            }
+            if (javaNumber instanceof Float) {
+                return new LispInt(((Float)javaNumber).longValue());
+            }
+            if (javaNumber instanceof Double) {
+                return new LispInt(((Double)javaNumber).longValue());
+            }
+        }
+
+        throw new LispException("Object '%s' cannot be converted to int", object);
     }
 
 }

@@ -9,7 +9,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
@@ -58,17 +58,15 @@ public class LMDefclass extends LispFunction {
     private static class LispClass extends LispType {
 
         LispClass(String name, LispType bases[], Map<String, LispObject> dict) {
-            super(name);
-            setType(LispType.TYPE);
-            setBaseTypes(bases);
-            this.dict = dict;
+            super(name, bases);
+            for (Map.Entry<String, LispObject> e : dict.entrySet()) {
+                setAttr(e.getKey(), e.getValue());
+            }
         }
 
-        @Override
         public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-            LispObject instance = new LispObject();
-            instance.setType(this);
-            LispObject constructor = dict.get("@init@");
+            LispObject instance = new LispObject(this);
+            LispObject constructor = getDict().get("@init@");
             if (constructor != null) {
                 arguments.setFirst(instance);
                 constructor.call(namespace, arguments);
@@ -78,7 +76,7 @@ public class LMDefclass extends LispFunction {
         }
 
         private void defineCastsRecursively(LispNamespace namespace, LispObject instance) throws LispException {
-            for (LispType type : baseTypes) {
+            for (LispType type : getBases()) {
                 if (type instanceof LispClass) {
                     ((LispClass)type).defineCastsRecursively(namespace, instance);
                 } else if (! instance.isCastDefined(type)) {

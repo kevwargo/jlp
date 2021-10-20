@@ -6,8 +6,8 @@ import java.util.Map;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.objects.LispType;
 
 public class LispNamespace {
 

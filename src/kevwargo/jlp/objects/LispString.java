@@ -1,8 +1,9 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
+import kevwargo.jlp.LispException;
+import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public class LispString extends LispObject {
@@ -10,8 +11,7 @@ public class LispString extends LispObject {
     private String value;
 
     public LispString(String value) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "string");
+        super(LispType.STRING);
         this.value = value;
     }
 
@@ -57,6 +57,22 @@ public class LispString extends LispObject {
 
     public Class<?> getJavaClass() {
         return String.class;
+    }
+
+}
+
+class StringType extends LispType {
+
+    StringType() {
+        super("str", new LispType[] { OBJECT });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (arguments.hasNext()) {
+            return new LispString(arguments.next().toString());
+        } else {
+            return new LispString("");
+        }
     }
 
 }

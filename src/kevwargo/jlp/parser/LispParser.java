@@ -13,7 +13,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.LispType;
 
 
 public class LispParser {

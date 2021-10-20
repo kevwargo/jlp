@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import kevwargo.jlp.LispCastException;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.types.LispType;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
@@ -17,19 +17,22 @@ public abstract class LispFunction extends LispObject {
     protected String name;
     protected FormalArguments formalArguments;
 
-
     public LispFunction(String name, FormalArguments formalArguments) {
         this(LispType.FUNCTION, name, formalArguments);
     }
 
     public LispFunction(LispType type, String name, FormalArguments formalArguments) {
-        setType(type);
+        super(type);
         this.name = name;
         this.formalArguments = formalArguments;
     }
 
     public String getName() {
         return name;
+    }
+
+    public FormalArguments getFormalArguments() {
+        return formalArguments;
     }
 
     public String toString() {
@@ -62,7 +65,52 @@ public abstract class LispFunction extends LispObject {
         return callInternal(namespace, argMap);
     }
 
+    protected abstract LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException;
 
-    abstract protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException;
+}
+
+class FunctionType extends LispType {
+
+    FunctionType(String name) {
+        super(name, new LispType[] { OBJECT });
+    }
+
+    FunctionType(String name, LispType base) {
+        super(name, new LispType[] { OBJECT, base });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        LispObject callable = arguments.next();
+
+        String name = "<anonymous>";
+        FormalArguments formalArguments = new FormalArguments();
+        try {
+            LispFunction func = (LispFunction)callable.cast(LispType.FUNCTION);
+            name = func.getName();
+            formalArguments = func.getFormalArguments();
+        } catch (LispCastException e) {}
+
+        return new WrappedFunction(callable, this, name, formalArguments);
+    }
+
+}
+
+class WrappedFunction extends LispFunction {
+
+    private LispObject callable;
+
+    public WrappedFunction(LispObject callable, LispType type, String name, FormalArguments formalArguments) {
+        super(type, name, formalArguments);
+        this.callable = callable;
+    }
+
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        return callable.call(namespace, arguments);
+    }
+
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        // This method will never be called since the `call()` is overriden.
+        return null;
+    }
 
 }

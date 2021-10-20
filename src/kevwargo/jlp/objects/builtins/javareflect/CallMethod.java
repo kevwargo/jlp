@@ -10,7 +10,7 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 

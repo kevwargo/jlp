@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
+import kevwargo.jlp.LispException;
+import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public class LispFloat extends LispObject {
@@ -9,12 +10,11 @@ public class LispFloat extends LispObject {
     private double value;
 
     LispFloat(double value, LispInt intCast) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "float");
+        super(LispType.FLOAT);
         this.value = value;
         if (intCast != null) {
-            TypeInitializer.instance().deferCastDefine(this, "int", intCast);
-            TypeInitializer.instance().deferCastDefine(intCast, "float", this);
+            defineCast(LispType.INT, intCast);
+            intCast.defineCast(LispType.FLOAT, this);
         }
     }
 
@@ -40,6 +40,51 @@ public class LispFloat extends LispObject {
 
     public Class<?> getJavaClass() {
         return Double.TYPE;
+    }
+
+}
+
+class FloatType extends LispType {
+
+    FloatType() {
+        super("float", new LispType[] { OBJECT });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (!arguments.hasNext()) {
+            return new LispFloat(0.0);
+        }
+
+        LispObject object = arguments.next();
+        if (object.isInstance(INT)) {
+            return new LispFloat((double)((LispInt)object.cast(INT)).getValue());
+        }
+
+        if (object.isInstance(FLOAT)) {
+            return new LispFloat(((LispFloat)object.cast(FLOAT)).getValue());
+        }
+
+        if (object.isInstance(STRING)) {
+            return new LispFloat(Double.parseDouble(((LispString)object.cast(STRING)).getValue()));
+        }
+
+        if (object.isInstance(JAVA_OBJECT)) {
+            Object javaNumber = ((LispJavaObject)object).getObject();
+            if (javaNumber instanceof Integer) {
+                return new LispFloat(((Integer)javaNumber).doubleValue());
+            }
+            if (javaNumber instanceof Long) {
+                return new LispFloat(((Long)javaNumber).doubleValue());
+            }
+            if (javaNumber instanceof Float) {
+                return new LispFloat(((Float)javaNumber).doubleValue());
+            }
+            if (javaNumber instanceof Double) {
+                return new LispFloat(((Double)javaNumber).doubleValue());
+            }
+        }
+
+        throw new LispException("Object '%s' cannot be converted to float", object);
     }
 
 }

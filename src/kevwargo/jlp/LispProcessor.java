@@ -50,7 +50,7 @@ import kevwargo.jlp.objects.builtins.macros.LMQuote;
 import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
 import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
 

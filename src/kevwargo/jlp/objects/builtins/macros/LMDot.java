@@ -8,8 +8,8 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 

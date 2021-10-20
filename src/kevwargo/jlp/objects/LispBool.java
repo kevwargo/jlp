@@ -1,7 +1,8 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
+import kevwargo.jlp.LispException;
+import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.LispNamespace;
 
 
 public class LispBool extends LispObject {
@@ -14,8 +15,7 @@ public class LispBool extends LispObject {
 
 
     private LispBool(boolean value) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "bool");
+        super(LispType.BOOL);
         this.value = value;
     }
 
@@ -33,6 +33,21 @@ public class LispBool extends LispObject {
 
     public Class<?> getJavaClass() {
         return Boolean.TYPE;
+    }
+
+}
+
+class BoolType extends LispType {
+
+    BoolType() {
+        super("bool", new LispType[] { OBJECT });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        if (arguments.getLength() < 1) {
+            return LispBool.NIL;
+        }
+        return arguments.next() == LispBool.NIL ? LispBool.NIL : LispBool.T;
     }
 
 }

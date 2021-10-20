@@ -1,10 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
+import kevwargo.jlp.LispCastException;
 import kevwargo.jlp.utils.LispNamespace;
+import kevwargo.jlp.utils.ArgumentsIterator;
 
 
 public class LispSymbol extends LispObject {
@@ -12,8 +11,7 @@ public class LispSymbol extends LispObject {
     private String name;
 
     public LispSymbol(String name) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "symbol");
+        super(LispType.SYMBOL);
         this.name = name;
     }
 
@@ -43,6 +41,26 @@ public class LispSymbol extends LispObject {
         } catch (LispCastException e) {
             return false;
         }
+    }
+
+}
+
+class SymbolType extends LispType {
+
+    SymbolType() {
+        super("symbol", new LispType[] { OBJECT });
+    }
+
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        LispObject obj = arguments.next();
+        if (obj.isInstance(this)) {
+            return obj;
+        }
+        if (obj.isInstance(LispType.STRING)) {
+            return new LispSymbol(((LispString)obj.cast(LispType.STRING)).getValue());
+        }
+
+        throw new LispCastException("The argument to symbol's constructor should be a symbol or a string");
     }
 
 }

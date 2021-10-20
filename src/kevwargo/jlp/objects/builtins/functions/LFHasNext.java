@@ -5,9 +5,9 @@ import java.util.Map;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispIterator;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.iterator.LispIterator;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 

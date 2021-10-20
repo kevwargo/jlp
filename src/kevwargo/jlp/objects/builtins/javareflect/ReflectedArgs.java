@@ -9,8 +9,8 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.types.LispCastException;
-import kevwargo.jlp.objects.types.LispType;
+import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.objects.LispType;
 
 class ReflectedArgs {
 

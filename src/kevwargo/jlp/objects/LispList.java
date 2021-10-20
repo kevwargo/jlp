@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import kevwargo.jlp.LispException;
-import kevwargo.jlp.objects.types.LispType;
-import kevwargo.jlp.objects.types.TypeInitializer;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -15,8 +13,7 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     private boolean special;
 
     public LispList(List<LispObject> contents, boolean special) {
-        super();
-        TypeInitializer.instance().deferTypeSet(this, "list");
+        super(LispType.LIST);
         this.contents = contents;
         this.special = special;
     }
@@ -89,9 +86,21 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     }
 }
 
+class ListType extends LispType {
 
+    ListType() {
+        super("list", new LispType[] { OBJECT });
+    }
 
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        ArrayList<LispObject> result = new ArrayList<LispObject>();
+        while (arguments.hasNext()) {
+            result.add(arguments.next());
+        }
+        if (result.isEmpty()) {
+            return LispBool.NIL;
+        }
+        return new LispList(result);
+    }
 
-
-
-
+}
