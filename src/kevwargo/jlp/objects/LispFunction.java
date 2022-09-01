@@ -76,7 +76,7 @@ class FunctionType extends LispType {
     }
 
     FunctionType(String name, LispType base) {
-        super(name, new LispType[] { OBJECT, base });
+        super(name, new LispType[] { base });
     }
 
     public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
