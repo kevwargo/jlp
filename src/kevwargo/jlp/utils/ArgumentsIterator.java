@@ -25,10 +25,6 @@ public class ArgumentsIterator {
         this(new EmptyIterator(), null, 0);
     }
 
-    public ArgumentsIterator(LispList list) {
-        this(list.iterator(), null, list.size());
-    }
-
     public boolean hasNext() {
         return first != null || iterator.hasNext();
     }

@@ -108,19 +108,21 @@ public class LMFor extends LoopBase {
     @SuppressWarnings("unchecked")
     private LispObject executeJavaIterator(String var, LispJavaObject javaObject, LispList body, LispNamespace namespace) throws LispException {
         Object object = javaObject.getObject();
-        Iterator<Object> it;
-        Map<String, LispObject> map = new HashMap<String, LispObject>();
 
+        if (object.getClass().isArray()) {
+            return executeJavaArray(var, (Object[])object, body, namespace);
+        }
+
+        Iterator<Object> it;
         if (object instanceof Iterator) {
             it = (Iterator)object;
         } else if (object instanceof Iterable) {
             it = ((Iterable)object).iterator();
-        } else if (object.getClass().isArray()) {
-            return executeJavaArray(var, (Object[])object, body, namespace);
         } else {
             throw new LispException("Java object %s of type %s is not iterable", object, object.getClass());
         }
 
+        Map<String, LispObject> map = new HashMap<String, LispObject>();
         while (it.hasNext()) {
             map.put(var, new LispJavaObject(it.next()));
             if (executeBody(namespace.prepend(map), body)) {

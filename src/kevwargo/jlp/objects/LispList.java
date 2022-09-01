@@ -60,26 +60,26 @@ public class LispList extends LispObject implements Iterable<LispObject> {
     }
 
     public LispObject eval(LispNamespace namespace) throws LispException {
-        Iterator<LispObject> iterator = iterator();
-        if (! iterator.hasNext()) {
+        Iterator<LispObject> it = this.iterator();
+        if (! it.hasNext()) {
             return LispBool.NIL;
         }
-        LispObject function = iterator.next().eval(namespace);
+        LispObject function = it.next().eval(namespace);
         boolean isMacro = function.isInstance(LispType.MACRO);
-        ArgumentsIterator args = new ArgumentsIterator(iterator, isMacro ? null : namespace, contents.size() - 1);
+        ArgumentsIterator args = new ArgumentsIterator(it, isMacro ? null : namespace, contents.size() - 1);
         return function.call(namespace, args);
     }
 
     public String repr() {
         StringBuffer sb = new StringBuffer();
         sb.append("(");
-        Iterator<LispObject> iterator = iterator();
-        if (iterator.hasNext()) {
-            sb.append(iterator.next().repr());
+        Iterator<LispObject> it = iterator();
+        if (it.hasNext()) {
+            sb.append(it.next().repr());
         }
-        while (iterator.hasNext()) {
+        while (it.hasNext()) {
             sb.append(" ");
-            sb.append(iterator.next().repr());
+            sb.append(it.next().repr());
         }
         sb.append(")");
         return sb.toString();
