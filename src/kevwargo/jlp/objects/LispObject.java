@@ -72,14 +72,12 @@ public class LispObject {
         return this;
     }
 
-    public LispObject getAttr(String name, boolean withDict) {
-        LispObject attr;
-        if (withDict) {
-            attr = dict.get(name);
-            if (attr != null) {
-                return attr;
-            }
+    public LispObject getAttr(String name) {
+        LispObject attr = dict.get(name);
+        if (attr != null) {
+            return attr;
         }
+
         attr = getAttr(name, type);
         if (attr != null) {
             try {
@@ -89,12 +87,12 @@ public class LispObject {
         return attr;
     }
 
-    public void setAttr(String name, LispObject value) {
+    public void setAttr(String name, LispObject value) throws LispException {
         dict.put(name, value);
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        LispObject callable = getAttr("@call@", false);
+        LispObject callable = getAttr("@call@");
         if (callable != null) {
             return callable.call(namespace, arguments);
         }

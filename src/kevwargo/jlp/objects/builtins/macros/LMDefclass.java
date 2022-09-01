@@ -35,7 +35,7 @@ public class LMDefclass extends LispFunction {
         for (int i = 0; it.hasNext(); i++) {
             bases[i] = (LispType)it.next().eval(namespace).cast(LispType.TYPE);
         }
-        
+
         Overlay overlay = new Overlay();
         LispNamespace classNamespace = namespace.prepend(overlay);
         for (LispObject form : (LispList)arguments.get("body")) {
@@ -60,7 +60,9 @@ public class LMDefclass extends LispFunction {
         LispClass(String name, LispType bases[], Map<String, LispObject> dict) {
             super(name, bases);
             for (Map.Entry<String, LispObject> e : dict.entrySet()) {
-                setAttr(e.getKey(), e.getValue());
+                try {
+                    setAttr(e.getKey(), e.getValue());
+                } catch (LispException exc) {}
             }
         }
 

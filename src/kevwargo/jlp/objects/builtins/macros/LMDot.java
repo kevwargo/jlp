@@ -19,27 +19,27 @@ public class LMDot extends LispFunction {
     public static final String NAME = ".";
     public static final String ARG_OBJ = "obj";
     public static final String ARG_ATTR = "attr";
-    public static final String ARG_REST = "rest";
+    public static final String ARG_VALUE = "value";
 
     public LMDot() {
-        super(LispType.MACRO, ".", new FormalArguments(ARG_REST).pos(ARG_OBJ).pos(ARG_ATTR));
+        super(LispType.MACRO, ".", new FormalArguments().pos(ARG_OBJ).pos(ARG_ATTR).opt(ARG_VALUE));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
         LispObject obj = arguments.get(ARG_OBJ).eval(namespace);
         String attrName = getAttrName(namespace, arguments);
+        LispObject value = arguments.get(ARG_VALUE);
 
-        if (((LispList)arguments.get(ARG_REST)).size() > 0) {
-            LispObject value = ((LispList)arguments.get(ARG_REST)).iterator().next().eval(namespace);
+        if (value != null) {
             obj.setAttr(attrName, value);
             return value;
-        } else {
-            LispObject attr = obj.getAttr(attrName, true);
-            if (attr == null) {
-                throw new LispException("'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
-            }
-            return attr;
         }
+
+        LispObject attr = obj.getAttr(attrName);
+        if (attr == null) {
+            throw new LispException("'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
+        }
+        return attr;
     }
 
     private String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
