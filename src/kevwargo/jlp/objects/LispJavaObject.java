@@ -41,10 +41,13 @@ public class LispJavaObject extends LispObject {
     }
 
     public String repr() {
-        return obj.toString();
+        return toString();
     }
 
     public String toString() {
+        if (obj == null) {
+            return cls.toString();
+        }
         return obj.toString();
     }
 

@@ -73,14 +73,6 @@ public class LispNamespace {
         return null;
     }
 
-    public LispObject resolve(String name) throws LispException {
-        LispObject object = get(name);
-        if (object != null) {
-            return object;
-        }
-        throw new LispException("Symbol's definition is void: '%s'", name);
-    }
-
     public Map<String, LispObject>[] getComponents() {
         return components;
     }
