@@ -17,8 +17,10 @@
 (defmacro cond (&rest clauses)
   (for (clause clauses)
        (if (eval (car clause))
-           (return (append (list 'progn)
-                           (cdr clause))))))
+           (return (if (cdr clause)
+                       (append (list 'progn)
+                               (cdr clause))
+                       (car clause))))))
 
 (defun %~> (object &rest methods)
   (for (method methods)
