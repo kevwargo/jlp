@@ -1,11 +1,11 @@
 package kevwargo.jlp.objects;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import kevwargo.jlp.LispException;
+
 import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
@@ -19,6 +19,75 @@ public class LispObject {
     public LispObject(LispType type) {
         this();
         setType(type);
+    }
+
+    /**
+       Wraps a Java object.
+       The cls parameter needs to be provided so we don't lose the precise type information
+       when passing primitive types to the Object parameter
+       (e.g. if we pass an int to the parameter declared as Object, the param.getClass() inside the method
+       will return java.lang.Integer and not int.class)
+    */
+    // TODO: arrays
+    public static LispObject wrap(Object obj, Class<?> cls) {
+        if (obj == null) {
+            return LispBool.NIL;
+        }
+        if (cls == boolean.class) {
+            if ((boolean)obj) {
+                return LispBool.T;
+            }
+            return LispBool.NIL;
+        }
+
+        if (cls == long.class) {
+            return new LispInt((long)obj);
+        }
+        if (cls == int.class) {
+            return new LispInt((int)obj);
+        }
+        if (cls == short.class) {
+            return new LispInt((short)obj);
+        }
+        if (cls == char.class) {
+            return new LispInt((char)obj);
+        }
+        if (cls == byte.class) {
+            return new LispInt((byte)obj);
+        }
+
+        if (cls == float.class) {
+            return new LispFloat((float)obj);
+        }
+        if (cls == double.class) {
+            return new LispFloat((double)obj);
+        }
+
+        if (obj instanceof String) {
+            return new LispString((String)obj);
+        }
+
+        if (obj instanceof List) {
+            LispList list = new LispList();
+            for (Object item : (List)obj) {
+                list.add(wrap(item));
+            }
+            return list;
+        }
+
+        if (cls.isArray()) {
+            LispList list = new LispList();
+            for (Object item : (Object[])obj) {
+                list.add(wrap(item, cls.getComponentType()));
+            }
+            return list;
+        }
+
+        return new LispJavaObject(obj);
+    }
+
+    public static LispObject wrap(Object obj) {
+        return wrap(obj, obj.getClass());
     }
 
     LispObject() {

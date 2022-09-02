@@ -35,7 +35,7 @@ public abstract class LispFunction extends LispObject {
         return formalArguments;
     }
 
-    public String toString() {
+    public String repr() {
         return String.format("function '%s' at 0x%x", name, System.identityHashCode(this));
     }
 

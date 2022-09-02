@@ -24,21 +24,7 @@ public class LispSymbol extends LispObject {
             return obj;
         }
 
-        Class<?> cls = null;
-        try {
-            cls = Class.forName(name);
-        } catch (ClassNotFoundException e) {}
-        if (cls == null) {
-            try {
-                cls = Class.forName("java.lang." + name);
-            } catch (ClassNotFoundException e) {}
-        }
-
-        if (cls == null) {
-            throw new LispException("Java class '%s' not found", name);
-        }
-
-        LispObject clsWapper = new LispJavaObject(cls);
+        LispObject clsWapper = new LispJavaClass(name);
         namespace.bind(name, clsWapper);
         return clsWapper;
     }

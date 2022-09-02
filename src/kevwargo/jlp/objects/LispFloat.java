@@ -8,10 +8,12 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LispFloat extends LispObject {
 
     private double value;
+    private Class<?> cls;
 
-    LispFloat(double value, LispInt intCast) {
+    LispFloat(double value, LispInt intCast, Class<?> cls) {
         super(LispType.FLOAT);
         this.value = value;
+        this.cls = cls;
         if (intCast != null) {
             defineCast(LispType.INT, intCast);
             intCast.defineCast(LispType.FLOAT, this);
@@ -19,7 +21,11 @@ public class LispFloat extends LispObject {
     }
 
     public LispFloat(double value) {
-        this(value, new LispInt((long)value, null));
+        this(value, new LispInt((long)value, null, long.class), double.class);
+    }
+
+    public LispFloat(float value) {
+        this(value, new LispInt((long)value, null, long.class), float.class);
     }
 
     public double getValue() {
@@ -35,11 +41,14 @@ public class LispFloat extends LispObject {
     }
 
     public Object getJavaObject() {
+        if (cls == float.class) {
+            return (float)value;
+        }
         return value;
     }
 
     public Class<?> getJavaClass() {
-        return Double.TYPE;
+        return cls;
     }
 
 }

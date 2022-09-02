@@ -99,7 +99,7 @@ class LispStringIterator extends LispIterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        int chr = string.codePointAt(pos++);
+        char chr = string.charAt(pos++);
         return new LispInt(chr);
     }
 

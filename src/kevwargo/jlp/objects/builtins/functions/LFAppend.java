@@ -35,5 +35,5 @@ public class LFAppend extends LispFunction {
         }
         return new LispList(result);
     }
-    
+
 }

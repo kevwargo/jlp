@@ -8,18 +8,36 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LispInt extends LispObject {
 
     private long value;
+    private Class<?> cls;
 
-    LispInt(long value, LispFloat floatCast) {
+    public LispInt(long value) {
+        this(value, new LispFloat((double)value, null, double.class), long.class);
+    }
+
+    public LispInt(int value) {
+        this((long)value, new LispFloat((double)value, null, double.class), int.class);
+    }
+
+    public LispInt(short value) {
+        this((long)value, new LispFloat((double)value, null, double.class), short.class);
+    }
+
+    public LispInt(char value) {
+        this((long)value, new LispFloat((double)value, null, double.class), char.class);
+    }
+
+    public LispInt(byte value) {
+        this((long)value, new LispFloat((double)value, null, double.class), byte.class);
+    }
+
+    LispInt(long value, LispFloat floatCast, Class<?> cls) {
         super(LispType.INT);
+        this.cls = cls;
         this.value = value;
         if (floatCast != null) {
             defineCast(LispType.FLOAT, floatCast);
             floatCast.defineCast(LispType.INT, this);
         }
-    }
-
-    public LispInt(long value) {
-        this(value, new LispFloat((double)value, null));
     }
 
     public long getValue() {
@@ -35,11 +53,23 @@ public class LispInt extends LispObject {
     }
 
     public Object getJavaObject() {
-        return (int)value;
+        if (cls == int.class) {
+            return (int)value;
+        }
+        if (cls == short.class) {
+            return (short)value;
+        }
+        if (cls == char.class) {
+            return (char)value;
+        }
+        if (cls == byte.class) {
+            return (byte)value;
+        }
+        return value;
     }
 
     public Class<?> getJavaClass() {
-        return Integer.TYPE;
+        return cls;
     }
 
 }

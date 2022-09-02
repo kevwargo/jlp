@@ -54,5 +54,5 @@ public class FormalArguments {
         this.rest = rest;
         return this;
     }
-    
+
 }

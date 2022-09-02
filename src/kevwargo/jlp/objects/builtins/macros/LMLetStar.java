@@ -15,5 +15,5 @@ public class LMLetStar extends LMLet {
     protected LispNamespace getVarValNamespace(LispNamespace namespace, Map<String, LispObject> prevDefs) {
         return namespace.prepend(prevDefs);
     }
-    
+
 }
