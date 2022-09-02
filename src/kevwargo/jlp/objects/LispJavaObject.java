@@ -1,6 +1,5 @@
 package kevwargo.jlp.objects;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,10 +17,9 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LispJavaObject extends LispObject {
 
     private Object obj;
-    private Class<?> cls;
+    protected Class<?> cls;
     private Map<String, Field> fields;
     private Map<String, MethodProxy> methods;
-    private Constructor<?>[] constructors;
 
     public LispJavaObject(Object obj) {
         this(obj, obj.getClass());
@@ -37,10 +35,7 @@ public class LispJavaObject extends LispObject {
     }
 
     public Object getObject() {
-        if (obj != null) {
-            return obj;
-        }
-        return cls;
+        return obj;
     }
 
     public String repr() {
@@ -48,9 +43,6 @@ public class LispJavaObject extends LispObject {
     }
 
     public String toString() {
-        if (obj == null) {
-            return cls.toString();
-        }
         return obj.toString();
     }
 
@@ -102,13 +94,8 @@ public class LispJavaObject extends LispObject {
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        if (obj != null) {
-            throw new LispException("The instance of '%s' is not callable", cls);
-        }
-
-        throw new LispException("Instantiating Java classes is not yet implemented");
+        throw new LispException("The instance of '%s' is not callable", cls);
     }
-
 
     private void initClass() {
         fields = new HashMap<String, Field>();
@@ -126,8 +113,6 @@ public class LispJavaObject extends LispObject {
                 method.addMethod(m);
             }
         }
-
-        constructors = cls.getConstructors();
     }
 
     private class MethodProxy extends LispFunction {
@@ -192,7 +177,7 @@ public class LispJavaObject extends LispObject {
 
 
             if (foundMethod == null) {
-                throw new LispException("No method '%s' for the provided arguments", name);
+                throw new LispException("'%s' has no method '%s' for the provided arguments", LispJavaObject.this.cls.getName(), name);
             }
 
             try {
@@ -201,7 +186,6 @@ public class LispJavaObject extends LispObject {
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NullPointerException | ExceptionInInitializerError exc) {
                 throw new LispException(exc);
             }
-
         }
 
     }
