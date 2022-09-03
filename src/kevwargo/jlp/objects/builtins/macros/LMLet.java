@@ -17,20 +17,22 @@ import kevwargo.jlp.utils.LispNamespace;
 
 public class LMLet extends LispFunction {
 
+    public static final String ARG_MAPPINGS = "mappings";
+    public static final String ARG_BODY = "body";
+
+    protected boolean usePrevMappings;
+
     public LMLet() {
-        this("let");
+        this("let", false);
     }
 
-    protected LMLet(String name) {
-        super(LispType.MACRO, name, new FormalArguments().pos("mappings").rest("body"));
-    }
-
-    protected LispNamespace getVarValNamespace(LispNamespace namespace, Map<String, LispObject> prevDefs) {
-        return namespace;
+    protected LMLet(String name, boolean usePrevMappings) {
+        super(LispType.MACRO, name, new FormalArguments(ARG_MAPPINGS).rest(ARG_BODY));
+        this.usePrevMappings = usePrevMappings;
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        LispObject mappingsObject = arguments.get("mappings").cast(LispType.LIST);
+        LispObject mappingsObject = arguments.get(ARG_MAPPINGS).cast(LispType.LIST);
         Map<String, LispObject> mappings = new HashMap<String, LispObject>();
         Iterator<LispObject> iterator = ((LispList)mappingsObject).iterator();
         while (iterator.hasNext()) {
@@ -42,7 +44,7 @@ public class LMLet extends LispFunction {
                 LispObject varObject = mappingIterator.next().cast(LispType.SYMBOL);
                 LispObject valObject = LispBool.NIL;
                 if (mappingIterator.hasNext()) {
-                    valObject = mappingIterator.next().eval(getVarValNamespace(namespace, mappings));
+                    valObject = mappingIterator.next().eval(usePrevMappings ? namespace.prepend(mappings) : namespace);
                 }
                 if (mappingIterator.hasNext()) {
                     throw new LispException("Mapping must be of structure (var val), not '%s'", mapping.toString());
@@ -54,7 +56,7 @@ public class LMLet extends LispFunction {
         }
         LispNamespace localNamespace = namespace.prepend(mappings);
         LispObject result = LispBool.NIL;
-        Iterator<LispObject> bodyIterator = ((LispList)arguments.get("body")).iterator();
+        Iterator<LispObject> bodyIterator = ((LispList)arguments.get(ARG_BODY)).iterator();
         while (bodyIterator.hasNext()) {
             result = bodyIterator.next().eval(localNamespace);
         }

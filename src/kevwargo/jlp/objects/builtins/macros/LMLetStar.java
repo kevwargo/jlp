@@ -9,11 +9,7 @@ import kevwargo.jlp.objects.LispObject;
 public class LMLetStar extends LMLet {
 
     public LMLetStar() {
-        super("let*");
-    }
-
-    protected LispNamespace getVarValNamespace(LispNamespace namespace, Map<String, LispObject> prevDefs) {
-        return namespace.prepend(prevDefs);
+        super("let*", true);
     }
 
 }
