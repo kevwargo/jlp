@@ -26,6 +26,11 @@ public class FormalArguments {
         return this;
     }
 
+    public FormalArguments pos(int index, String arg) {
+        positional.add(index, arg);
+        return this;
+    }
+
     public List<String> opt() {
         return optional;
     }
