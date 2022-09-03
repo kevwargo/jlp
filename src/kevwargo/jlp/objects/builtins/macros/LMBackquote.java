@@ -24,7 +24,7 @@ public class LMBackquote extends LispFunction {
     private static final LispSymbol symUnfold = new LispSymbol(",@");
 
     public LMBackquote() {
-        super(LispType.MACRO, NAME, new FormalArguments().pos(ARG_EXPR));
+        super(LispType.MACRO, NAME, new FormalArguments(ARG_EXPR));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

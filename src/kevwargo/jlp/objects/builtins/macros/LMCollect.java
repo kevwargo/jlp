@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMCollect extends LispFunction {
 
     public LMCollect() {
-        super(LispType.MACRO, "collect", new FormalArguments("body"));
+        super(LispType.MACRO, "collect", new FormalArguments().rest("body"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
@@ -39,7 +39,7 @@ public class LMCollect extends LispFunction {
         private boolean from;
 
         public YieldFunction(LispList result, boolean from) {
-            super(LispType.FUNCTION, "yield" + (from ? "-from" : ""), new FormalArguments().pos("obj"));
+            super(LispType.FUNCTION, "yield" + (from ? "-from" : ""), new FormalArguments("obj"));
             this.result = result;
             this.from = from;
         }

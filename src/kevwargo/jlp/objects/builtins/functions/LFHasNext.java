@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFHasNext extends LispFunction {
 
     public LFHasNext() {
-        super(LispType.FUNCTION, "has-next", new FormalArguments().pos("obj"));
+        super(LispType.FUNCTION, "has-next", new FormalArguments("obj"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

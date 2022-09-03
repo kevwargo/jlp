@@ -13,7 +13,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFEval extends LispFunction {
 
     public LFEval() {
-        super(LispType.FUNCTION, "eval", (new FormalArguments()).pos("object"));
+        super(LispType.FUNCTION, "eval", new FormalArguments("object"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

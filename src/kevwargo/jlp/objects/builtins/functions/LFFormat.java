@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFFormat extends LispFunction {
 
     public LFFormat() {
-        super(LispType.FUNCTION, "format", new FormalArguments("args").pos("fmt"));
+        super(LispType.FUNCTION, "format", new FormalArguments("fmt").rest("args"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

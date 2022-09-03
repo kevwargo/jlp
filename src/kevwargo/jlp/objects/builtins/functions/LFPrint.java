@@ -13,7 +13,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFPrint extends LispFunction {
 
     public LFPrint() {
-        super(LispType.FUNCTION, "print", new FormalArguments().pos("obj"));
+        super(LispType.FUNCTION, "print", new FormalArguments("obj"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

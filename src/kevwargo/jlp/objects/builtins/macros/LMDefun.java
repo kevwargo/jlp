@@ -28,7 +28,7 @@ public class LMDefun extends LispFunction {
     }
 
     public LMDefun(String name) {
-        this(name, (new FormalArguments()).pos(ARG_NAME).pos(ARG_ARGLIST).rest(ARG_BODY));
+        this(name, new FormalArguments(ARG_NAME, ARG_ARGLIST).rest(ARG_BODY));
     }
 
     public LMDefun(String name, FormalArguments formalArguments) {
@@ -111,7 +111,7 @@ public class LMDefun extends LispFunction {
     private static class ReturnFunction extends LispFunction {
 
         public ReturnFunction() {
-            super(LispType.FUNCTION, "return", new FormalArguments().pos("obj"));
+            super(LispType.FUNCTION, "return", new FormalArguments("obj"));
         }
 
         protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFNth extends LispFunction {
 
     public LFNth() {
-        super(LispType.FUNCTION, "nth", new FormalArguments().pos("n").pos("list"));
+        super(LispType.FUNCTION, "nth", new FormalArguments("n", "list"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

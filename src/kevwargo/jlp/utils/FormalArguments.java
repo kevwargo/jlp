@@ -9,18 +9,11 @@ public class FormalArguments {
     private String rest;
     private List<String> optional;
 
-    public FormalArguments() {
-        this(null);
-    }
-
-    public FormalArguments(String rest) {
-        this(new ArrayList<String>(), rest);
-    }
-
-    public FormalArguments(List<String> positional, String rest) {
-        this.positional = positional;
-        this.rest = rest;
-        this.optional = new ArrayList<String>();
+    public FormalArguments(String... args) {
+        positional = new ArrayList<String>(args.length);
+        for (String arg : args) {
+            positional.add(arg);
+        }
     }
 
     public List<String> pos() {
@@ -29,11 +22,6 @@ public class FormalArguments {
 
     public FormalArguments pos(String arg) {
         positional.add(arg);
-        return this;
-    }
-
-    public FormalArguments pos(int index, String arg) {
-        positional.add(index, arg);
         return this;
     }
 

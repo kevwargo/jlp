@@ -17,7 +17,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFAppend extends LispFunction {
 
     public LFAppend() {
-        super(LispType.FUNCTION, "append", new FormalArguments("args"));
+        super(LispType.FUNCTION, "append", new FormalArguments().rest("args"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

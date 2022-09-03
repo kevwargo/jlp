@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFApply extends LispFunction {
 
     public LFApply() {
-        super(LispType.FUNCTION, "apply", new FormalArguments().pos("func").pos("args"));
+        super(LispType.FUNCTION, "apply", new FormalArguments("func", "args"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

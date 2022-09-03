@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMLambda extends LMDefun {
 
     public LMLambda() {
-        super("lambda", (new FormalArguments()).pos("arglist").rest("body"));
+        super("lambda", new FormalArguments("arglist").rest("body"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

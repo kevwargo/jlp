@@ -14,7 +14,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMQuote extends LispFunction {
 
     public LMQuote() {
-        super(LispType.MACRO, "quote", new FormalArguments().pos("obj"));
+        super(LispType.MACRO, "quote", new FormalArguments("obj"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

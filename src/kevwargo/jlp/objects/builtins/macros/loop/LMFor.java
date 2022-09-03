@@ -22,7 +22,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMFor extends LoopBase {
 
     public LMFor() {
-        super("for", new FormalArguments("body").pos("cond"));
+        super("for", new FormalArguments("cond").rest("body"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

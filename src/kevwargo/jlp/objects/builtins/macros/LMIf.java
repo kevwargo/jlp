@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMIf extends LispFunction {
 
     public LMIf() {
-        super(LispType.MACRO, "if", new FormalArguments().pos("condition").pos("true").rest("false"));
+        super(LispType.MACRO, "if", new FormalArguments("condition", "true").rest("false"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

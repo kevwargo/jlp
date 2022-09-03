@@ -17,7 +17,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFConcat extends LispFunction {
 
     public LFConcat() {
-        super(LispType.FUNCTION, "concat", new FormalArguments(new ArrayList<String>(), "args"));
+        super(LispType.FUNCTION, "concat", new FormalArguments().rest("args"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

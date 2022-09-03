@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFIsInstance extends LispFunction {
 
     public LFIsInstance() {
-        super(LispType.FUNCTION, "isinstance", new FormalArguments().pos("obj").pos("type"));
+        super(LispType.FUNCTION, "isinstance", new FormalArguments("obj", "type"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

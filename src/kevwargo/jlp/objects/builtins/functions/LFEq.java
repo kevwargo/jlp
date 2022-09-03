@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFEq extends LispFunction {
 
     LFEq(String name) {
-        super(LispType.FUNCTION, name, new FormalArguments().pos("arg1").pos("arg2"));
+        super(LispType.FUNCTION, name, new FormalArguments("arg1", "arg2"));
     }
 
     public LFEq() {

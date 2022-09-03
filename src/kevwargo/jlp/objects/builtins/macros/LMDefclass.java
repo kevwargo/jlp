@@ -18,7 +18,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LMDefclass extends LispFunction {
 
     public LMDefclass() {
-        super(LispType.MACRO, "defclass", new FormalArguments().pos("name").pos("bases").rest("body"));
+        super(LispType.MACRO, "defclass", new FormalArguments("name", "bases").rest("body"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

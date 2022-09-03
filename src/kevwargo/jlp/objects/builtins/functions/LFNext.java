@@ -16,7 +16,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFNext extends LispFunction {
 
     public LFNext() {
-        super(LispType.FUNCTION, "next", new FormalArguments().pos("obj"));
+        super(LispType.FUNCTION, "next", new FormalArguments("obj"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

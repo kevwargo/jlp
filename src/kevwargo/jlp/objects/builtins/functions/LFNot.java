@@ -15,7 +15,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFNot extends LispFunction {
 
     public LFNot() {
-        super(LispType.FUNCTION, "not", new FormalArguments().pos("obj"));
+        super(LispType.FUNCTION, "not", new FormalArguments("obj"));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

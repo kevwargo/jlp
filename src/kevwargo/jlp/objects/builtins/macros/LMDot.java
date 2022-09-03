@@ -22,7 +22,7 @@ public class LMDot extends LispFunction {
     public static final String ARG_VALUE = "value";
 
     public LMDot() {
-        super(LispType.MACRO, ".", new FormalArguments().pos(ARG_OBJ).pos(ARG_ATTR).opt(ARG_VALUE));
+        super(LispType.MACRO, ".", new FormalArguments(ARG_OBJ, ARG_ATTR).opt(ARG_VALUE));
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {

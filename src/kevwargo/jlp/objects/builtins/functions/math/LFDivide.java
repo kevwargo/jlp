@@ -17,7 +17,7 @@ import kevwargo.jlp.utils.LispNamespace;
 public class LFDivide extends ArithmeticFunction {
 
     public LFDivide() {
-        super("/", new FormalArguments().pos("first"));
+        super("/", new FormalArguments("first"));
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
