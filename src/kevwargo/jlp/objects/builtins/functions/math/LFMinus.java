@@ -22,7 +22,7 @@ public class LFMinus extends ArithmeticFunction {
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList)arguments.get("numbers").cast(LispType.LIST);
+        LispList numbers = (LispList)arguments.get(ARG_NUMBERS).cast(LispType.LIST);
         Iterator<LispObject> it = numbers.iterator();
         if (it.hasNext()) {
             LispObject first = it.next();

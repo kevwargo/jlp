@@ -40,7 +40,7 @@ public abstract class LispFunction extends LispObject {
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
-        HashMap<String, LispObject> argMap = new HashMap<String, LispObject>();
+        Map<String, LispObject> argMap = new HashMap<String, LispObject>();
         int al = arguments.getLength();
         int min = formalArguments.pos().size();
         int max = min + formalArguments.opt().size();

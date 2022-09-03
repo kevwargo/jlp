@@ -22,7 +22,7 @@ public class LFMultiply extends ArithmeticFunction {
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        Iterator<LispObject> it = ((LispList)arguments.get("numbers").cast(LispType.LIST)).iterator();
+        Iterator<LispObject> it = ((LispList)arguments.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
         return new Params(1, 1.0, it);
     }
 

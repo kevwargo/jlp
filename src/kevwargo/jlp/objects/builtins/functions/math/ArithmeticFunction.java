@@ -15,18 +15,20 @@ import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
 
-abstract public class ArithmeticFunction extends LispFunction {
+public abstract class ArithmeticFunction extends LispFunction {
 
-    abstract protected long addLong(long result, long value);
-    abstract protected double addDouble(double result, double value);
-    abstract protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException;
+    public static final String ARG_NUMBERS = "numbers";
+
+    protected abstract long addLong(long result, long value);
+    protected abstract double addDouble(double result, double value);
+    protected abstract Params parseParams(Map<String, LispObject> arguments) throws LispCastException;
 
     protected ArithmeticFunction(String name, FormalArguments args) {
-        super(LispType.FUNCTION, name, args.rest("numbers"));
+        super(LispType.FUNCTION, name, args.rest(ARG_NUMBERS));
     }
 
     protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList)arguments.get("numbers");
+        LispList numbers = (LispList)arguments.get(ARG_NUMBERS);
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
             if (first.isInstance(LispType.FLOAT)) {
