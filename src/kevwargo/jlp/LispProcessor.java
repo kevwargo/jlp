@@ -29,10 +29,6 @@ import kevwargo.jlp.objects.builtins.functions.math.LFDivide;
 import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
 import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
 import kevwargo.jlp.objects.builtins.functions.math.LFPlus;
-import kevwargo.jlp.objects.builtins.javareflect.AccessField;
-import kevwargo.jlp.objects.builtins.javareflect.CallMethod;
-import kevwargo.jlp.objects.builtins.javareflect.CreateInstance;
-import kevwargo.jlp.objects.builtins.javareflect.LoadClass;
 import kevwargo.jlp.objects.builtins.macros.LMBackquote;
 import kevwargo.jlp.objects.builtins.macros.LMCollect;
 import kevwargo.jlp.objects.builtins.macros.LMDefclass;
@@ -126,12 +122,6 @@ public class LispProcessor {
         map.put("equalp", new LFEqualp());
         map.put("isinstance", new LFIsInstance());
         map.put("collect", new LMCollect());
-
-        map.put("%class", new LoadClass());
-        map.put("%new", new CreateInstance());
-        map.put("%call", new CallMethod());
-        map.put("%get", new AccessField(false));
-        map.put("%set", new AccessField(true));
 
         namespace = new LispNamespace(map);
     }
