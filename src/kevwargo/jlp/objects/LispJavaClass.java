@@ -12,7 +12,15 @@ public class LispJavaClass extends LispJavaObject {
 
     private Constructor<?> constructors[];
 
-    public LispJavaClass(String name) throws LispException {
+    public static LispJavaClass forName(String name) {
+        try {
+            return new LispJavaClass(name);
+        } catch (LispException exc) {
+            return null;
+        }
+    }
+
+    private LispJavaClass(String name) throws LispException {
         super(null, resolveClass(name));
         constructors = cls.getConstructors();
     }
@@ -38,21 +46,14 @@ public class LispJavaClass extends LispJavaObject {
     }
 
     private static Class<?> resolveClass(String name) throws LispException {
-        Class<?> cls = null;
         try {
-            cls = Class.forName(name);
+            return Class.forName(name);
         } catch (ClassNotFoundException e) {}
-        if (cls == null) {
-            try {
-                cls = Class.forName("java.lang." + name);
-            } catch (ClassNotFoundException e) {}
-        }
+        try {
+            return Class.forName("java.lang." + name);
+        } catch (ClassNotFoundException e) {}
 
-        if (cls == null) {
-            throw new LispException("Java class '%s' not found", name);
-        }
-
-        return cls;
+        throw new LispException("Java class '%s' not found", name);
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {

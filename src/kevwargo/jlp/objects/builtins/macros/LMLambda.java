@@ -24,5 +24,5 @@ public class LMLambda extends LMDefun {
         LispList body = (LispList)arguments.get("body").cast(LispType.LIST);
         LispFunction function = createFunction("<lambda>", buildArgs(arglist), body, namespace);
         return function;
-    }    
+    }
 }

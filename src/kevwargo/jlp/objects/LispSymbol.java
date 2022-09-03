@@ -24,9 +24,12 @@ public class LispSymbol extends LispObject {
             return obj;
         }
 
-        LispObject clsWapper = new LispJavaClass(name);
-        namespace.bind(name, clsWapper);
-        return clsWapper;
+        LispObject cls = LispJavaClass.forName(name);
+        if (cls == null) {
+            throw new LispException("Symbol '%s' is not bound", name);
+        }
+        namespace.bind(name, cls);
+        return cls;
     }
 
     public String getName() {
