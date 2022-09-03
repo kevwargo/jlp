@@ -22,9 +22,12 @@
                                (cdr clause))
                        (car clause))))))
 
-(defun %~> (object &rest methods)
+(defmacro %~> (object &rest methods)
   (for (method methods)
-       (setq object (%call object method)))
+       (setq object
+             (if (isinstance method list)
+                 `((. ,object ,(car method)) ,@(cdr method))
+                 `((. ,object ,method)))))
   object)
 
 (defmacro ++ (var)
