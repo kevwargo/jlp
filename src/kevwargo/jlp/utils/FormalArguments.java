@@ -14,6 +14,7 @@ public class FormalArguments {
         for (String arg : args) {
             positional.add(arg);
         }
+        optional = new ArrayList<String>();
     }
 
     public List<String> pos() {
