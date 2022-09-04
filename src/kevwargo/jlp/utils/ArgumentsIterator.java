@@ -15,14 +15,18 @@ public class ArgumentsIterator {
     private LispObject first;
     private int length;
 
+    public ArgumentsIterator() {
+        this(new EmptyIterator(), null, 0);
+    }
+
+    public ArgumentsIterator(LispList list) {
+        this(list.iterator(), null, list.size());
+    }
+
     public ArgumentsIterator(Iterator<LispObject> iterator, LispNamespace evalNamespace, int length) {
         this.iterator = iterator;
         this.evalNamespace = evalNamespace;
         this.length = length;
-    }
-
-    public ArgumentsIterator() {
-        this(new EmptyIterator(), null, 0);
     }
 
     public boolean hasNext() {
