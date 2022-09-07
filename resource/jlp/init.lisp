@@ -40,3 +40,10 @@
   (print (apply format
                 (append (list fmt)
                         args))))
+
+(defmacro with-getters (getters object &rest body)
+  `(let (,@(mapcar (lambda (getter)
+                     `(,getter ((. ,object (concat "get"
+                                                   ,(capitalize (str getter)))))))
+                   getters))
+     ,@body))

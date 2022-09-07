@@ -42,13 +42,13 @@ public class LMDot extends LispFunction {
         return attr;
     }
 
-    private String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        LispObject attrObj = arguments.get(ARG_ATTR);
-        try {
-            return ((LispSymbol)attrObj.cast(LispType.SYMBOL)).getName();
-        } catch (LispCastException e) {
-            return attrObj.eval(namespace).toString();
+    private static String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        LispObject attr = arguments.get(ARG_ATTR);
+        if (attr.isInstance(LispType.SYMBOL)) {
+            return ((LispSymbol)attr.cast(LispType.SYMBOL)).getName();
         }
+
+        return attr.eval(namespace).toString();
     }
 
 }

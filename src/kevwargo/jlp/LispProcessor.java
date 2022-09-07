@@ -13,6 +13,7 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.LFAppend;
 import kevwargo.jlp.objects.builtins.functions.LFApply;
+import kevwargo.jlp.objects.builtins.functions.LFCapitalize;
 import kevwargo.jlp.objects.builtins.functions.LFConcat;
 import kevwargo.jlp.objects.builtins.functions.LFEq;
 import kevwargo.jlp.objects.builtins.functions.LFEqualp;
@@ -93,6 +94,7 @@ public class LispProcessor {
         map.put("format", new LFFormat());
         map.put("quote", new LMQuote());
         map.put("apply", new LFApply());
+        map.put(LFCapitalize.NAME, new LFCapitalize());
         map.put("concat", new LFConcat());
         map.put("defun", new LMDefun());
         map.put("defmacro", new LMDefmacro());
