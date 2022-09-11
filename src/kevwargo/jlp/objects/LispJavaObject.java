@@ -151,43 +151,66 @@ public class LispJavaObject extends LispObject {
                 index++;
             }
 
-            Method foundMethod = null;
-            try {
-                foundMethod = LispJavaObject.this.cls.getMethod(name, classes);
-            } catch (NoSuchMethodException exc) {
-                for (Method m : methods) {
-                    Class<?> paramTypes[] = m.getParameterTypes();
-                    if (paramTypes.length != classes.length) {
-                        continue;
-                    }
-
-                    index = 0;
-                    while (index < paramTypes.length && index < classes.length) {
-                        if (!paramTypes[index].isAssignableFrom(classes[index])) {
-                            break;
-                        }
-                        index++;
-                    }
-                    if (paramTypes.length == index) {
-                        foundMethod = m;
-                        break;
-                    }
-                }
-            }
-
-
-            if (foundMethod == null) {
-                throw new LispException("'%s' has no method '%s' for the provided arguments", LispJavaObject.this.cls.getName(), name);
+            Method method = LispJavaObject.this.findMethod(name, classes, methods);
+            if (method == null) {
+                throw new LispException("'%s' has no method '%s' for the provided arguments %s", LispJavaObject.this.cls.getName(), name, describeClasses(classes));
             }
 
             try {
-                Object result = foundMethod.invoke(LispJavaObject.this.obj, args);
-                return LispObject.wrap(result, foundMethod.getReturnType());
+                Object result = method.invoke(LispJavaObject.this.obj, args);
+                return LispObject.wrap(result, method.getReturnType());
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NullPointerException | ExceptionInInitializerError exc) {
                 throw new LispException(exc);
             }
         }
 
+    }
+
+    protected static boolean paramsMatch(Class<?> declared[], Class<?> actual[]) {
+        if (declared.length != actual.length) {
+            return false;
+        }
+
+        for (int i = 0; i < declared.length; i++) {
+            if (!declared[i].isAssignableFrom(actual[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected static String describeClasses(Class<?> params[]) {
+        StringBuilder sb = new StringBuilder("[");
+
+        int index = 0;
+        if (params.length > index) {
+            sb.append(params[index].getName());
+            index++;
+        }
+
+        while (params.length > index) {
+            sb.append(", ");
+            sb.append(params[index].getName());
+            index++;
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
+
+    private Method findMethod(String name, Class<?> params[], List<Method> methods) throws LispException {
+        try {
+            return cls.getMethod(name, params);
+        } catch (NoSuchMethodException exc) {
+            for (Method m : methods) {
+                if (paramsMatch(m.getParameterTypes(), params)) {
+                    return m;
+                }
+            }
+        }
+
+        return null;
     }
 
 }

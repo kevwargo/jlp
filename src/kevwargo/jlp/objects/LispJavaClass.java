@@ -15,12 +15,12 @@ public class LispJavaClass extends LispJavaObject {
     public static LispJavaClass forName(String name) {
         try {
             return new LispJavaClass(name);
-        } catch (LispException exc) {
+        } catch (ClassNotFoundException exc) {
             return null;
         }
     }
 
-    private LispJavaClass(String name) throws LispException {
+    private LispJavaClass(String name) throws ClassNotFoundException {
         super(null, resolveClass(name));
         constructors = cls.getConstructors();
     }
@@ -45,15 +45,15 @@ public class LispJavaClass extends LispJavaObject {
         return cls.getClass();
     }
 
-    private static Class<?> resolveClass(String name) throws LispException {
+    private static Class<?> resolveClass(String name) throws ClassNotFoundException {
         try {
             return Class.forName(name);
-        } catch (ClassNotFoundException e) {}
-        try {
-            return Class.forName("java.lang." + name);
-        } catch (ClassNotFoundException e) {}
-
-        throw new LispException("Java class '%s' not found", name);
+        } catch (ClassNotFoundException e) {
+            if (name.indexOf('.') == -1) {
+                return Class.forName("java.lang." + name);
+            }
+            throw e;
+        }
     }
 
     public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
@@ -68,41 +68,35 @@ public class LispJavaClass extends LispJavaObject {
             index++;
         }
 
-        Constructor foundConstructor = null;
+        Constructor constructor = findConstructor(classes);
+        if (constructor == null) {
+            throw new LispException("%s has no constructor for the provided arguments: %s", cls.getName(), describeClasses(classes));
+        }
+
         try {
-            foundConstructor = cls.getConstructor(classes);
+            Object result = constructor.newInstance(args);
+            return LispObject.wrap(result, cls);
+        } catch (IllegalAccessException |
+                IllegalArgumentException |
+                InstantiationException |
+                InvocationTargetException |
+                ExceptionInInitializerError exc) {
+            throw new LispException(exc);
+        }
+    }
+
+    private Constructor findConstructor(Class<?> params[]) {
+        try {
+            return cls.getConstructor(params);
         } catch (NoSuchMethodException exc) {
             for (Constructor c : constructors) {
-                Class<?> paramTypes[] = c.getParameterTypes();
-                if (paramTypes.length != classes.length) {
-                    continue;
-                }
-
-                index = 0;
-                while (index < paramTypes.length && index < classes.length) {
-                    if (!paramTypes[index].isAssignableFrom(classes[index])) {
-                        break;
-                    }
-                    index++;
-                }
-                if (paramTypes.length == index) {
-                    foundConstructor = c;
-                    break;
+                if (paramsMatch(c.getParameterTypes(), params)) {
+                    return c;
                 }
             }
         }
 
-
-        if (foundConstructor == null) {
-            throw new LispException("%s has no constructor for the provided arguments: %s", cls.getName());
-        }
-
-        try {
-            Object result = foundConstructor.newInstance(args);
-            return LispObject.wrap(result, cls);
-        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | ExceptionInInitializerError exc) {
-            throw new LispException(exc);
-        }
+        return null;
     }
 
 }
