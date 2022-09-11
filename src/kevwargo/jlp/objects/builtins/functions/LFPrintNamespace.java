@@ -1,6 +1,5 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.io.PrintStream;
 import java.util.Map;
 
 import kevwargo.jlp.LispException;
@@ -18,18 +17,9 @@ public class LFPrintNamespace extends LispFunction {
         super(LispType.FUNCTION, "print-namespace", new FormalArguments());
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        Map<String, LispObject> components[] = namespace.getComponents();
-        PrintStream out = namespace.getOutput();
-        out.println("NAMESPACE BEGIN");
-        for (Map<String, LispObject> component : components) {
-            out.println("{");
-            for (Map.Entry<String, LispObject> entry : component.entrySet()) {
-                out.printf("\t%s: %s\n", entry.getKey(), entry.getValue().toString());
-            }
-            out.println("}");
-        }
-        out.println("NAMESPACE END");
+    protected LispObject callInternal(LispNamespace ns, Map<String, LispObject> arguments) throws LispException {
+        ns.dump();
         return LispBool.NIL;
     }
+
 }

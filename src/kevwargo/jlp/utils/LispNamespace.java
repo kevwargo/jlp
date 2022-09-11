@@ -1,7 +1,9 @@
 package kevwargo.jlp.utils;
 
 import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispJavaObject;
@@ -88,6 +90,57 @@ public class LispNamespace {
             } catch (LispCastException e) {}
         }
         return System.out;
+    }
+
+    public void dump() {
+        printHeader();
+        boolean empty = printComponents();
+        printFooter(empty);
+    }
+
+    private void printHeader() {
+        System.out.printf("Namespace 0x%x: {", System.identityHashCode(this));
+    }
+
+    private boolean printComponents() {
+        if (components.length > 0) {
+            System.out.print("\n  ");
+            printComponent(components[0]);
+        } else {
+            return true;
+        }
+
+        for (int i = 1; i < components.length; i++) {
+            System.out.print(",\n  ");
+            printComponent(components[i]);
+        }
+
+        return false;
+    }
+
+    private void printComponent(Map<String, LispObject> component) {
+        System.out.printf("Map 0x%x: {", System.identityHashCode(component));
+        Map<String, LispObject> sorted = new TreeMap<String, LispObject>(component);
+        Iterator<Map.Entry<String, LispObject>> it = sorted.entrySet().iterator();
+
+        if (it.hasNext()) {
+            Map.Entry<String, LispObject> entry = it.next();
+            System.out.printf("\n    %s: %s", entry.getKey(), entry.getValue().toString());
+            while (it.hasNext()) {
+                entry = it.next();
+                System.out.printf(",\n    %s: %s", entry.getKey(), entry.getValue().toString());
+            }
+            System.out.print("\n  }");
+        } else {
+            System.out.print("}");
+        }
+    }
+
+    private void printFooter(boolean empty) {
+        if (!empty) {
+            System.out.print('\n');
+        }
+        System.out.println("}");
     }
 
 }
