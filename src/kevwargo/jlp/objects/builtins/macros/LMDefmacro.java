@@ -26,7 +26,7 @@ public class LMDefmacro extends LMDefun {
 
     protected static class Macro extends LMDefun.Function {
 
-        Macro(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
+        public Macro(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
             super(type, name, formalArguments, body, namespace);
         }
 

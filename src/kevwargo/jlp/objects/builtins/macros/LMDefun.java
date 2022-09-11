@@ -73,7 +73,7 @@ public class LMDefun extends LispFunction {
         LispList body;
         LispNamespace defNamespace;
 
-        Function(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
+        public Function(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
             super(type, name, formalArguments);
             this.body = body;
             defNamespace = namespace;
