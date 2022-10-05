@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class LMLet extends LispFunction {
         this.usePrevMappings = usePrevMappings;
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispList mappings = (LispList) arguments.get(ARG_MAPPINGS).cast(LispType.LIST);
         Map<String, LispObject> bindings = new HashMap<String, LispObject>();
@@ -39,19 +39,13 @@ public class LMLet extends LispFunction {
             if (mapping.isInstance(LispType.SYMBOL)) {
                 bindings.put(((LispSymbol) mapping).getName(), LispBool.NIL);
             } else if (mapping.isInstance(LispType.LIST)) {
-                Iterator<LispObject> mappingIterator = ((LispList) mapping).iterator();
-                LispSymbol variable = (LispSymbol) mappingIterator.next().cast(LispType.SYMBOL);
+                Iterator<LispObject> it = ((LispList) mapping).iterator();
+                LispSymbol variable = (LispSymbol) it.next().cast(LispType.SYMBOL);
                 LispObject value = LispBool.NIL;
-                if (mappingIterator.hasNext()) {
-                    value =
-                            mappingIterator
-                                    .next()
-                                    .eval(
-                                            usePrevMappings
-                                                    ? namespace.prepend(bindings)
-                                                    : namespace);
+                if (it.hasNext()) {
+                    value = it.next().eval(usePrevMappings ? runtime.with(bindings) : runtime);
                 }
-                if (mappingIterator.hasNext()) {
+                if (it.hasNext()) {
                     throw new LispException(
                             "Mapping must be of structure (var val), not '%s'", mapping.toString());
                 }
@@ -63,11 +57,11 @@ public class LMLet extends LispFunction {
             }
         }
 
-        LispNamespace localNamespace = namespace.prepend(bindings);
+        LispRuntime localRuntime = runtime.with(bindings);
         LispObject result = LispBool.NIL;
         Iterator<LispObject> bodyIterator = ((LispList) arguments.get(ARG_BODY)).iterator();
         while (bodyIterator.hasNext()) {
-            result = bodyIterator.next().eval(localNamespace);
+            result = bodyIterator.next().eval(localRuntime);
         }
         return result;
     }

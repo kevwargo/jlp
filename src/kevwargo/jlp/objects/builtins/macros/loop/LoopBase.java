@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.HashMap;
@@ -18,15 +18,15 @@ public abstract class LoopBase extends LispFunction {
         super(LispType.MACRO, name, formalArguments);
     }
 
-    protected boolean executeBody(LispNamespace namespace, LispList body) throws LispException {
+    protected boolean executeBody(LispRuntime runtime, LispList body) throws LispException {
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         map.put("break", new LoopExit(false));
         map.put("continue", new LoopExit(true));
-        LispNamespace bodyNamespace = namespace.prepend(map);
+        LispRuntime bodyRuntime = runtime.with(map);
         for (LispObject form : body) {
             LispLoopException exc = null;
             try {
-                form.eval(bodyNamespace);
+                form.eval(bodyRuntime);
             } catch (LispLoopException lle) {
                 if (lle.getLevel() > 1) {
                     exc = new LispLoopException(lle);
@@ -53,8 +53,8 @@ public abstract class LoopBase extends LispFunction {
             this.isContinue = isContinue;
         }
 
-        protected LispObject callInternal(
-                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
+                throws LispException {
             long level = 1;
             LispObject levelObject = arguments.get("level");
             if (levelObject != null) {

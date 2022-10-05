@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 public abstract class LispType extends LispObject {
@@ -71,12 +71,11 @@ public abstract class LispType extends LispObject {
         return String.format("<type '%s'>", name);
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
-        return makeInstance(namespace, arguments);
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
+        return makeInstance(runtime, arguments);
     }
 
-    public abstract LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public abstract LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException;
 }
 
@@ -86,15 +85,14 @@ class Type extends LispType {
         super("type");
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         if (arguments.getLength() == 1) {
             return arguments.next().getType();
         }
-        return super.call(namespace, arguments);
+        return super.call(runtime, arguments);
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (arguments.getLength() != 2) {
             throw new LispException("(%s) takes 1 or 2 arguments", getName());
@@ -107,7 +105,7 @@ class Type extends LispType {
             bases[pos++] = (LispType) base.cast(TYPE);
         }
         return new LispType(name, bases) {
-            public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
                     throws LispException {
                 // TODO: maybe bring back default constructor, idk
                 return new LispObject(Type.this);

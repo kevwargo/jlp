@@ -10,7 +10,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -21,9 +21,9 @@ public class LFEqualp extends LFEq {
         super("equalp");
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        if (super.callInternal(namespace, arguments) == LispBool.T) {
+        if (super.callInternal(runtime, arguments) == LispBool.T) {
             return LispBool.T;
         }
         if (equalp(arguments.get("arg1"), arguments.get("arg2"))) {

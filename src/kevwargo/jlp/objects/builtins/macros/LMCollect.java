@@ -5,7 +5,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.HashMap;
@@ -17,16 +17,16 @@ public class LMCollect extends LispFunction {
         super(LispType.MACRO, "collect", new FormalArguments().rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispList body = (LispList) arguments.get("body");
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         LispList result = new LispList();
         map.put("yield", new YieldFunction(result, false));
         map.put("yield-from", new YieldFunction(result, true));
-        LispNamespace bodyNamespace = namespace.prepend(map);
+        LispRuntime bodyRuntime = runtime.with(map);
         for (LispObject form : body) {
-            form.eval(bodyNamespace);
+            form.eval(bodyRuntime);
         }
         return result;
     }
@@ -42,8 +42,8 @@ public class LMCollect extends LispFunction {
             this.from = from;
         }
 
-        protected LispObject callInternal(
-                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
+                throws LispException {
             LispObject obj = arguments.get("obj");
             if (from) {
                 LispList list = (LispList) obj.cast(LispType.LIST);

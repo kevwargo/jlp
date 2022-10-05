@@ -7,6 +7,7 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public class LFEq extends LispFunction {
         this("eq");
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispObject obj1 = arguments.get("arg1");
         LispObject obj2 = arguments.get("arg2");

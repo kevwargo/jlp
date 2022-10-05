@@ -12,53 +12,53 @@ import java.util.TreeMap;
 
 public class LispNamespace {
 
-    private List<Map<String, LispObject>> components;
+    private List<Map<String, LispObject>> layers;
 
     public LispNamespace() {
-        components = new ArrayList<Map<String, LispObject>>();
+        layers = new ArrayList<Map<String, LispObject>>();
     }
 
     public LispNamespace(Map<String, LispObject> map) {
         this();
         if (!map.isEmpty()) {
-            components.add(map);
+            layers.add(map);
         }
     }
 
-    private LispNamespace(List<Map<String, LispObject>> components) {
-        this.components = components;
+    private LispNamespace(List<Map<String, LispObject>> layers) {
+        this.layers = layers;
     }
 
-    public LispNamespace prepend(Map<String, LispObject> map) {
-        if (map.isEmpty()) {
-            return this;
+    public LispNamespace with(Map<String, LispObject>... maps) {
+        List<Map<String, LispObject>> layers = new ArrayList<Map<String, LispObject>>(this.layers);
+        for (Map<String, LispObject> map : maps) {
+            if (!map.isEmpty()) {
+                layers.add(0, map);
+            }
         }
-        List<Map<String, LispObject>> components =
-                new ArrayList<Map<String, LispObject>>(this.components);
-        components.add(0, map);
-        return new LispNamespace(components);
+        return new LispNamespace(layers);
     }
 
     public void bind(String name, LispObject definition) {
-        Map<String, LispObject> component = null;
-        Iterator<Map<String, LispObject>> it = components.iterator();
+        Map<String, LispObject> layer = null;
+        Iterator<Map<String, LispObject>> it = layers.iterator();
         while (it.hasNext()) {
-            component = it.next();
-            if (component.containsKey(name)) {
-                component.put(name, definition);
+            layer = it.next();
+            if (layer.containsKey(name)) {
+                layer.put(name, definition);
                 return;
             }
         }
-        if (component == null) {
-            component = new HashMap<String, LispObject>();
-            components.add(component);
+        if (layer == null) {
+            layer = new HashMap<String, LispObject>();
+            layers.add(layer);
         }
-        component.put(name, definition);
+        layer.put(name, definition);
     }
 
     public LispObject get(String name) {
-        for (Map<String, LispObject> component : components) {
-            LispObject object = component.get(name);
+        for (Map<String, LispObject> layer : layers) {
+            LispObject object = layer.get(name);
             if (object != null) {
                 return object;
             }
@@ -72,7 +72,7 @@ public class LispNamespace {
 
     public void dump(PrintStream out) {
         dumpHeader(out);
-        dumpComponents(out);
+        dumpLayers(out);
         dumpFooter(out);
     }
 
@@ -80,25 +80,25 @@ public class LispNamespace {
         out.printf("Namespace 0x%x: {", System.identityHashCode(this));
     }
 
-    private void dumpComponents(PrintStream out) {
-        if (components.isEmpty()) {
+    private void dumpLayers(PrintStream out) {
+        if (layers.isEmpty()) {
             return;
         }
 
-        Iterator<Map<String, LispObject>> it = components.iterator();
-        Map<String, LispObject> component = it.next();
+        Iterator<Map<String, LispObject>> it = layers.iterator();
+        Map<String, LispObject> layer = it.next();
         out.print("\n  ");
-        dumpComponent(out, component);
+        dumpLayer(out, layer);
 
         while (it.hasNext()) {
             out.print(",\n  ");
-            dumpComponent(out, it.next());
+            dumpLayer(out, it.next());
         }
     }
 
-    private void dumpComponent(PrintStream out, Map<String, LispObject> component) {
-        out.printf("Map 0x%x: {", System.identityHashCode(component));
-        Map<String, LispObject> sorted = new TreeMap<String, LispObject>(component);
+    private void dumpLayer(PrintStream out, Map<String, LispObject> layer) {
+        out.printf("Map 0x%x: {", System.identityHashCode(layer));
+        Map<String, LispObject> sorted = new TreeMap<String, LispObject>(layer);
         Iterator<Map.Entry<String, LispObject>> it = sorted.entrySet().iterator();
 
         if (it.hasNext()) {
@@ -115,7 +115,7 @@ public class LispNamespace {
     }
 
     private void dumpFooter(PrintStream out) {
-        if (!components.isEmpty()) {
+        if (!layers.isEmpty()) {
             out.print('\n');
         }
         out.println("}");

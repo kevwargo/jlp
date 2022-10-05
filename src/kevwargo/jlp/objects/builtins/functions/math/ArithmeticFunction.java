@@ -9,6 +9,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Iterator;
@@ -40,7 +41,7 @@ public abstract class ArithmeticFunction extends LispFunction {
         return false;
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         Params params = parseParams(arguments);
         boolean isDouble = isDouble(arguments);

@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -15,8 +15,8 @@ public class LFEval extends LispFunction {
         super(LispType.FUNCTION, "eval", new FormalArguments("object"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        return arguments.get("object").eval(namespace);
+        return arguments.get("object").eval(runtime);
     }
 }

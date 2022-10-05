@@ -7,6 +7,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -17,15 +18,15 @@ public class LFFormat extends LispFunction {
         super(LispType.FUNCTION, "format", new FormalArguments("fmt").rest("args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispList argsList = (LispList) arguments.get("args");
-        Object args[] = new Object[argsList.size()];
+        Object fmtArgs[] = new Object[argsList.size()];
         int pos = 0;
         for (LispObject arg : argsList) {
-            args[pos++] = arg.format();
+            fmtArgs[pos++] = arg.format();
         }
         String fmt = ((LispString) arguments.get("fmt").cast(LispType.STRING)).getValue();
-        return new LispString(String.format(fmt, args));
+        return new LispString(String.format(fmt, fmtArgs));
     }
 }

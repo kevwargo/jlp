@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.HashMap;
@@ -138,7 +138,7 @@ public class LispObject {
         return instance;
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject eval(LispRuntime runtime) throws LispException {
         return this;
     }
 
@@ -162,11 +162,10 @@ public class LispObject {
         dict.put(name, value);
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         LispObject callable = getAttr("@call@");
         if (callable != null) {
-            return callable.call(namespace, arguments);
+            return callable.call(runtime, arguments);
         }
         throw new LispException("'%s' object is not callable", type.getName());
     }
@@ -211,7 +210,7 @@ class ObjectType extends LispType {
         super("object");
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         return new LispObject(this);
     }

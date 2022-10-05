@@ -2,6 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.lang.reflect.Constructor;
@@ -55,15 +56,14 @@ public class LispJavaClass extends LispJavaObject {
         }
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
-        Object args[] = new Object[arguments.getLength()];
-        Class<?> classes[] = new Class<?>[arguments.getLength()];
+    public LispObject call(LispRuntime runtime, ArgumentsIterator args) throws LispException {
+        Object arguments[] = new Object[args.getLength()];
+        Class<?> classes[] = new Class<?>[args.getLength()];
         int index = 0;
 
-        while (arguments.hasNext()) {
-            LispObject obj = arguments.next();
-            args[index] = obj.getJavaObject();
+        while (args.hasNext()) {
+            LispObject obj = args.next();
+            arguments[index] = obj.getJavaObject();
             classes[index] = obj.getJavaClass();
             index++;
         }
@@ -76,7 +76,7 @@ public class LispJavaClass extends LispJavaObject {
         }
 
         try {
-            Object result = constructor.newInstance(args);
+            Object result = constructor.newInstance(arguments);
             return LispObject.wrap(result, cls);
         } catch (IllegalAccessException
                 | IllegalArgumentException

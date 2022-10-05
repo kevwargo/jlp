@@ -9,7 +9,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class LMFor extends LoopBase {
         super("for", new FormalArguments("cond").rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispList cond = (LispList) arguments.get("cond").cast(LispType.LIST);
         if (cond.size() < 1 || cond.size() > 3) {
@@ -32,65 +32,64 @@ public class LMFor extends LoopBase {
         LispList body = (LispList) arguments.get("body").cast(LispType.LIST);
         switch (cond.size()) {
             case 1:
-                return executeWhile(cond.iterator().next(), body, namespace);
+                return executeWhile(cond.iterator().next(), body, runtime);
             case 2:
-                return executeIterator(cond, body, namespace);
+                return executeIterator(cond, body, runtime);
             default:
-                return executeSimple(cond, body, namespace);
+                return executeSimple(cond, body, runtime);
         }
     }
 
-    private LispObject executeWhile(LispObject cond, LispList body, LispNamespace namespace)
+    private LispObject executeWhile(LispObject cond, LispList body, LispRuntime runtime)
             throws LispException {
-        while (cond.eval(namespace) != LispBool.NIL) {
-            if (executeBody(namespace, body)) {
+        while (cond.eval(runtime) != LispBool.NIL) {
+            if (executeBody(runtime, body)) {
                 break;
             }
         }
         return LispBool.NIL;
     }
 
-    private LispObject executeSimple(LispList forCond, LispList body, LispNamespace namespace)
+    private LispObject executeSimple(LispList forCond, LispList body, LispRuntime runtime)
             throws LispException {
         LispObject init = forCond.get(0);
         LispObject cond = forCond.get(1);
         LispObject incr = forCond.get(2);
-        init.eval(namespace);
-        while (cond.eval(namespace) != LispBool.NIL) {
-            if (executeBody(namespace, body)) {
+        init.eval(runtime);
+        while (cond.eval(runtime) != LispBool.NIL) {
+            if (executeBody(runtime, body)) {
                 break;
             }
-            incr.eval(namespace);
+            incr.eval(runtime);
         }
         return LispBool.NIL;
     }
 
-    private LispObject executeIterator(LispList cond, LispList body, LispNamespace namespace)
+    private LispObject executeIterator(LispList cond, LispList body, LispRuntime runtime)
             throws LispException {
         String var = ((LispSymbol) cond.get(0).cast(LispType.SYMBOL)).getName();
-        LispObject iterator = cond.get(1).eval(namespace);
+        LispObject iterator = cond.get(1).eval(runtime);
 
         if (iterator.isInstance(LispType.LIST)) {
-            return executeList(var, (LispList) iterator.cast(LispType.LIST), body, namespace);
+            return executeList(var, (LispList) iterator.cast(LispType.LIST), body, runtime);
         }
         if (iterator.isInstance(LispType.STRING)) {
-            return executeString(var, (LispString) iterator.cast(LispType.STRING), body, namespace);
+            return executeString(var, (LispString) iterator.cast(LispType.STRING), body, runtime);
         }
         if (iterator.isInstance(LispType.JAVA_OBJECT)) {
             return executeJavaIterator(
-                    var, (LispJavaObject) iterator.cast(LispType.JAVA_OBJECT), body, namespace);
+                    var, (LispJavaObject) iterator.cast(LispType.JAVA_OBJECT), body, runtime);
         }
         throw new LispException(
                 "object of type '%s' is not iterable", iterator.getType().getName());
     }
 
-    private LispObject executeList(
-            String var, LispList list, LispList body, LispNamespace namespace)
+    private LispObject executeList(String var, LispList list, LispList body, LispRuntime runtime)
             throws LispException {
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         for (LispObject val : list) {
             map.put(var, val);
-            if (executeBody(namespace.prepend(map), body)) {
+            if (executeBody(runtime.with(map), body)) {
                 break;
             }
         }
@@ -98,14 +97,14 @@ public class LMFor extends LoopBase {
     }
 
     private LispObject executeString(
-            String var, LispString lispString, LispList body, LispNamespace namespace)
+            String var, LispString lispString, LispList body, LispRuntime runtime)
             throws LispException {
         String string = lispString.getValue();
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         int length = string.length();
         for (int i = 0; i < length; i++) {
             map.put(var, new LispInt(string.codePointAt(i)));
-            if (executeBody(namespace.prepend(map), body)) {
+            if (executeBody(runtime.with(map), body)) {
                 break;
             }
         }
@@ -114,12 +113,12 @@ public class LMFor extends LoopBase {
 
     @SuppressWarnings("unchecked")
     private LispObject executeJavaIterator(
-            String var, LispJavaObject javaObject, LispList body, LispNamespace namespace)
+            String var, LispJavaObject javaObject, LispList body, LispRuntime runtime)
             throws LispException {
         Object object = javaObject.getObject();
 
         if (object.getClass().isArray()) {
-            return executeJavaArray(var, (Object[]) object, body, namespace);
+            return executeJavaArray(var, (Object[]) object, body, runtime);
         }
 
         Iterator<Object> it;
@@ -135,7 +134,7 @@ public class LMFor extends LoopBase {
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         while (it.hasNext()) {
             map.put(var, new LispJavaObject(it.next()));
-            if (executeBody(namespace.prepend(map), body)) {
+            if (executeBody(runtime.with(map), body)) {
                 break;
             }
         }
@@ -143,12 +142,11 @@ public class LMFor extends LoopBase {
     }
 
     private LispObject executeJavaArray(
-            String var, Object array[], LispList body, LispNamespace namespace)
-            throws LispException {
+            String var, Object array[], LispList body, LispRuntime runtime) throws LispException {
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         for (Object object : array) {
             map.put(var, new LispJavaObject(object));
-            if (executeBody(namespace.prepend(map), body)) {
+            if (executeBody(runtime.with(map), body)) {
                 break;
             }
         }

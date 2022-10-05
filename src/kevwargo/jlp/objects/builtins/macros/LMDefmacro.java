@@ -6,6 +6,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -32,9 +33,9 @@ public class LMDefmacro extends LMDefun {
             super(type, name, formalArguments, body, namespace);
         }
 
-        protected LispObject callInternal(
-                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-            return super.callInternal(namespace, arguments).eval(namespace);
+        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
+                throws LispException {
+            return super.callInternal(runtime, arguments).eval(runtime);
         }
     }
 }

@@ -7,6 +7,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Iterator;
@@ -18,7 +19,7 @@ public class LFConcat extends LispFunction {
         super(LispType.FUNCTION, "concat", new FormalArguments().rest("args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         StringBuffer sb = new StringBuffer();
         Iterator<LispObject> iterator = ((LispList) arguments.get("args")).iterator();

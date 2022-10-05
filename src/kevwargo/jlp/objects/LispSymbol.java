@@ -3,6 +3,7 @@ package kevwargo.jlp.objects;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispSymbol extends LispObject {
@@ -14,10 +15,12 @@ public class LispSymbol extends LispObject {
         this.name = name;
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject eval(LispRuntime runtime) throws LispException {
         if (name.startsWith(":")) {
             return this;
         }
+
+        LispNamespace namespace = runtime.getNS();
         LispObject obj = namespace.get(name);
         if (obj != null) {
             return obj;
@@ -59,7 +62,7 @@ class SymbolType extends LispType {
         super("symbol", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         LispObject obj = arguments.next();
         if (obj.isInstance(this)) {

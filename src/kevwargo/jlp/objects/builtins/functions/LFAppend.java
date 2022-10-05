@@ -7,6 +7,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class LFAppend extends LispFunction {
         super(LispType.FUNCTION, "append", new FormalArguments().rest("args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         Iterator<LispObject> argsIterator =

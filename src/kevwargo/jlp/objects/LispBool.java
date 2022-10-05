@@ -2,6 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispBool extends LispObject {
@@ -39,7 +40,7 @@ class BoolType extends LispType {
         super("bool", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (arguments.getLength() < 1) {
             return LispBool.NIL;

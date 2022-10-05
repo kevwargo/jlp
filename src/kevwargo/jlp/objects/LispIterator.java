@@ -2,6 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.Iterator;
@@ -20,7 +21,7 @@ class IteratorType extends LispType {
         super("iterator", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (!arguments.hasNext()) {
             return new LispListIterator(new LispList());

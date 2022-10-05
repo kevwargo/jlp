@@ -5,7 +5,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 
@@ -17,12 +17,11 @@ public class LFApply extends LispFunction {
         super(LispType.FUNCTION, "apply", new FormalArguments("func", "args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispObject func = arguments.get("func");
         LispList args = (LispList) arguments.get("args").cast(LispType.LIST);
-        LispNamespace argsNamespace = func.isInstance(LispType.MACRO) ? null : namespace;
-        return func.call(
-                namespace, new ArgumentsIterator(args.iterator(), argsNamespace, args.size()));
+        LispRuntime argsRuntime = func.isInstance(LispType.MACRO) ? null : runtime;
+        return func.call(runtime, new ArgumentsIterator(args.iterator(), argsRuntime, args.size()));
     }
 }

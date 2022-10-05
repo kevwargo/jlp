@@ -5,6 +5,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ public class LFPrint extends LispFunction {
         super(LispType.FUNCTION, "print", new FormalArguments("obj"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispObject object = arguments.get("obj");
         System.out.println(object.toString());

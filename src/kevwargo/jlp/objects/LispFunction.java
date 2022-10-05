@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 
@@ -36,8 +36,7 @@ public abstract class LispFunction extends LispObject {
         return String.format("function '%s' at 0x%x", name, System.identityHashCode(this));
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         Map<String, LispObject> argMap = new HashMap<String, LispObject>();
         int al = arguments.getLength();
         int min = formalArguments.pos().size();
@@ -61,11 +60,11 @@ public abstract class LispFunction extends LispObject {
             }
             argMap.put(formalArguments.rest(), rest);
         }
-        return callInternal(namespace, argMap);
+        return callInternal(runtime, argMap);
     }
 
     protected abstract LispObject callInternal(
-            LispNamespace namespace, Map<String, LispObject> arguments) throws LispException;
+            LispRuntime runtime, Map<String, LispObject> arguments) throws LispException;
 }
 
 class FunctionType extends LispType {
@@ -78,7 +77,7 @@ class FunctionType extends LispType {
         super(name, new LispType[] {base});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         LispObject callable = arguments.next();
 
@@ -105,12 +104,11 @@ class WrappedFunction extends LispFunction {
         this.callable = callable;
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
-        return callable.call(namespace, arguments);
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
+        return callable.call(runtime, arguments);
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         // This method will never be called since the `call()` is overriden.
         return null;

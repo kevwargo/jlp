@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispMethod extends LispObject {
@@ -17,10 +17,9 @@ public class LispMethod extends LispObject {
         name = function.getName();
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         arguments.setFirst(object);
-        return function.call(namespace, arguments);
+        return function.call(runtime, arguments);
     }
 
     public String getName() {

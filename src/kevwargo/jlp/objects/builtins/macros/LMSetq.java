@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Iterator;
@@ -22,7 +22,7 @@ public class LMSetq extends LispFunction {
         super(LispType.MACRO, NAME, (new FormalArguments()).rest(ARG_DEFS));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         Iterator<LispObject> iterator =
                 ((LispList) arguments.get(ARG_DEFS).cast(LispType.LIST)).iterator();
@@ -34,8 +34,8 @@ public class LMSetq extends LispFunction {
                 throw new LispException(String.format("Odd number of arguments to '%s'", NAME));
             }
 
-            LispObject val = iterator.next().eval(namespace);
-            namespace.bind(var.getName(), val);
+            LispObject val = iterator.next().eval(runtime);
+            runtime.getNS().bind(var.getName(), val);
             result = val;
         }
         return result;

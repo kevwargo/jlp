@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Iterator;
@@ -18,17 +18,17 @@ public class LMIf extends LispFunction {
         super(LispType.MACRO, "if", new FormalArguments("condition", "true").rest("false"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispObject result;
-        if (arguments.get("condition").eval(namespace) != LispBool.NIL) {
-            result = arguments.get("true").eval(namespace);
+        if (arguments.get("condition").eval(runtime) != LispBool.NIL) {
+            result = arguments.get("true").eval(runtime);
         } else {
             result = LispBool.NIL;
             Iterator<LispObject> iterator =
                     ((LispList) arguments.get("false").cast(LispType.LIST)).iterator();
             while (iterator.hasNext()) {
-                result = iterator.next().eval(namespace);
+                result = iterator.next().eval(runtime);
             }
         }
         return result;

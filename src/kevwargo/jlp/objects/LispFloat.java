@@ -2,6 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispFloat extends LispObject {
@@ -57,7 +58,7 @@ class FloatType extends LispType {
         super("float", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (!arguments.hasNext()) {
             return new LispFloat(0.0);

@@ -6,6 +6,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class LFCapitalize extends LispFunction {
         super(LispType.FUNCTION, NAME, new FormalArguments(ARG_STRING));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         String string = ((LispString) arguments.get(ARG_STRING).cast(LispType.STRING)).getValue();
         return new LispString(string.substring(0, 1).toUpperCase() + string.substring(1));

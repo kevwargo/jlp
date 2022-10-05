@@ -1,7 +1,7 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.ArrayList;
@@ -59,16 +59,17 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         return special;
     }
 
-    public LispObject eval(LispNamespace namespace) throws LispException {
+    public LispObject eval(LispRuntime runtime) throws LispException {
         Iterator<LispObject> it = this.iterator();
         if (!it.hasNext()) {
             return LispBool.NIL;
         }
-        LispObject function = it.next().eval(namespace);
-        boolean isMacro = function.isInstance(LispType.MACRO);
-        ArgumentsIterator args =
-                new ArgumentsIterator(it, isMacro ? null : namespace, contents.size() - 1);
-        return function.call(namespace, args);
+
+        LispObject function = it.next().eval(runtime);
+        LispRuntime evalRuntime = function.isInstance(LispType.MACRO) ? null : runtime;
+        ArgumentsIterator args = new ArgumentsIterator(it, evalRuntime, contents.size() - 1);
+
+        return function.call(runtime, args);
     }
 
     public String repr() {
@@ -93,7 +94,7 @@ class ListType extends LispType {
         super("list", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         while (arguments.hasNext()) {

@@ -3,7 +3,7 @@ package kevwargo.jlp.utils;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class ArgumentsIterator {
 
     private Iterator<LispObject> iterator;
-    private LispNamespace evalNamespace;
+    private LispRuntime evalRuntime;
     private LispObject first;
     private int length;
 
@@ -23,10 +23,9 @@ public class ArgumentsIterator {
         this(list.iterator(), null, list.size());
     }
 
-    public ArgumentsIterator(
-            Iterator<LispObject> iterator, LispNamespace evalNamespace, int length) {
+    public ArgumentsIterator(Iterator<LispObject> iterator, LispRuntime evalRuntime, int length) {
         this.iterator = iterator;
-        this.evalNamespace = evalNamespace;
+        this.evalRuntime = evalRuntime;
         this.length = length;
     }
 
@@ -43,8 +42,8 @@ public class ArgumentsIterator {
             object = iterator.next();
         }
         length--;
-        if (evalNamespace != null) {
-            return object.eval(evalNamespace);
+        if (evalRuntime != null) {
+            return object.eval(evalRuntime);
         } else {
             return object;
         }

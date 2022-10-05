@@ -5,7 +5,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
 import java.util.Map;
@@ -16,11 +16,12 @@ public class LMLambda extends LMDefun {
         super("lambda", new FormalArguments("arglist").rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispList arglist = (LispList) arguments.get("arglist").cast(LispType.LIST);
         LispList body = (LispList) arguments.get("body").cast(LispType.LIST);
-        LispFunction function = createFunction("<lambda>", buildArgs(arglist), body, namespace);
+        LispFunction function =
+                createFunction("<lambda>", buildArgs(arglist), body, runtime.getNS());
         return function;
     }
 }

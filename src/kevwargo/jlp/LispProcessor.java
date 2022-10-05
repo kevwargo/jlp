@@ -40,17 +40,16 @@ import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
 import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
 import kevwargo.jlp.parser.LispParser;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
 
 public class LispProcessor {
 
     private static LispProcessor instance;
-    private LispNamespace namespace;
+    private LispRuntime runtime;
 
     private boolean verbose;
 
@@ -62,7 +61,7 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
-        namespace = new LispNamespace();
+        runtime = new LispRuntime();
         initNamespace();
         loadInitFile();
     }
@@ -137,7 +136,7 @@ public class LispProcessor {
     }
 
     public void define(String name, LispObject definition) {
-        namespace.bind(name, definition);
+        runtime.getNS().bind(name, definition);
     }
 
     public void define(LispFunction function) {
@@ -155,11 +154,9 @@ public class LispProcessor {
     public void process(LispParser parser, PrintStream outStream)
             throws IOException, LispException {
         LispObject lispObject;
-        HashMap<String, LispObject> map = new HashMap<String, LispObject>();
-        LispNamespace namespace = this.namespace.prepend(map);
         while ((lispObject = parser.read()) != null) {
             try {
-                LispObject result = lispObject.eval(namespace);
+                LispObject result = lispObject.eval(runtime);
                 if (verbose) {
                     System.out.println(result.repr());
                 }

@@ -2,6 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 
@@ -93,7 +94,7 @@ public class LispJavaObject extends LispObject {
         }
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         throw new LispException("The instance of '%s' is not callable", cls);
     }
@@ -140,15 +141,15 @@ public class LispJavaObject extends LispObject {
 
         // No varargs
         // No choosing the nearest by inheritance distance between actual vs declared arguments
-        protected LispObject callInternal(
-                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-            LispList argList = (LispList) arguments.get(ARG_PARAMS).cast(LispType.LIST);
-            Object args[] = new Object[argList.size()];
+        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> args)
+                throws LispException {
+            LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispType.LIST);
+            Object arguments[] = new Object[argList.size()];
             Class<?> classes[] = new Class<?>[argList.size()];
             int index = 0;
 
             for (LispObject obj : argList) {
-                args[index] = obj.getJavaObject();
+                arguments[index] = obj.getJavaObject();
                 classes[index] = obj.getJavaClass();
                 index++;
             }
@@ -161,7 +162,7 @@ public class LispJavaObject extends LispObject {
             }
 
             try {
-                Object result = method.invoke(LispJavaObject.this.obj, args);
+                Object result = method.invoke(LispJavaObject.this.obj, arguments);
                 return LispObject.wrap(result, method.getReturnType());
             } catch (IllegalAccessException
                     | IllegalArgumentException
@@ -228,7 +229,7 @@ class JavaObjectType extends LispType {
         super("java-object", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (arguments.hasNext()) {
             throw new LispException("java-object's constructor does not accept any arguments");
