@@ -2,7 +2,6 @@ package kevwargo.jlp;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.objects.builtins.functions.LFAppend;
@@ -41,7 +40,7 @@ import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
 import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
 import kevwargo.jlp.parser.LispParser;
-import kevwargo.jlp.utils.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -157,7 +156,6 @@ public class LispProcessor {
             throws IOException, LispException {
         LispObject lispObject;
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
-        map.put("*out*", new LispJavaObject(outStream));
         LispNamespace namespace = this.namespace.prepend(map);
         while ((lispObject = parser.read()) != null) {
             try {

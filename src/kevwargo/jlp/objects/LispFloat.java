@@ -1,8 +1,8 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.LispNamespace;
 
 public class LispFloat extends LispObject {
 
@@ -36,7 +36,7 @@ public class LispFloat extends LispObject {
     }
 
     public Object format() {
-        return new Double(value);
+        return Double.valueOf(value);
     }
 
     public Object getJavaObject() {

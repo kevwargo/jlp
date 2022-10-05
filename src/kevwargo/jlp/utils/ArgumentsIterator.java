@@ -3,6 +3,7 @@ package kevwargo.jlp.utils;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.runtime.LispNamespace;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

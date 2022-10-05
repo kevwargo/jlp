@@ -1,9 +1,6 @@
-package kevwargo.jlp.utils;
+package kevwargo.jlp.runtime;
 
-import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -69,68 +66,58 @@ public class LispNamespace {
         return null;
     }
 
-    public PrintStream getOutput() {
-        LispObject out = get("*out*");
-        if (out != null) {
-            try {
-                Object outStream = ((LispJavaObject) out.cast(LispType.JAVA_OBJECT)).getObject();
-                if (outStream instanceof PrintStream) {
-                    return (PrintStream) outStream;
-                }
-            } catch (LispCastException e) {
-            }
-        }
-        return System.out;
-    }
-
     public void dump() {
-        dumpHeader();
-        dumpComponents();
-        dumpFooter();
+        dump(System.out);
     }
 
-    private void dumpHeader() {
-        System.out.printf("Namespace 0x%x: {", System.identityHashCode(this));
+    public void dump(PrintStream out) {
+        dumpHeader(out);
+        dumpComponents(out);
+        dumpFooter(out);
     }
 
-    private void dumpComponents() {
+    private void dumpHeader(PrintStream out) {
+        out.printf("Namespace 0x%x: {", System.identityHashCode(this));
+    }
+
+    private void dumpComponents(PrintStream out) {
         if (components.isEmpty()) {
             return;
         }
 
         Iterator<Map<String, LispObject>> it = components.iterator();
         Map<String, LispObject> component = it.next();
-        System.out.print("\n  ");
-        dumpComponent(component);
+        out.print("\n  ");
+        dumpComponent(out, component);
 
         while (it.hasNext()) {
-            System.out.print(",\n  ");
-            dumpComponent(it.next());
+            out.print(",\n  ");
+            dumpComponent(out, it.next());
         }
     }
 
-    private void dumpComponent(Map<String, LispObject> component) {
-        System.out.printf("Map 0x%x: {", System.identityHashCode(component));
+    private void dumpComponent(PrintStream out, Map<String, LispObject> component) {
+        out.printf("Map 0x%x: {", System.identityHashCode(component));
         Map<String, LispObject> sorted = new TreeMap<String, LispObject>(component);
         Iterator<Map.Entry<String, LispObject>> it = sorted.entrySet().iterator();
 
         if (it.hasNext()) {
             Map.Entry<String, LispObject> entry = it.next();
-            System.out.printf("\n    %s: %s", entry.getKey(), entry.getValue().toString());
+            out.printf("\n    %s: %s", entry.getKey(), entry.getValue().toString());
             while (it.hasNext()) {
                 entry = it.next();
-                System.out.printf(",\n    %s: %s", entry.getKey(), entry.getValue().toString());
+                out.printf(",\n    %s: %s", entry.getKey(), entry.getValue().toString());
             }
-            System.out.print("\n  }");
+            out.print("\n  }");
         } else {
-            System.out.print("}");
+            out.print("}");
         }
     }
 
-    private void dumpFooter() {
+    private void dumpFooter(PrintStream out) {
         if (!components.isEmpty()) {
-            System.out.print('\n');
+            out.print('\n');
         }
-        System.out.println("}");
+        out.println("}");
     }
 }

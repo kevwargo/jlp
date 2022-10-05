@@ -6,8 +6,8 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.utils.FormalArguments;
-import kevwargo.jlp.utils.LispNamespace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +54,8 @@ public class LMBackquote extends LispFunction {
             }
             if (symUnfold.equals(first)) {
                 LispObject second = list.get(1).eval(namespace);
-                LispList sublist =
-                        (LispList)
-                                second.cast(
-                                        LispType
-                                                .LIST); // TODO: throw more readable exception if
-                                                        // not list
+                LispList sublist = (LispList) second.cast(LispType.LIST);
+                // TODO: throw more readable exception if not a list
                 for (LispObject elt : sublist) {
                     contents.add(elt);
                 }
