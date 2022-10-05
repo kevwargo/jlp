@@ -1,68 +1,63 @@
 package kevwargo.jlp.utils;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import kevwargo.jlp.LispCastException;
 import kevwargo.jlp.LispException;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.LispCastException;
 import kevwargo.jlp.objects.LispType;
+
 
 public class LispNamespace {
 
-    private Map<String, LispObject>[] components;
+    private List<Map<String, LispObject>> components;
 
-    @SuppressWarnings("unchecked")
     public LispNamespace() {
-        components = new Map[0];
+        components = new ArrayList<Map<String, LispObject>>();
     }
 
-    @SuppressWarnings("unchecked")
     public LispNamespace(Map<String, LispObject> map) {
-        components = new Map[1];
-        components[0] = map;
+        this();
+        if (!map.isEmpty()) {
+            components.add(map);
+        }
     }
 
-    public LispNamespace(Map<String, LispObject>[] components) {
+    private LispNamespace(List<Map<String, LispObject>> components) {
         this.components = components;
     }
 
-    @SuppressWarnings("unchecked")
-    public LispNamespace append(Map<String, LispObject> map) {
-        Map<String, LispObject>[] components = new Map[this.components.length + 1];
-        for (int i = 0; i < this.components.length; i++) {
-            components[i] = this.components[i];
-        }
-        components[this.components.length] = map;
-        return new LispNamespace(components);
-    }
-
-    @SuppressWarnings("unchecked")
     public LispNamespace prepend(Map<String, LispObject> map) {
-        Map<String, LispObject>[] components = new Map[this.components.length + 1];
-        components[0] = map;
-        for (int i = 1; i < components.length; i++) {
-            components[i] = this.components[i - 1];
+        if (map.isEmpty()) {
+            return this;
         }
+        List<Map<String, LispObject>> components = new ArrayList<Map<String, LispObject>>(this.components);
+        components.add(0, map);
         return new LispNamespace(components);
     }
 
     public void bind(String name, LispObject definition) {
-        int length = components.length;
-        boolean defined = false;
-        for (int i = 0; i < length - 1; i++) {
-            if (components[i].containsKey(name)) {
-                components[i].put(name, definition);
-                defined = true;
-                break;
+        Map<String, LispObject> component = null;
+        Iterator<Map<String, LispObject>> it = components.iterator();
+        while (it.hasNext()) {
+            component = it.next();
+            if (component.containsKey(name)) {
+                component.put(name, definition);
+                return;
             }
         }
-        if (length > 0 && !defined) {
-            components[length - 1].put(name, definition);
+        if (component == null) {
+            component = new HashMap<String, LispObject>();
+            components.add(component);
         }
+        component.put(name, definition);
     }
 
     public LispObject get(String name) {
@@ -73,10 +68,6 @@ public class LispNamespace {
             }
         }
         return null;
-    }
-
-    public Map<String, LispObject>[] getComponents() {
-        return components;
     }
 
     public PrintStream getOutput() {
@@ -93,32 +84,32 @@ public class LispNamespace {
     }
 
     public void dump() {
-        printHeader();
-        boolean empty = printComponents();
-        printFooter(empty);
+        dumpHeader();
+        dumpComponents();
+        dumpFooter();
     }
 
-    private void printHeader() {
+    private void dumpHeader() {
         System.out.printf("Namespace 0x%x: {", System.identityHashCode(this));
     }
 
-    private boolean printComponents() {
-        if (components.length > 0) {
-            System.out.print("\n  ");
-            printComponent(components[0]);
-        } else {
-            return true;
+    private void dumpComponents() {
+        if (components.isEmpty()) {
+            return;
         }
 
-        for (int i = 1; i < components.length; i++) {
+        Iterator<Map<String, LispObject>> it = components.iterator();
+        Map<String, LispObject> component = it.next();
+        System.out.print("\n  ");
+        dumpComponent(component);
+
+        while (it.hasNext()) {
             System.out.print(",\n  ");
-            printComponent(components[i]);
+            dumpComponent(it.next());
         }
-
-        return false;
     }
 
-    private void printComponent(Map<String, LispObject> component) {
+    private void dumpComponent(Map<String, LispObject> component) {
         System.out.printf("Map 0x%x: {", System.identityHashCode(component));
         Map<String, LispObject> sorted = new TreeMap<String, LispObject>(component);
         Iterator<Map.Entry<String, LispObject>> it = sorted.entrySet().iterator();
@@ -136,8 +127,8 @@ public class LispNamespace {
         }
     }
 
-    private void printFooter(boolean empty) {
-        if (!empty) {
+    private void dumpFooter() {
+        if (!components.isEmpty()) {
             System.out.print('\n');
         }
         System.out.println("}");
