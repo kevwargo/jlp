@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 

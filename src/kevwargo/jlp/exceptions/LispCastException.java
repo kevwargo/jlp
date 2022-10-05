@@ -1,4 +1,4 @@
-package kevwargo.jlp;
+package kevwargo.jlp.exceptions;
 
 public class LispCastException extends LispException {
 

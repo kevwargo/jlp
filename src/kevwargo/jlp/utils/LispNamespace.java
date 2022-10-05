@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import kevwargo.jlp.LispCastException;
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispCastException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;

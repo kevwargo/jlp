@@ -3,7 +3,7 @@ package kevwargo.jlp.objects.builtins.macros;
 import java.util.Iterator;
 import java.util.Map;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;

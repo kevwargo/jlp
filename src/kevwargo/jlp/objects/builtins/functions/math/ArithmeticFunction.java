@@ -3,13 +3,13 @@ package kevwargo.jlp.objects.builtins.functions.math;
 import java.util.Map;
 import java.util.Iterator;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;

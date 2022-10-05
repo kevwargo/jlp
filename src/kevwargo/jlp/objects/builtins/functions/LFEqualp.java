@@ -3,7 +3,7 @@ package kevwargo.jlp.objects.builtins.functions;
 import java.util.Iterator;
 import java.util.Map;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
@@ -15,7 +15,7 @@ import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.LispCastException;
+import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;

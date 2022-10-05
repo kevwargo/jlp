@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 

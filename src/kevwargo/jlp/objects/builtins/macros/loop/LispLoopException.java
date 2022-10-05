@@ -1,6 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros.loop;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 
 
 public class LispLoopException extends LispException {

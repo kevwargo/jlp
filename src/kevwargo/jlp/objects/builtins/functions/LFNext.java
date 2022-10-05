@@ -3,7 +3,7 @@ package kevwargo.jlp.objects.builtins.functions;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import kevwargo.jlp.LispException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispIterator;
