@@ -13,6 +13,7 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.builtins.functions.LFAppend;
 import kevwargo.jlp.objects.builtins.functions.LFApply;
+import kevwargo.jlp.objects.builtins.functions.LFBoundp;
 import kevwargo.jlp.objects.builtins.functions.LFCapitalize;
 import kevwargo.jlp.objects.builtins.functions.LFConcat;
 import kevwargo.jlp.objects.builtins.functions.LFEq;
@@ -66,66 +67,64 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
+        namespace = new LispNamespace();
         initNamespace();
         loadInitFile();
     }
 
     private void initNamespace() {
-        Map<String, LispObject> map = new HashMap<String, LispObject>();
+        define("object", LispType.OBJECT);
+        define("type", LispType.TYPE);
+        define("builtin-function", LispType.FUNCTION);
+        define("builtin-macro", LispType.MACRO);
+        define("function", LispType.FUNCTION);
+        define("macro", LispType.MACRO);
+        define("str", LispType.STRING);
+        define("bool", LispType.BOOL);
+        define("int", LispType.INT);
+        define("float", LispType.FLOAT);
+        define("list", LispType.LIST);
+        define("symbol", LispType.SYMBOL);
+        define("method", LispType.METHOD);
+        define("java-object", LispType.JAVA_OBJECT);
+        define("iterator", LispType.ITERATOR);
 
-        map.put("object", LispType.OBJECT);
-        map.put("type", LispType.TYPE);
-        map.put("builtin-function", LispType.FUNCTION);
-        map.put("builtin-macro", LispType.MACRO);
-        map.put("function", LispType.FUNCTION);
-        map.put("macro", LispType.MACRO);
-        map.put("str", LispType.STRING);
-        map.put("bool", LispType.BOOL);
-        map.put("int", LispType.INT);
-        map.put("float", LispType.FLOAT);
-        map.put("list", LispType.LIST);
-        map.put("symbol", LispType.SYMBOL);
-        map.put("method", LispType.METHOD);
-        map.put("java-object", LispType.JAVA_OBJECT);
-        map.put("iterator", LispType.ITERATOR);
+        define(new LMBackquote());
+        define(new LFPrint());
+        define(new LFFormat());
+        define(new LMQuote());
+        define(new LFApply());
+        define(new LFCapitalize());
+        define(new LFConcat());
+        define(new LMDefun());
+        define(new LMDefmacro());
+        define(new LMDefclass());
+        define(new LMLet());
+        define(new LMLetStar());
+        define(new LFAppend());
+        define(new LMIf());
+        define(new LMFor());
+        define(new LMProgn());
+        define(new LFNth());
+        define(new LMLambda());
+        define(new LMSetq());
+        define(new LFEval());
+        define(new LFPrintNamespace());
+        define(new LMDot());
+        define(new LFNext());
+        define(new LFHasNext());
 
-        map.put("`", new LMBackquote());
-        map.put("print", new LFPrint());
-        map.put("format", new LFFormat());
-        map.put("quote", new LMQuote());
-        map.put("apply", new LFApply());
-        map.put(LFCapitalize.NAME, new LFCapitalize());
-        map.put("concat", new LFConcat());
-        map.put("defun", new LMDefun());
-        map.put("defmacro", new LMDefmacro());
-        map.put("defclass", new LMDefclass());
-        map.put("let", new LMLet());
-        map.put("let*", new LMLetStar());
-        map.put("append", new LFAppend());
-        map.put("if", new LMIf());
-        map.put("for", new LMFor());
-        map.put("progn", new LMProgn());
-        map.put("nth", new LFNth());
-        map.put("lambda", new LMLambda());
-        map.put("setq", new LMSetq());
-        map.put("eval", new LFEval());
-        map.put("print-namespace", new LFPrintNamespace());
-        map.put(".", new LMDot());
-        map.put("next", new LFNext());
-        map.put("has-next", new LFHasNext());
+        define(new LFPlus());
+        define(new LFMinus());
+        define(new LFMultiply());
+        define(new LFDivide());
 
-        map.put("+", new LFPlus());
-        map.put("-", new LFMinus());
-        map.put("*", new LFMultiply());
-        map.put("/", new LFDivide());
-
-        map.put("not", new LFNot());
-        map.put("eq", new LFEq());
-        map.put("equalp", new LFEqualp());
-        map.put("isinstance", new LFIsInstance());
-        map.put("collect", new LMCollect());
-
-        namespace = new LispNamespace(map);
+        define(new LFNot());
+        define(new LFEq());
+        define(new LFEqualp());
+        define(new LFIsInstance());
+        define(new LMCollect());
+        define(new LFBoundp());
     }
 
     private void loadInitFile() {

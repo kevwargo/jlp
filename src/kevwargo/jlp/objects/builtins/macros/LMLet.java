@@ -32,29 +32,29 @@ public class LMLet extends LispFunction {
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        LispObject mappingsObject = arguments.get(ARG_MAPPINGS).cast(LispType.LIST);
-        Map<String, LispObject> mappings = new HashMap<String, LispObject>();
-        Iterator<LispObject> iterator = ((LispList)mappingsObject).iterator();
-        while (iterator.hasNext()) {
-            LispObject mapping = iterator.next();
+        LispList mappings = (LispList)arguments.get(ARG_MAPPINGS).cast(LispType.LIST);
+        Map<String, LispObject> bindings = new HashMap<String, LispObject>();
+
+        for (LispObject mapping : mappings) {
             if (mapping.isInstance(LispType.SYMBOL)) {
-                mappings.put(((LispSymbol)mapping).getName(), LispBool.NIL);
+                bindings.put(((LispSymbol)mapping).getName(), LispBool.NIL);
             } else if (mapping.isInstance(LispType.LIST)) {
                 Iterator<LispObject> mappingIterator = ((LispList)mapping).iterator();
-                LispObject varObject = mappingIterator.next().cast(LispType.SYMBOL);
-                LispObject valObject = LispBool.NIL;
+                LispSymbol variable = (LispSymbol)mappingIterator.next().cast(LispType.SYMBOL);
+                LispObject value = LispBool.NIL;
                 if (mappingIterator.hasNext()) {
-                    valObject = mappingIterator.next().eval(usePrevMappings ? namespace.prepend(mappings) : namespace);
+                    value = mappingIterator.next().eval(usePrevMappings ? namespace.prepend(bindings) : namespace);
                 }
                 if (mappingIterator.hasNext()) {
                     throw new LispException("Mapping must be of structure (var val), not '%s'", mapping.toString());
                 }
-                mappings.put(((LispSymbol)varObject).getName(), valObject);
+                bindings.put(variable.getName(), value);
             } else {
-                throw new LispException("Mapping must be a symbol or a list, not '%s'", mapping.toString());
+                throw new LispException("Mapping must be a symbol or a list, not '%s'", mapping.getType().toString());
             }
         }
-        LispNamespace localNamespace = namespace.prepend(mappings);
+
+        LispNamespace localNamespace = namespace.prepend(bindings);
         LispObject result = LispBool.NIL;
         Iterator<LispObject> bodyIterator = ((LispList)arguments.get(ARG_BODY)).iterator();
         while (bodyIterator.hasNext()) {
