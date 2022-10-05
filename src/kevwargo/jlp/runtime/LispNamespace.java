@@ -2,6 +2,7 @@ package kevwargo.jlp.runtime;
 
 import kevwargo.jlp.objects.LispObject;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +30,13 @@ public class LispNamespace {
         this.layers = layers;
     }
 
-    public LispNamespace with(Map<String, LispObject>... maps) {
-        List<Map<String, LispObject>> layers = new ArrayList<Map<String, LispObject>>(this.layers);
-        for (Map<String, LispObject> map : maps) {
-            if (!map.isEmpty()) {
-                layers.add(0, map);
-            }
+    public LispNamespace with(Map<String, LispObject> layer) {
+        if (layer.isEmpty()) {
+            return this;
         }
+
+        List<Map<String, LispObject>> layers = new ArrayList<Map<String, LispObject>>(this.layers);
+        layers.add(0, layer);
         return new LispNamespace(layers);
     }
 
@@ -66,8 +67,8 @@ public class LispNamespace {
         return null;
     }
 
-    public void dump() {
-        dump(System.out);
+    public void dump(OutputStream out) {
+        dump(new PrintStream(out));
     }
 
     public void dump(PrintStream out) {

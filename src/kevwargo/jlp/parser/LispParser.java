@@ -10,8 +10,6 @@ import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Stack;
@@ -23,10 +21,6 @@ public class LispParser {
     private LispList currentSexp;
     private HashMap<String, LispSymbol> symbolMap;
 
-    public LispParser(String filename) throws IOException {
-        this(new FileInputStream(filename));
-    }
-
     public LispParser(InputStream stream) {
         scanner = new LispScanner(stream);
         sexpStack = new Stack<LispList>();
@@ -35,9 +29,7 @@ public class LispParser {
 
     public LispObject read() throws LispException {
         LispObject object = readInternal();
-        if (object != null
-                && object.isInstance(LispType.LIST)
-                && !((LispList) object).iterator().hasNext()) {
+        if (object != null && object.isInstance(LispType.LIST) && ((LispList) object).isEmpty()) {
             return LispBool.NIL;
         }
         return object;

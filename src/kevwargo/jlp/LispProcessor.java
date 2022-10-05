@@ -38,18 +38,23 @@ import kevwargo.jlp.objects.builtins.macros.LMProgn;
 import kevwargo.jlp.objects.builtins.macros.LMQuote;
 import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
-import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
 import kevwargo.jlp.parser.LispParser;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class LispProcessor {
 
     private static LispProcessor instance;
-    private LispRuntime runtime;
+    private LispNamespace namespace;
 
     private boolean verbose;
 
@@ -61,7 +66,7 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
-        runtime = new LispRuntime();
+        namespace = new LispNamespace();
         initNamespace();
         loadInitFile();
     }
@@ -122,45 +127,83 @@ public class LispProcessor {
     }
 
     private void loadInitFile() {
-        InputStream is = getClass().getResourceAsStream("/jlp/init.lisp");
-        if (is == null) {
+        InputStream in = getClass().getResourceAsStream("/jlp/init.lisp");
+        if (in == null) {
             return;
         }
 
-        LispParser parser = new LispParser(is);
         try {
-            process(parser);
+            run(in);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void define(String name, LispObject definition) {
-        runtime.getNS().bind(name, definition);
+        namespace.bind(name, definition);
     }
 
     public void define(LispFunction function) {
         define(function.getName(), function);
     }
 
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
+    public void run(InputStream in) throws LispException {
+        run(in, System.out, System.err, false);
     }
 
-    public void process(LispParser parser) throws IOException, LispException {
-        process(parser, System.out);
+    public void runInteractive(InputStream in, OutputStream out, OutputStream err) {
+        try {
+            run(in, out, err, true);
+        } catch (LispException exc) {
+            // For interactive execute, the exception is handled in `execute()`
+        }
     }
 
-    public void process(LispParser parser, PrintStream outStream)
-            throws IOException, LispException {
-        LispObject lispObject;
-        while ((lispObject = parser.read()) != null) {
+    public void runServer(String host, int port) throws UnknownHostException, IOException {
+        InetAddress addr = InetAddress.getByName(host);
+        ServerSocket server = new ServerSocket(port, 10, addr);
+
+        while (!server.isClosed()) {
+            Socket clientSocket = server.accept();
+            InputStream in = clientSocket.getInputStream();
+            OutputStream out = clientSocket.getOutputStream();
+            System.out.printf("JLP client %s connected\n", clientSocket);
+
+            runInteractive(in, out, out);
+
+            clientSocket.close();
+            System.out.printf("JLP client %s disconnected\n", clientSocket);
+        }
+    }
+
+    private void run(InputStream in, OutputStream out, OutputStream err, boolean interactive)
+            throws LispException {
+        LispRuntime runtime = new LispRuntime(namespace, in, out);
+        LispParser parser = new LispParser(in);
+        PrintStream printOut = new PrintStream(out);
+        PrintStream printErr = new PrintStream(err);
+
+        while (true) {
+            if (interactive) {
+                printOut.print("JLP> ");
+                printOut.flush();
+            }
+
             try {
-                LispObject result = lispObject.eval(runtime);
-                if (verbose) {
-                    System.out.println(result.repr());
+                LispObject expr = parser.read();
+                if (expr == null) {
+                    break;
                 }
-            } catch (LispLoopException e) {
+
+                LispObject result = expr.eval(runtime);
+                if (interactive) {
+                    printOut.println(result);
+                }
+            } catch (LispException exc) {
+                if (!interactive) {
+                    throw exc;
+                }
+                exc.printStackTrace(printErr);
             }
         }
     }

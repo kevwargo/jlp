@@ -8,7 +8,6 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
-import java.io.PrintStream;
 import java.util.Map;
 
 public class LFPrintNamespace extends LispFunction {
@@ -19,7 +18,7 @@ public class LFPrintNamespace extends LispFunction {
 
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        runtime.getNS().dump(new PrintStream(runtime.getOut()));
+        runtime.getNS().dump(runtime.getOut());
         return LispBool.NIL;
     }
 }

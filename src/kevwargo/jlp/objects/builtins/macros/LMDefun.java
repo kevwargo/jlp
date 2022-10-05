@@ -92,7 +92,7 @@ public class LMDefun extends LispFunction {
             Map<String, LispObject> map = new HashMap<String, LispObject>();
             map.put("return", new ReturnFunction());
             map.put("$", this);
-            LispNamespace bodyNamespace = defNamespace.with(arguments, map);
+            LispNamespace bodyNamespace = defNamespace.with(arguments).with(map);
 
             Iterator<LispObject> bodyIterator = body.iterator();
             LispObject result = LispBool.NIL;

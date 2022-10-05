@@ -1,17 +1,19 @@
 package kevwargo.jlp;
 
-import kevwargo.jlp.parser.LispParser;
+import java.io.FileInputStream;
 
 public class Main {
 
     public static void main(String args[]) throws Exception {
-        LispParser parser;
-        if (args.length > 0) {
-            parser = new LispParser(args[0]);
-        } else {
-            parser = new LispParser(System.in);
-        }
         LispProcessor proc = LispProcessor.getInstance();
-        proc.process(parser);
+
+        if (args.length > 1) {
+            int port = Integer.parseInt(args[1]);
+            proc.runServer(args[0], port);
+        } else if (args.length == 1) {
+            proc.run(new FileInputStream(args[0]));
+        } else {
+            proc.runInteractive(System.in, System.out, System.err);
+        }
     }
 }

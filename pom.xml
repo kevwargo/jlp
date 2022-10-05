@@ -33,6 +33,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:removal</arg>
+                        <arg>-Xlint:unchecked</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

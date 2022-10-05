@@ -55,6 +55,10 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         return contents.size();
     }
 
+    public boolean isEmpty() {
+        return contents.isEmpty();
+    }
+
     public boolean isSpecial() {
         return special;
     }

@@ -1,7 +1,6 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
@@ -94,8 +93,7 @@ public class LispJavaObject extends LispObject {
         }
     }
 
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         throw new LispException("The instance of '%s' is not callable", cls);
     }
 
