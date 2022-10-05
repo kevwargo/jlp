@@ -1,28 +1,27 @@
 package kevwargo.jlp.objects;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public abstract class LispIterator extends LispObject implements Iterator<LispObject> {
 
     public LispIterator() {
         super(LispType.ITERATOR);
     }
-
 }
 
 class IteratorType extends LispType {
 
     IteratorType() {
-        super("iterator", new LispType[] { OBJECT });
+        super("iterator", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         if (!arguments.hasNext()) {
             return new LispListIterator(new LispList());
         }
@@ -32,31 +31,30 @@ class IteratorType extends LispType {
             return obj.cast(ITERATOR);
         }
         if (obj.isInstance(JAVA_OBJECT)) {
-            return handleJavaObject(((LispJavaObject)obj.cast(JAVA_OBJECT)).getObject());
+            return handleJavaObject(((LispJavaObject) obj.cast(JAVA_OBJECT)).getObject());
         }
         if (obj.isInstance(LIST)) {
-            return new LispListIterator((LispList)obj.cast(LIST));
+            return new LispListIterator((LispList) obj.cast(LIST));
         }
         if (obj.isInstance(STRING)) {
-            return new LispStringIterator((LispString)obj.cast(STRING));
+            return new LispStringIterator((LispString) obj.cast(STRING));
         }
         throw new LispException("object '%s' is not an iterator", obj);
     }
 
     @SuppressWarnings("unchecked")
     private LispIterator handleJavaObject(Object obj) throws LispException {
-        if (obj.getClass().isArray()){
-            return new JavaArrayIterator((Object[])obj);
+        if (obj.getClass().isArray()) {
+            return new JavaArrayIterator((Object[]) obj);
         }
         if (obj instanceof Iterable) {
-            return new JavaIterator(((Iterable<Object>)obj).iterator());
+            return new JavaIterator(((Iterable<Object>) obj).iterator());
         }
         if (obj instanceof Iterator) {
-            return new JavaIterator((Iterator<Object>)obj);
+            return new JavaIterator((Iterator<Object>) obj);
         }
         throw new LispException("java-object '%s' is not iterable", obj);
     }
-
 }
 
 class LispListIterator extends LispIterator {
@@ -75,7 +73,6 @@ class LispListIterator extends LispIterator {
     public LispObject next() throws NoSuchElementException {
         return it.next();
     }
-
 }
 
 class LispStringIterator extends LispIterator {
@@ -102,7 +99,6 @@ class LispStringIterator extends LispIterator {
         char chr = string.charAt(pos++);
         return new LispInt(chr);
     }
-
 }
 
 class JavaIterator extends LispIterator {
@@ -121,7 +117,6 @@ class JavaIterator extends LispIterator {
     public LispObject next() throws NoSuchElementException {
         return new LispJavaObject(it.next());
     }
-
 }
 
 class JavaArrayIterator extends LispIterator {
@@ -147,5 +142,4 @@ class JavaArrayIterator extends LispIterator {
         }
         return new LispJavaObject(array[pos++]);
     }
-
 }

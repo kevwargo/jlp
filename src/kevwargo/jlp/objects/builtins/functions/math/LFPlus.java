@@ -1,19 +1,13 @@
 package kevwargo.jlp.objects.builtins.functions.math;
 
-import java.util.Iterator;
-import java.util.Map;
-
-import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFloat;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispInt;
+import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
-import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Iterator;
+import java.util.Map;
 
 public class LFPlus extends ArithmeticFunction {
 
@@ -22,7 +16,8 @@ public class LFPlus extends ArithmeticFunction {
     }
 
     protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        Iterator<LispObject> it = ((LispList)arguments.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
+        Iterator<LispObject> it =
+                ((LispList) arguments.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
         return new Params(0, 0.0, it);
     }
 
@@ -33,5 +28,4 @@ public class LFPlus extends ArithmeticFunction {
     protected double addDouble(double result, double value) {
         return result + value;
     }
-
 }

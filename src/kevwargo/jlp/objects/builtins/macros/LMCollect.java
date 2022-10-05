@@ -1,9 +1,5 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -12,6 +8,8 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class LMCollect extends LispFunction {
 
@@ -19,8 +17,9 @@ public class LMCollect extends LispFunction {
         super(LispType.MACRO, "collect", new FormalArguments().rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        LispList body = (LispList)arguments.get("body");
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
+        LispList body = (LispList) arguments.get("body");
         Map<String, LispObject> map = new HashMap<String, LispObject>();
         LispList result = new LispList();
         map.put("yield", new YieldFunction(result, false));
@@ -31,7 +30,6 @@ public class LMCollect extends LispFunction {
         }
         return result;
     }
-
 
     private class YieldFunction extends LispFunction {
 
@@ -44,10 +42,11 @@ public class LMCollect extends LispFunction {
             this.from = from;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(
+                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             LispObject obj = arguments.get("obj");
             if (from) {
-                LispList list = (LispList)obj.cast(LispType.LIST);
+                LispList list = (LispList) obj.cast(LispType.LIST);
                 for (LispObject o : list) {
                     result.add(o);
                 }
@@ -56,7 +55,5 @@ public class LMCollect extends LispFunction {
             }
             return obj;
         }
-
     }
-
 }

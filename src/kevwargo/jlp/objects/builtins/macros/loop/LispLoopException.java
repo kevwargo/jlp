@@ -2,7 +2,6 @@ package kevwargo.jlp.objects.builtins.macros.loop;
 
 import kevwargo.jlp.exceptions.LispException;
 
-
 public class LispLoopException extends LispException {
 
     private boolean isContinue;
@@ -25,5 +24,4 @@ public class LispLoopException extends LispException {
     public boolean isContinue() {
         return isContinue;
     }
-
 }

@@ -1,12 +1,11 @@
 package kevwargo.jlp.objects;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class LispJavaClass extends LispJavaObject {
 
@@ -56,7 +55,8 @@ public class LispJavaClass extends LispJavaObject {
         }
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         Object args[] = new Object[arguments.getLength()];
         Class<?> classes[] = new Class<?>[arguments.getLength()];
         int index = 0;
@@ -70,17 +70,19 @@ public class LispJavaClass extends LispJavaObject {
 
         Constructor constructor = findConstructor(classes);
         if (constructor == null) {
-            throw new LispException("%s has no constructor for the provided arguments: %s", cls.getName(), describeClasses(classes));
+            throw new LispException(
+                    "%s has no constructor for the provided arguments: %s",
+                    cls.getName(), describeClasses(classes));
         }
 
         try {
             Object result = constructor.newInstance(args);
             return LispObject.wrap(result, cls);
-        } catch (IllegalAccessException |
-                IllegalArgumentException |
-                InstantiationException |
-                InvocationTargetException |
-                ExceptionInInitializerError exc) {
+        } catch (IllegalAccessException
+                | IllegalArgumentException
+                | InstantiationException
+                | InvocationTargetException
+                | ExceptionInInitializerError exc) {
             throw new LispException(exc);
         }
     }
@@ -98,5 +100,4 @@ public class LispJavaClass extends LispJavaObject {
 
         return null;
     }
-
 }

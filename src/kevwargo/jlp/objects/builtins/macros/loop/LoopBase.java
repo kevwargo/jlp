@@ -1,11 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros.loop;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
@@ -14,6 +9,8 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class LoopBase extends LispFunction {
 
@@ -44,25 +41,26 @@ public abstract class LoopBase extends LispFunction {
         return false;
     }
 
-
     private class LoopExit extends LispFunction {
 
         private boolean isContinue;
 
         public LoopExit(boolean isContinue) {
-            super(LispType.FUNCTION, (isContinue ? "continue" : "break"), new FormalArguments().opt("level"));
+            super(
+                    LispType.FUNCTION,
+                    (isContinue ? "continue" : "break"),
+                    new FormalArguments().opt("level"));
             this.isContinue = isContinue;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(
+                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             long level = 1;
             LispObject levelObject = arguments.get("level");
             if (levelObject != null) {
-                level = ((LispInt)levelObject.cast(LispType.INT)).getValue();
+                level = ((LispInt) levelObject.cast(LispType.INT)).getValue();
             }
             throw new LispLoopException(isContinue, level);
         }
-
     }
-
 }

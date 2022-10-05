@@ -1,9 +1,5 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -14,6 +10,9 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class LMDefun extends LispFunction {
 
@@ -21,7 +20,6 @@ public class LMDefun extends LispFunction {
     public static String ARG_NAME = "name";
     public static String ARG_ARGLIST = "arglist";
     public static String ARG_BODY = "body";
-
 
     public LMDefun() {
         this(NAME);
@@ -40,13 +38,13 @@ public class LMDefun extends LispFunction {
         Iterator<LispObject> iterator = arglist.iterator();
         while (iterator.hasNext()) {
             LispObject object = iterator.next().cast(LispType.SYMBOL);
-            LispSymbol symbol = (LispSymbol)object;
+            LispSymbol symbol = (LispSymbol) object;
             if (symbol.getName().equals("&rest")) {
                 if (!iterator.hasNext()) {
                     throw new LispException("&rest keyword must be followed by a symbol");
                 }
                 LispObject restObject = iterator.next().cast(LispType.SYMBOL);
-                args.rest(((LispSymbol)restObject).getName());
+                args.rest(((LispSymbol) restObject).getName());
                 break;
             }
             args.pos(symbol.getName());
@@ -54,32 +52,39 @@ public class LMDefun extends LispFunction {
         return args;
     }
 
-    protected LispFunction createFunction(String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
+    protected LispFunction createFunction(
+            String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
         return new Function(LispType.LISP_FUNCTION, name, formalArguments, body, namespace);
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        String name = ((LispSymbol)arguments.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
-        LispList arglist = (LispList)arguments.get(ARG_ARGLIST).cast(LispType.LIST);
-        LispList body = (LispList)arguments.get(ARG_BODY).cast(LispType.LIST);
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
+        String name = ((LispSymbol) arguments.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
+        LispList arglist = (LispList) arguments.get(ARG_ARGLIST).cast(LispType.LIST);
+        LispList body = (LispList) arguments.get(ARG_BODY).cast(LispType.LIST);
         LispFunction function = createFunction(name, buildArgs(arglist), body, namespace);
         namespace.bind(name, function);
         return function;
     }
-
 
     protected static class Function extends LispFunction {
 
         LispList body;
         LispNamespace defNamespace;
 
-        public Function(LispType type, String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
+        public Function(
+                LispType type,
+                String name,
+                FormalArguments formalArguments,
+                LispList body,
+                LispNamespace namespace) {
             super(type, name, formalArguments);
             this.body = body;
             defNamespace = namespace;
         }
 
-        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(
+                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             Map<String, LispObject> map = new HashMap<String, LispObject>();
             map.put("return", new ReturnFunction());
             map.put("$", this);
@@ -114,7 +119,8 @@ public class LMDefun extends LispFunction {
             super(LispType.FUNCTION, "return", new FormalArguments("obj"));
         }
 
-        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+        protected LispObject callInternal(
+                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
             throw new ReturnException(arguments.get("obj"));
         }
     }

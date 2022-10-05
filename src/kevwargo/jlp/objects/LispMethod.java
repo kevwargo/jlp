@@ -1,11 +1,8 @@
 package kevwargo.jlp.objects;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
-
 
 public class LispMethod extends LispObject {
 
@@ -20,7 +17,8 @@ public class LispMethod extends LispObject {
         name = function.getName();
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         arguments.setFirst(object);
         return function.call(namespace, arguments);
     }
@@ -32,5 +30,4 @@ public class LispMethod extends LispObject {
     public String repr() {
         return String.format("<bound method %s of %s>", name, object.repr());
     }
-
 }

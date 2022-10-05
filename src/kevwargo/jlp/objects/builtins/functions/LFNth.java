@@ -1,7 +1,5 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
@@ -11,6 +9,7 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Map;
 
 public class LFNth extends LispFunction {
 
@@ -18,11 +17,11 @@ public class LFNth extends LispFunction {
         super(LispType.FUNCTION, "nth", new FormalArguments("n", "list"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        long idx = ((LispInt)arguments.get("n").cast(LispType.INT)).getValue();
-        LispList list = (LispList)arguments.get("list").cast(LispType.LIST);
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
+        long idx = ((LispInt) arguments.get("n").cast(LispType.INT)).getValue();
+        LispList list = (LispList) arguments.get("list").cast(LispType.LIST);
 
-        return list.get((int)idx);
+        return list.get((int) idx);
     }
-
 }

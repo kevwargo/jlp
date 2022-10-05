@@ -2,7 +2,6 @@ package kevwargo.jlp;
 
 import kevwargo.jlp.parser.LispParser;
 
-
 public class Main {
 
     public static void main(String args[]) throws Exception {
@@ -15,5 +14,4 @@ public class Main {
         LispProcessor proc = LispProcessor.getInstance();
         proc.process(parser);
     }
-
 }

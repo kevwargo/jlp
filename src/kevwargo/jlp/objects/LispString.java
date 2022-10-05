@@ -1,10 +1,9 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.exceptions.LispCastException;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
-
 
 public class LispString extends LispObject {
 
@@ -24,12 +23,12 @@ public class LispString extends LispObject {
     }
 
     public String repr() {
-        return "\"" +
-            value.replaceAll("\"", "\\\\\"")
-            	.replaceAll("\n", "\\\\n")
-            	.replaceAll("\r", "\\\\r")
-            	.replaceAll("\t", "\\\\t") +
-            "\"";
+        return "\""
+                + value.replaceAll("\"", "\\\\\"")
+                        .replaceAll("\n", "\\\\n")
+                        .replaceAll("\r", "\\\\r")
+                        .replaceAll("\t", "\\\\t")
+                + "\"";
     }
 
     public int hashCode() {
@@ -43,9 +42,9 @@ public class LispString extends LispObject {
         if (!(other instanceof LispObject)) {
             return false;
         }
-        LispObject object = (LispObject)other;
+        LispObject object = (LispObject) other;
         try {
-            return value.equals(((LispString)object.cast(LispType.STRING)).getValue());
+            return value.equals(((LispString) object.cast(LispType.STRING)).getValue());
         } catch (LispCastException e) {
             return false;
         }
@@ -58,21 +57,20 @@ public class LispString extends LispObject {
     public Class<?> getJavaClass() {
         return String.class;
     }
-
 }
 
 class StringType extends LispType {
 
     StringType() {
-        super("str", new LispType[] { OBJECT });
+        super("str", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         if (arguments.hasNext()) {
             return new LispString(arguments.next().toString());
         } else {
             return new LispString("");
         }
     }
-
 }

@@ -1,10 +1,9 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.utils.LispNamespace;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
-
+import kevwargo.jlp.utils.LispNamespace;
 
 public class LispSymbol extends LispObject {
 
@@ -46,31 +45,31 @@ public class LispSymbol extends LispObject {
         }
 
         try {
-            LispSymbol symbol = (LispSymbol)((LispObject)obj).cast(LispType.SYMBOL);
+            LispSymbol symbol = (LispSymbol) ((LispObject) obj).cast(LispType.SYMBOL);
             return symbol.getName().equals(getName());
         } catch (LispCastException e) {
             return false;
         }
     }
-
 }
 
 class SymbolType extends LispType {
 
     SymbolType() {
-        super("symbol", new LispType[] { OBJECT });
+        super("symbol", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         LispObject obj = arguments.next();
         if (obj.isInstance(this)) {
             return obj;
         }
         if (obj.isInstance(LispType.STRING)) {
-            return new LispSymbol(((LispString)obj.cast(LispType.STRING)).getValue());
+            return new LispSymbol(((LispString) obj.cast(LispType.STRING)).getValue());
         }
 
-        throw new LispCastException("The argument to symbol's constructor should be a symbol or a string");
+        throw new LispCastException(
+                "The argument to symbol's constructor should be a symbol or a string");
     }
-
 }

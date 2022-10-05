@@ -1,5 +1,10 @@
 package kevwargo.jlp.objects;
 
+import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.LispNamespace;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,12 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
-import kevwargo.jlp.utils.LispNamespace;
-
 
 public class LispJavaObject extends LispObject {
 
@@ -78,7 +77,8 @@ public class LispJavaObject extends LispObject {
     public void setAttr(String name, LispObject value) throws LispException {
         if (!name.startsWith("#")) {
             throw new LispException("Cannot overwrite Java method");
-        };
+        }
+        ;
 
         name = name.substring(1);
         Field f = fields.get(name);
@@ -93,7 +93,8 @@ public class LispJavaObject extends LispObject {
         }
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         throw new LispException("The instance of '%s' is not callable", cls);
     }
 
@@ -139,8 +140,9 @@ public class LispJavaObject extends LispObject {
 
         // No varargs
         // No choosing the nearest by inheritance distance between actual vs declared arguments
-        protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-            LispList argList = (LispList)arguments.get(ARG_PARAMS).cast(LispType.LIST);
+        protected LispObject callInternal(
+                LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+            LispList argList = (LispList) arguments.get(ARG_PARAMS).cast(LispType.LIST);
             Object args[] = new Object[argList.size()];
             Class<?> classes[] = new Class<?>[argList.size()];
             int index = 0;
@@ -153,17 +155,22 @@ public class LispJavaObject extends LispObject {
 
             Method method = LispJavaObject.this.findMethod(name, classes, methods);
             if (method == null) {
-                throw new LispException("'%s' has no method '%s' for the provided arguments %s", LispJavaObject.this.cls.getName(), name, describeClasses(classes));
+                throw new LispException(
+                        "'%s' has no method '%s' for the provided arguments %s",
+                        LispJavaObject.this.cls.getName(), name, describeClasses(classes));
             }
 
             try {
                 Object result = method.invoke(LispJavaObject.this.obj, args);
                 return LispObject.wrap(result, method.getReturnType());
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NullPointerException | ExceptionInInitializerError exc) {
+            } catch (IllegalAccessException
+                    | IllegalArgumentException
+                    | InvocationTargetException
+                    | NullPointerException
+                    | ExceptionInInitializerError exc) {
                 throw new LispException(exc);
             }
         }
-
     }
 
     protected static boolean paramsMatch(Class<?> declared[], Class<?> actual[]) {
@@ -199,7 +206,8 @@ public class LispJavaObject extends LispObject {
         return sb.toString();
     }
 
-    private Method findMethod(String name, Class<?> params[], List<Method> methods) throws LispException {
+    private Method findMethod(String name, Class<?> params[], List<Method> methods)
+            throws LispException {
         try {
             return cls.getMethod(name, params);
         } catch (NoSuchMethodException exc) {
@@ -212,21 +220,20 @@ public class LispJavaObject extends LispObject {
 
         return null;
     }
-
 }
 
 class JavaObjectType extends LispType {
 
     JavaObjectType() {
-        super("java-object", new LispType[] { OBJECT });
+        super("java-object", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         if (arguments.hasNext()) {
             throw new LispException("java-object's constructor does not accept any arguments");
         }
 
         return new LispJavaObject(new Object());
     }
-
 }

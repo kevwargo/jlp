@@ -1,5 +1,10 @@
 package kevwargo.jlp.utils;
 
+import kevwargo.jlp.exceptions.LispCastException;
+import kevwargo.jlp.objects.LispJavaObject;
+import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.LispType;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,13 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispJavaObject;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
-
 
 public class LispNamespace {
 
@@ -38,7 +36,8 @@ public class LispNamespace {
         if (map.isEmpty()) {
             return this;
         }
-        List<Map<String, LispObject>> components = new ArrayList<Map<String, LispObject>>(this.components);
+        List<Map<String, LispObject>> components =
+                new ArrayList<Map<String, LispObject>>(this.components);
         components.add(0, map);
         return new LispNamespace(components);
     }
@@ -74,11 +73,12 @@ public class LispNamespace {
         LispObject out = get("*out*");
         if (out != null) {
             try {
-                Object outStream = ((LispJavaObject)out.cast(LispType.JAVA_OBJECT)).getObject();
+                Object outStream = ((LispJavaObject) out.cast(LispType.JAVA_OBJECT)).getObject();
                 if (outStream instanceof PrintStream) {
-                    return (PrintStream)outStream;
+                    return (PrintStream) outStream;
                 }
-            } catch (LispCastException e) {}
+            } catch (LispCastException e) {
+            }
         }
         return System.out;
     }
@@ -133,5 +133,4 @@ public class LispNamespace {
         }
         System.out.println("}");
     }
-
 }

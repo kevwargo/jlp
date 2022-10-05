@@ -1,25 +1,19 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
-import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Iterator;
+import java.util.Map;
 
 public class LFEqualp extends LFEq {
 
@@ -27,7 +21,8 @@ public class LFEqualp extends LFEq {
         super("equalp");
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         if (super.callInternal(namespace, arguments) == LispBool.T) {
             return LispBool.T;
         }
@@ -39,33 +34,39 @@ public class LFEqualp extends LFEq {
 
     private boolean equalp(LispObject obj1, LispObject obj2) throws LispException {
         if (obj1.isInstance(LispType.FLOAT) && obj2.isInstance(LispType.FLOAT)) {
-            if (((LispFloat)obj1.cast(LispType.FLOAT)).getValue() == ((LispFloat)obj2.cast(LispType.FLOAT)).getValue()) {
+            if (((LispFloat) obj1.cast(LispType.FLOAT)).getValue()
+                    == ((LispFloat) obj2.cast(LispType.FLOAT)).getValue()) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.FLOAT) && obj2.isInstance(LispType.INT)) {
-            if (((LispFloat)obj1.cast(LispType.FLOAT)).getValue() == ((LispInt)obj2.cast(LispType.INT)).getValue()) {
+            if (((LispFloat) obj1.cast(LispType.FLOAT)).getValue()
+                    == ((LispInt) obj2.cast(LispType.INT)).getValue()) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.INT) && obj2.isInstance(LispType.FLOAT)) {
-            if (((LispInt)obj1.cast(LispType.INT)).getValue() == ((LispFloat)obj2.cast(LispType.FLOAT)).getValue()) {
+            if (((LispInt) obj1.cast(LispType.INT)).getValue()
+                    == ((LispFloat) obj2.cast(LispType.FLOAT)).getValue()) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.INT) && obj2.isInstance(LispType.INT)) {
-            if (((LispInt)obj1.cast(LispType.INT)).getValue() == ((LispInt)obj2.cast(LispType.INT)).getValue()) {
+            if (((LispInt) obj1.cast(LispType.INT)).getValue()
+                    == ((LispInt) obj2.cast(LispType.INT)).getValue()) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.STRING) && obj2.isInstance(LispType.STRING)) {
-            if (((LispString)obj1.cast(LispType.STRING)).getValue().equals(((LispString)obj2.cast(LispType.STRING)).getValue())) {
+            if (((LispString) obj1.cast(LispType.STRING))
+                    .getValue()
+                    .equals(((LispString) obj2.cast(LispType.STRING)).getValue())) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.LIST) && obj2.isInstance(LispType.LIST)) {
-            Iterator<LispObject> it1 = ((LispList)obj1.cast(LispType.LIST)).iterator();
-            Iterator<LispObject> it2 = ((LispList)obj2.cast(LispType.LIST)).iterator();
+            Iterator<LispObject> it1 = ((LispList) obj1.cast(LispType.LIST)).iterator();
+            Iterator<LispObject> it2 = ((LispList) obj2.cast(LispType.LIST)).iterator();
             while (it1.hasNext() && it2.hasNext()) {
                 if (!equalp(it1.next(), it2.next())) {
                     return false;
@@ -76,16 +77,19 @@ public class LFEqualp extends LFEq {
             }
         }
         if (obj1.isInstance(LispType.SYMBOL) && obj2.isInstance(LispType.SYMBOL)) {
-            if (((LispSymbol)obj1.cast(LispType.SYMBOL)).getName().equals(((LispSymbol)obj2.cast(LispType.SYMBOL)).getName())) {
+            if (((LispSymbol) obj1.cast(LispType.SYMBOL))
+                    .getName()
+                    .equals(((LispSymbol) obj2.cast(LispType.SYMBOL)).getName())) {
                 return true;
             }
         }
         if (obj1.isInstance(LispType.JAVA_OBJECT) && obj2.isInstance(LispType.JAVA_OBJECT)) {
-            if (((LispJavaObject)obj1.cast(LispType.JAVA_OBJECT)).getObject().equals(((LispJavaObject)obj2.cast(LispType.JAVA_OBJECT)).getObject())) {
+            if (((LispJavaObject) obj1.cast(LispType.JAVA_OBJECT))
+                    .getObject()
+                    .equals(((LispJavaObject) obj2.cast(LispType.JAVA_OBJECT)).getObject())) {
                 return true;
             }
         }
         return false;
     }
-
 }

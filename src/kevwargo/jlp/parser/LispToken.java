@@ -30,5 +30,4 @@ public class LispToken {
         STRING,
         SYMBOL
     }
-
 }

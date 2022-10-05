@@ -3,11 +3,9 @@ package kevwargo.jlp.parser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-
 
 public class LispScanner {
 
@@ -90,5 +88,4 @@ public class LispScanner {
         }
         return null;
     }
-
 }

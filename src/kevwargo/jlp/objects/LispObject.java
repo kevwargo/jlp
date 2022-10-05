@@ -1,14 +1,13 @@
 package kevwargo.jlp.objects;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LispObject {
 
@@ -22,54 +21,53 @@ public class LispObject {
     }
 
     /**
-       Wraps a Java object.
-       The cls parameter needs to be provided so we don't lose the precise type information
-       when passing primitive types to the Object parameter
-       (e.g. if we pass an int to the parameter declared as Object, the param.getClass() inside the method
-       will return java.lang.Integer and not int.class)
-    */
+     * Wraps a Java object. The cls parameter needs to be provided so we don't lose the precise type
+     * information when passing primitive types to the Object parameter (e.g. if we pass an int to
+     * the parameter declared as Object, the param.getClass() inside the method will return
+     * java.lang.Integer and not int.class)
+     */
     // TODO: arrays
     public static LispObject wrap(Object obj, Class<?> cls) {
         if (obj == null) {
             return LispBool.NIL;
         }
         if (cls == boolean.class) {
-            if ((boolean)obj) {
+            if ((boolean) obj) {
                 return LispBool.T;
             }
             return LispBool.NIL;
         }
 
         if (cls == long.class) {
-            return new LispInt((long)obj);
+            return new LispInt((long) obj);
         }
         if (cls == int.class) {
-            return new LispInt((int)obj);
+            return new LispInt((int) obj);
         }
         if (cls == short.class) {
-            return new LispInt((short)obj);
+            return new LispInt((short) obj);
         }
         if (cls == char.class) {
-            return new LispInt((char)obj);
+            return new LispInt((char) obj);
         }
         if (cls == byte.class) {
-            return new LispInt((byte)obj);
+            return new LispInt((byte) obj);
         }
 
         if (cls == float.class) {
-            return new LispFloat((float)obj);
+            return new LispFloat((float) obj);
         }
         if (cls == double.class) {
-            return new LispFloat((double)obj);
+            return new LispFloat((double) obj);
         }
 
         if (obj instanceof String) {
-            return new LispString((String)obj);
+            return new LispString((String) obj);
         }
 
         if (obj instanceof List) {
             LispList list = new LispList();
-            for (Object item : (List)obj) {
+            for (Object item : (List) obj) {
                 list.add(wrap(item));
             }
             return list;
@@ -77,7 +75,7 @@ public class LispObject {
 
         if (cls.isArray()) {
             LispList list = new LispList();
-            for (Object item : (Object[])obj) {
+            for (Object item : (Object[]) obj) {
                 list.add(wrap(item, cls.getComponentType()));
             }
             return list;
@@ -125,14 +123,17 @@ public class LispObject {
         for (Map.Entry<LispType, LispObject> e : castMap.entrySet()) {
             if (e.getKey().isSubtype(type)) {
                 if (instance != null) {
-                    System.err.printf("Warning: '%s' cast to '%s' is ambiguous\n", toString(), type.toString());
+                    System.err.printf(
+                            "Warning: '%s' cast to '%s' is ambiguous\n",
+                            toString(), type.toString());
                 } else {
                     instance = e.getValue();
                 }
             }
         }
         if (instance == null) {
-            throw new LispCastException("object '%s' cannot be converted to '%s'", toString(), type.getName());
+            throw new LispCastException(
+                    "object '%s' cannot be converted to '%s'", toString(), type.getName());
         }
         return instance;
     }
@@ -150,8 +151,9 @@ public class LispObject {
         attr = getAttr(name, type);
         if (attr != null) {
             try {
-                return new LispMethod(this, (LispFunction)attr.cast(LispType.FUNCTION));
-            } catch (LispCastException e) {}
+                return new LispMethod(this, (LispFunction) attr.cast(LispType.FUNCTION));
+            } catch (LispCastException e) {
+            }
         }
         return attr;
     }
@@ -160,7 +162,8 @@ public class LispObject {
         dict.put(name, value);
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         LispObject callable = getAttr("@call@");
         if (callable != null) {
             return callable.call(namespace, arguments);
@@ -208,8 +211,8 @@ class ObjectType extends LispType {
         super("object");
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         return new LispObject(this);
     }
-
 }

@@ -1,10 +1,5 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -14,6 +9,9 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LMBackquote extends LispFunction {
 
@@ -27,14 +25,15 @@ public class LMBackquote extends LispFunction {
         super(LispType.MACRO, NAME, new FormalArguments(ARG_EXPR));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         LispObject expr = arguments.get(ARG_EXPR);
 
         if (!expr.isInstance(LispType.LIST)) {
             return expr;
         }
 
-        return processList((LispList)expr.cast(LispType.LIST), namespace);
+        return processList((LispList) expr.cast(LispType.LIST), namespace);
     }
 
     private LispList processList(LispList expr, LispNamespace namespace) throws LispException {
@@ -46,7 +45,7 @@ public class LMBackquote extends LispFunction {
                 continue;
             }
 
-            LispList list = (LispList)obj.cast(LispType.LIST);
+            LispList list = (LispList) obj.cast(LispType.LIST);
             LispObject first = list.get(0);
             if (symEval.equals(first)) {
                 LispObject second = list.get(1).eval(namespace);
@@ -55,7 +54,12 @@ public class LMBackquote extends LispFunction {
             }
             if (symUnfold.equals(first)) {
                 LispObject second = list.get(1).eval(namespace);
-                LispList sublist = (LispList)second.cast(LispType.LIST); // TODO: throw more readable exception if not list
+                LispList sublist =
+                        (LispList)
+                                second.cast(
+                                        LispType
+                                                .LIST); // TODO: throw more readable exception if
+                                                        // not list
                 for (LispObject elt : sublist) {
                     contents.add(elt);
                 }
@@ -67,5 +71,4 @@ public class LMBackquote extends LispFunction {
 
         return new LispList(contents);
     }
-
 }

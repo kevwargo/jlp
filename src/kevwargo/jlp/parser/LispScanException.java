@@ -7,5 +7,4 @@ public class LispScanException extends LispException {
     public LispScanException(String msg) {
         super(msg);
     }
-
 }

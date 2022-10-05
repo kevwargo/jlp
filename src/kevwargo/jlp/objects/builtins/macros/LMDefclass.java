@@ -1,9 +1,5 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -14,6 +10,9 @@ import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class LMDefclass extends LispFunction {
 
@@ -21,24 +20,25 @@ public class LMDefclass extends LispFunction {
         super(LispType.MACRO, "defclass", new FormalArguments("name", "bases").rest("body"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
-        String name = ((LispSymbol)arguments.get("name").cast(LispType.SYMBOL)).getName();
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
+        String name = ((LispSymbol) arguments.get("name").cast(LispType.SYMBOL)).getName();
 
-        LispList basesList = (LispList)arguments.get("bases").cast(LispType.LIST);
+        LispList basesList = (LispList) arguments.get("bases").cast(LispType.LIST);
         LispType bases[];
         if (basesList.size() > 0) {
             bases = new LispType[basesList.size()];
         } else {
-            bases = new LispType[] { LispType.OBJECT };
+            bases = new LispType[] {LispType.OBJECT};
         }
         Iterator<LispObject> it = basesList.iterator();
         for (int i = 0; it.hasNext(); i++) {
-            bases[i] = (LispType)it.next().eval(namespace).cast(LispType.TYPE);
+            bases[i] = (LispType) it.next().eval(namespace).cast(LispType.TYPE);
         }
 
         Overlay overlay = new Overlay();
         LispNamespace classNamespace = namespace.prepend(overlay);
-        for (LispObject form : (LispList)arguments.get("body")) {
+        for (LispObject form : (LispList) arguments.get("body")) {
             form.eval(classNamespace);
         }
         Map<String, LispObject> dict = new HashMap<String, LispObject>();
@@ -47,7 +47,6 @@ public class LMDefclass extends LispFunction {
         namespace.bind(name, cls);
         return cls;
     }
-
 
     private static class Overlay extends HashMap<String, LispObject> {
         public boolean containsKey(Object key) {
@@ -62,11 +61,13 @@ public class LMDefclass extends LispFunction {
             for (Map.Entry<String, LispObject> e : dict.entrySet()) {
                 try {
                     setAttr(e.getKey(), e.getValue());
-                } catch (LispException exc) {}
+                } catch (LispException exc) {
+                }
             }
         }
 
-        public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+        public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+                throws LispException {
             LispObject instance = new LispObject(this);
             LispObject constructor = getDict().get("@init@");
             if (constructor != null) {
@@ -77,16 +78,16 @@ public class LMDefclass extends LispFunction {
             return instance;
         }
 
-        private void defineCastsRecursively(LispNamespace namespace, LispObject instance) throws LispException {
+        private void defineCastsRecursively(LispNamespace namespace, LispObject instance)
+                throws LispException {
             for (LispType type : getBases()) {
                 if (type instanceof LispClass) {
-                    ((LispClass)type).defineCastsRecursively(namespace, instance);
-                } else if (! instance.isCastDefined(type)) {
-                    instance.defineCast(type, type.makeInstance(namespace, new ArgumentsIterator()));
+                    ((LispClass) type).defineCastsRecursively(namespace, instance);
+                } else if (!instance.isCastDefined(type)) {
+                    instance.defineCast(
+                            type, type.makeInstance(namespace, new ArgumentsIterator()));
                 }
             }
         }
-
     }
-
 }

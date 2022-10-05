@@ -1,34 +1,36 @@
 package kevwargo.jlp.objects.builtins.functions.math;
 
-import java.util.Map;
-import java.util.Iterator;
-
+import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Iterator;
+import java.util.Map;
 
 public abstract class ArithmeticFunction extends LispFunction {
 
     public static final String ARG_NUMBERS = "numbers";
 
     protected abstract long addLong(long result, long value);
+
     protected abstract double addDouble(double result, double value);
-    protected abstract Params parseParams(Map<String, LispObject> arguments) throws LispCastException;
+
+    protected abstract Params parseParams(Map<String, LispObject> arguments)
+            throws LispCastException;
 
     protected ArithmeticFunction(String name, FormalArguments args) {
         super(LispType.FUNCTION, name, args.rest(ARG_NUMBERS));
     }
 
     protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList)arguments.get(ARG_NUMBERS);
+        LispList numbers = (LispList) arguments.get(ARG_NUMBERS);
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
             if (first.isInstance(LispType.FLOAT)) {
@@ -38,7 +40,8 @@ public abstract class ArithmeticFunction extends LispFunction {
         return false;
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         Params params = parseParams(arguments);
         boolean isDouble = isDouble(arguments);
         long longResult = params.longInitial;
@@ -51,17 +54,17 @@ public abstract class ArithmeticFunction extends LispFunction {
             if (isDouble) {
                 double value;
                 if (number.isInstance(LispType.FLOAT)) {
-                    value = ((LispFloat)number.cast(LispType.FLOAT)).getValue();
+                    value = ((LispFloat) number.cast(LispType.FLOAT)).getValue();
                 } else {
-                    value = (double)((LispInt)number.cast(LispType.INT)).getValue();
+                    value = (double) ((LispInt) number.cast(LispType.INT)).getValue();
                 }
                 doubleResult = addDouble(doubleResult, value);
             } else if (number.isInstance(LispType.FLOAT)) {
-                double value = ((LispFloat)number.cast(LispType.FLOAT)).getValue();
+                double value = ((LispFloat) number.cast(LispType.FLOAT)).getValue();
                 isDouble = true;
-                doubleResult = addDouble((double)longResult, value);
+                doubleResult = addDouble((double) longResult, value);
             } else {
-                longResult = addLong(longResult, ((LispInt)number.cast(LispType.INT)).getValue());
+                longResult = addLong(longResult, ((LispInt) number.cast(LispType.INT)).getValue());
             }
         }
         if (isDouble) {
@@ -70,7 +73,6 @@ public abstract class ArithmeticFunction extends LispFunction {
             return new LispInt(longResult);
         }
     }
-
 
     protected static class Params {
 
@@ -83,7 +85,5 @@ public abstract class ArithmeticFunction extends LispFunction {
             doubleInitial = di;
             numbers = n;
         }
-
     }
-
 }

@@ -1,15 +1,9 @@
 package kevwargo.jlp.objects;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
-
 
 public abstract class LispType extends LispObject {
 
@@ -33,7 +27,7 @@ public abstract class LispType extends LispObject {
         OBJECT.setType(TYPE);
         OBJECT.setBases(new LispType[0]);
         TYPE.setType(TYPE);
-        TYPE.setBases(new LispType[] { OBJECT });
+        TYPE.setBases(new LispType[] {OBJECT});
     }
 
     private LispType bases[];
@@ -78,11 +72,13 @@ public abstract class LispType extends LispObject {
         return String.format("<type '%s'>", name);
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         return makeInstance(namespace, arguments);
     }
 
-    public abstract LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException;
+    public abstract LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException;
 }
 
 class Type extends LispType {
@@ -91,30 +87,32 @@ class Type extends LispType {
         super("type");
     }
 
-    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject call(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         if (arguments.getLength() == 1) {
             return arguments.next().getType();
         }
         return super.call(namespace, arguments);
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         if (arguments.getLength() != 2) {
             throw new LispException("(%s) takes 1 or 2 arguments", getName());
         }
-        String name = ((LispString)arguments.next().cast(STRING)).getValue();
-        LispList basesList = (LispList)arguments.next().cast(LIST);
+        String name = ((LispString) arguments.next().cast(STRING)).getValue();
+        LispList basesList = (LispList) arguments.next().cast(LIST);
         LispType bases[] = new LispType[basesList.size()];
         int pos = 0;
         for (LispObject base : basesList) {
-            bases[pos++] = (LispType)base.cast(TYPE);
+            bases[pos++] = (LispType) base.cast(TYPE);
         }
         return new LispType(name, bases) {
-            public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+            public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+                    throws LispException {
                 // TODO: maybe bring back default constructor, idk
                 return new LispObject(Type.this);
             }
         };
     }
-
 }

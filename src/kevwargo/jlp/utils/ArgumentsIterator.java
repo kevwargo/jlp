@@ -1,12 +1,11 @@
 package kevwargo.jlp.utils;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArgumentsIterator {
 
@@ -23,7 +22,8 @@ public class ArgumentsIterator {
         this(list.iterator(), null, list.size());
     }
 
-    public ArgumentsIterator(Iterator<LispObject> iterator, LispNamespace evalNamespace, int length) {
+    public ArgumentsIterator(
+            Iterator<LispObject> iterator, LispNamespace evalNamespace, int length) {
         this.iterator = iterator;
         this.evalNamespace = evalNamespace;
         this.length = length;
@@ -65,10 +65,9 @@ public class ArgumentsIterator {
         public boolean hasNext() {
             return false;
         }
+
         public LispObject next() throws NoSuchElementException {
             throw new NoSuchElementException();
         }
-
     }
-
 }

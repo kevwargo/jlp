@@ -1,10 +1,5 @@
 package kevwargo.jlp.parser;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Stack;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
@@ -15,6 +10,11 @@ import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class LispParser {
 
@@ -22,7 +22,6 @@ public class LispParser {
     private Stack<LispList> sexpStack;
     private LispList currentSexp;
     private HashMap<String, LispSymbol> symbolMap;
-
 
     public LispParser(String filename) throws IOException {
         this(new FileInputStream(filename));
@@ -36,7 +35,9 @@ public class LispParser {
 
     public LispObject read() throws LispException {
         LispObject object = readInternal();
-        if (object != null && object.isInstance(LispType.LIST) && ! ((LispList)object).iterator().hasNext()) {
+        if (object != null
+                && object.isInstance(LispType.LIST)
+                && !((LispList) object).iterator().hasNext()) {
             return LispBool.NIL;
         }
         return object;
@@ -50,41 +51,41 @@ public class LispParser {
             LispList sexp;
             String specialName;
             switch (token.getType()) {
-            case OPEN_PAREN:
-                if (currentSexp != null) {
-                    sexpStack.push(currentSexp);
-                }
-                currentSexp = new LispList();
-                break;
-            case CLOSE_PAREN:
-                if (currentSexp == null) {
-                    throw new LispException("Invalid input: `)'");
-                }
-                if (sexpStack.empty()) {
-                    return currentSexp;
-                }
-                currentSexp = sexpStack.pop().add(currentSexp);
-                while (currentSexp.isSpecial() && !sexpStack.empty()) {
+                case OPEN_PAREN:
+                    if (currentSexp != null) {
+                        sexpStack.push(currentSexp);
+                    }
+                    currentSexp = new LispList();
+                    break;
+                case CLOSE_PAREN:
+                    if (currentSexp == null) {
+                        throw new LispException("Invalid input: `)'");
+                    }
+                    if (sexpStack.empty()) {
+                        return currentSexp;
+                    }
                     currentSexp = sexpStack.pop().add(currentSexp);
-                }
-                if (currentSexp.isSpecial() && sexpStack.empty()) {
-                    return currentSexp;
-                }
-                break;
-            case SPECIAL:
-                if (currentSexp != null) {
-                    sexpStack.push(currentSexp);
-                }
-                specialName = token.getValue();
-                if (specialName.equals("'")) {
-                    specialName = "quote";
-                }
-                currentSexp = (new LispList(true)).add(getSymbol(specialName));
-                break;
-            default:
-                if ((object = processToken(token)) != null) {
-                    return object;
-                }
+                    while (currentSexp.isSpecial() && !sexpStack.empty()) {
+                        currentSexp = sexpStack.pop().add(currentSexp);
+                    }
+                    if (currentSexp.isSpecial() && sexpStack.empty()) {
+                        return currentSexp;
+                    }
+                    break;
+                case SPECIAL:
+                    if (currentSexp != null) {
+                        sexpStack.push(currentSexp);
+                    }
+                    specialName = token.getValue();
+                    if (specialName.equals("'")) {
+                        specialName = "quote";
+                    }
+                    currentSexp = (new LispList(true)).add(getSymbol(specialName));
+                    break;
+                default:
+                    if ((object = processToken(token)) != null) {
+                        return object;
+                    }
             }
         }
         if (!sexpStack.empty() || currentSexp != null) {
@@ -106,21 +107,21 @@ public class LispParser {
         LispObject object = null;
 
         switch (token.getType()) {
-        case SYMBOL:
-            if (token.getValue().equals("t")) {
-                object = LispBool.T;
-            } else if (token.getValue().equals("nil")) {
-                object = LispBool.NIL;
-            } else {
-                object = parseNumber(token.getValue());
-                if (object == null) {
-                    object = getSymbol(token.getValue());
+            case SYMBOL:
+                if (token.getValue().equals("t")) {
+                    object = LispBool.T;
+                } else if (token.getValue().equals("nil")) {
+                    object = LispBool.NIL;
+                } else {
+                    object = parseNumber(token.getValue());
+                    if (object == null) {
+                        object = getSymbol(token.getValue());
+                    }
                 }
-            }
-            break;
-        case STRING:
-            object = new LispString(token.getValue());
-            break;
+                break;
+            case STRING:
+                object = new LispString(token.getValue());
+                break;
         }
 
         if (currentSexp != null) {
@@ -143,26 +144,27 @@ public class LispParser {
 
         try {
             switch (suffix) {
-            case 'l':
-                return new LispInt(Long.parseLong(stripped));
-            case 's':
-                return new LispInt(Short.parseShort(stripped));
-            case 'c':
-                return new LispInt((char)Integer.parseInt(stripped));
-            case 'b':
-                return new LispInt(Byte.parseByte(stripped));
-            default:
-                return new LispInt(Integer.parseInt(token));
+                case 'l':
+                    return new LispInt(Long.parseLong(stripped));
+                case 's':
+                    return new LispInt(Short.parseShort(stripped));
+                case 'c':
+                    return new LispInt((char) Integer.parseInt(stripped));
+                case 'b':
+                    return new LispInt(Byte.parseByte(stripped));
+                default:
+                    return new LispInt(Integer.parseInt(token));
             }
         } catch (NumberFormatException nfe) {
             try {
                 switch (suffix) {
-                case 'f':
-                    return new LispFloat(Float.parseFloat(stripped));
-                default:
-                    return new LispFloat(Double.parseDouble(token));
+                    case 'f':
+                        return new LispFloat(Float.parseFloat(stripped));
+                    default:
+                        return new LispFloat(Double.parseDouble(token));
                 }
-            } catch (NumberFormatException nfe1) {}
+            } catch (NumberFormatException nfe1) {
+            }
         }
 
         return null;
@@ -175,5 +177,4 @@ public class LispParser {
         }
         return sb.toString();
     }
-
 }

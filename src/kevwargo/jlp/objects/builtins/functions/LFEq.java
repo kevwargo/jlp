@@ -1,8 +1,5 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
@@ -12,6 +9,7 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Map;
 
 public class LFEq extends LispFunction {
 
@@ -23,7 +21,8 @@ public class LFEq extends LispFunction {
         this("eq");
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         LispObject obj1 = arguments.get("arg1");
         LispObject obj2 = arguments.get("arg2");
 
@@ -32,7 +31,8 @@ public class LFEq extends LispFunction {
         }
 
         if (obj1.isInstance(LispType.JAVA_OBJECT) && obj2.isInstance(LispType.JAVA_OBJECT)) {
-            if (((LispJavaObject)obj1.cast(LispType.JAVA_OBJECT)).getObject() == ((LispJavaObject)obj2.cast(LispType.JAVA_OBJECT)).getObject()) {
+            if (((LispJavaObject) obj1.cast(LispType.JAVA_OBJECT)).getObject()
+                    == ((LispJavaObject) obj2.cast(LispType.JAVA_OBJECT)).getObject()) {
                 return LispBool.T;
             }
         }

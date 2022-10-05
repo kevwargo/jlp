@@ -1,18 +1,14 @@
 package kevwargo.jlp.objects.builtins.macros;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Map;
 
 public class LMDot extends LispFunction {
 
@@ -25,7 +21,8 @@ public class LMDot extends LispFunction {
         super(LispType.MACRO, ".", new FormalArguments(ARG_OBJ, ARG_ATTR).opt(ARG_VALUE));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         LispObject obj = arguments.get(ARG_OBJ).eval(namespace);
         String attrName = getAttrName(namespace, arguments);
         LispObject value = arguments.get(ARG_VALUE);
@@ -37,18 +34,19 @@ public class LMDot extends LispFunction {
 
         LispObject attr = obj.getAttr(attrName);
         if (attr == null) {
-            throw new LispException("'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
+            throw new LispException(
+                    "'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
         }
         return attr;
     }
 
-    private static String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    private static String getAttrName(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         LispObject attr = arguments.get(ARG_ATTR);
         if (attr.isInstance(LispType.SYMBOL)) {
-            return ((LispSymbol)attr.cast(LispType.SYMBOL)).getName();
+            return ((LispSymbol) attr.cast(LispType.SYMBOL)).getName();
         }
 
         return attr.eval(namespace).toString();
     }
-
 }

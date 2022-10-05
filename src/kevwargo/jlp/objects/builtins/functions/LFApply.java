@@ -1,7 +1,5 @@
 package kevwargo.jlp.objects.builtins.functions;
 
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -11,6 +9,7 @@ import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.util.Map;
 
 public class LFApply extends LispFunction {
 
@@ -18,11 +17,12 @@ public class LFApply extends LispFunction {
         super(LispType.FUNCTION, "apply", new FormalArguments("func", "args"));
     }
 
-    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
+    protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments)
+            throws LispException {
         LispObject func = arguments.get("func");
-        LispList args = (LispList)arguments.get("args").cast(LispType.LIST);
+        LispList args = (LispList) arguments.get("args").cast(LispType.LIST);
         LispNamespace argsNamespace = func.isInstance(LispType.MACRO) ? null : namespace;
-        return func.call(namespace, new ArgumentsIterator(args.iterator(), argsNamespace, args.size()));
+        return func.call(
+                namespace, new ArgumentsIterator(args.iterator(), argsNamespace, args.size()));
     }
-
 }

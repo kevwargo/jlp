@@ -1,17 +1,10 @@
 package kevwargo.jlp;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.objects.builtins.functions.LFAppend;
 import kevwargo.jlp.objects.builtins.functions.LFApply;
 import kevwargo.jlp.objects.builtins.functions.LFBoundp;
@@ -26,8 +19,8 @@ import kevwargo.jlp.objects.builtins.functions.LFIsInstance;
 import kevwargo.jlp.objects.builtins.functions.LFNext;
 import kevwargo.jlp.objects.builtins.functions.LFNot;
 import kevwargo.jlp.objects.builtins.functions.LFNth;
-import kevwargo.jlp.objects.builtins.functions.LFPrintNamespace;
 import kevwargo.jlp.objects.builtins.functions.LFPrint;
+import kevwargo.jlp.objects.builtins.functions.LFPrintNamespace;
 import kevwargo.jlp.objects.builtins.functions.math.LFDivide;
 import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
 import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
@@ -40,17 +33,20 @@ import kevwargo.jlp.objects.builtins.macros.LMDefun;
 import kevwargo.jlp.objects.builtins.macros.LMDot;
 import kevwargo.jlp.objects.builtins.macros.LMIf;
 import kevwargo.jlp.objects.builtins.macros.LMLambda;
-import kevwargo.jlp.objects.builtins.macros.LMLetStar;
 import kevwargo.jlp.objects.builtins.macros.LMLet;
+import kevwargo.jlp.objects.builtins.macros.LMLetStar;
 import kevwargo.jlp.objects.builtins.macros.LMProgn;
 import kevwargo.jlp.objects.builtins.macros.LMQuote;
 import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
 import kevwargo.jlp.objects.builtins.macros.loop.LispLoopException;
-import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.utils.LispNamespace;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
 
 public class LispProcessor {
 
@@ -58,7 +54,6 @@ public class LispProcessor {
     private LispNamespace namespace;
 
     private boolean verbose;
-
 
     public static LispProcessor getInstance() {
         if (instance == null) {
@@ -158,7 +153,8 @@ public class LispProcessor {
         process(parser, System.out);
     }
 
-    public void process(LispParser parser, PrintStream outStream) throws IOException, LispException {
+    public void process(LispParser parser, PrintStream outStream)
+            throws IOException, LispException {
         LispObject lispObject;
         HashMap<String, LispObject> map = new HashMap<String, LispObject>();
         map.put("*out*", new LispJavaObject(outStream));
@@ -169,7 +165,8 @@ public class LispProcessor {
                 if (verbose) {
                     System.out.println(result.repr());
                 }
-            } catch (LispLoopException e) {}
+            } catch (LispLoopException e) {
+            }
         }
     }
 }

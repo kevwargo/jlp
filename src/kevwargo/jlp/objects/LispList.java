@@ -1,11 +1,12 @@
 package kevwargo.jlp.objects;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.LispNamespace;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class LispList extends LispObject implements Iterable<LispObject> {
 
@@ -37,7 +38,6 @@ public class LispList extends LispObject implements Iterable<LispObject> {
         this(new ArrayList<LispObject>(), false);
     }
 
-
     public Iterator<LispObject> iterator() {
         return contents.iterator();
     }
@@ -61,12 +61,13 @@ public class LispList extends LispObject implements Iterable<LispObject> {
 
     public LispObject eval(LispNamespace namespace) throws LispException {
         Iterator<LispObject> it = this.iterator();
-        if (! it.hasNext()) {
+        if (!it.hasNext()) {
             return LispBool.NIL;
         }
         LispObject function = it.next().eval(namespace);
         boolean isMacro = function.isInstance(LispType.MACRO);
-        ArgumentsIterator args = new ArgumentsIterator(it, isMacro ? null : namespace, contents.size() - 1);
+        ArgumentsIterator args =
+                new ArgumentsIterator(it, isMacro ? null : namespace, contents.size() - 1);
         return function.call(namespace, args);
     }
 
@@ -89,10 +90,11 @@ public class LispList extends LispObject implements Iterable<LispObject> {
 class ListType extends LispType {
 
     ListType() {
-        super("list", new LispType[] { OBJECT });
+        super("list", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments) throws LispException {
+    public LispObject makeInstance(LispNamespace namespace, ArgumentsIterator arguments)
+            throws LispException {
         ArrayList<LispObject> result = new ArrayList<LispObject>();
         while (arguments.hasNext()) {
             result.add(arguments.next());
@@ -102,5 +104,4 @@ class ListType extends LispType {
         }
         return new LispList(result);
     }
-
 }
