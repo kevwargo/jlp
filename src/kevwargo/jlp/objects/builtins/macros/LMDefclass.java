@@ -6,11 +6,11 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,20 +36,14 @@ public class LMDefclass extends LispFunction {
             bases[i] = (LispType) it.next().eval(runtime).cast(LispType.TYPE);
         }
 
-        Overlay overlay = new Overlay();
+        LispNamespace.Layer overlay = new LispNamespace.Layer(true);
         LispRuntime classRuntime = runtime.with(overlay);
         for (LispObject form : (LispList) arguments.get("body")) {
             form.eval(classRuntime);
         }
-        LispClass cls = new LispClass(name, bases, new HashMap<String, LispObject>(overlay));
+        LispClass cls = new LispClass(name, bases, overlay);
         runtime.getNS().bind(name, cls);
         return cls;
-    }
-
-    private static class Overlay extends HashMap<String, LispObject> {
-        public boolean containsKey(Object key) {
-            return true;
-        }
     }
 
     private static class LispClass extends LispType {

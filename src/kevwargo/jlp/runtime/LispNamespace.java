@@ -13,58 +13,74 @@ import java.util.TreeMap;
 
 public class LispNamespace {
 
-    private List<Map<String, LispObject>> layers;
+    private Layer builtins;
+    private Layer globals;
+    private List<Layer> overlays;
 
-    public LispNamespace() {
-        layers = new ArrayList<Map<String, LispObject>>();
-    }
-
-    public LispNamespace(Map<String, LispObject> map) {
-        this();
-        if (!map.isEmpty()) {
-            layers.add(map);
-        }
-    }
-
-    private LispNamespace(List<Map<String, LispObject>> layers) {
-        this.layers = layers;
+    public LispNamespace(Layer builtins) {
+        this.builtins = builtins;
+        this.globals = new Layer(false);
+        this.overlays = new ArrayList<Layer>();
     }
 
     public LispNamespace with(Map<String, LispObject> layer) {
-        if (layer.isEmpty()) {
-            return this;
-        }
+        return with(new Layer(layer));
+    }
 
-        List<Map<String, LispObject>> layers = new ArrayList<Map<String, LispObject>>(this.layers);
-        layers.add(0, layer);
-        return new LispNamespace(layers);
+    public LispNamespace with(Layer layer) {
+        LispNamespace clone = new LispNamespace(builtins);
+        clone.globals = globals;
+        clone.overlays = new ArrayList<Layer>(overlays);
+        clone.overlays.add(0, layer);
+        return clone;
     }
 
     public void bind(String name, LispObject definition) {
-        Map<String, LispObject> layer = null;
-        Iterator<Map<String, LispObject>> it = layers.iterator();
-        while (it.hasNext()) {
-            layer = it.next();
-            if (layer.containsKey(name)) {
-                layer.put(name, definition);
+        bind(name, definition, false);
+    }
+
+    public void bind(String name, LispObject definition, boolean global) {
+        if (global) {
+            globals.put(name, definition);
+            return;
+        }
+
+        for (Layer overlay : overlays) {
+            if (overlay.sticky || overlay.containsKey(name)) {
+                overlay.put(name, definition);
                 return;
             }
         }
-        if (layer == null) {
-            layer = new HashMap<String, LispObject>();
-            layers.add(layer);
+
+        if (overlays.isEmpty()) {
+            globals.put(name, definition);
+        } else {
+            overlays.get(0).put(name, definition);
         }
-        layer.put(name, definition);
     }
 
     public LispObject get(String name) {
-        for (Map<String, LispObject> layer : layers) {
-            LispObject object = layer.get(name);
-            if (object != null) {
-                return object;
+        for (Layer overlay : overlays) {
+            if (overlay.containsKey(name)) {
+                return overlay.get(name);
             }
         }
-        return null;
+
+        if (globals.containsKey(name)) {
+            return globals.get(name);
+        }
+
+        return builtins.get(name);
+    }
+
+    public void delete(String name) {
+        for (Layer overlay : overlays) {
+            if (overlay.remove(name) != null) {
+                return;
+            }
+        }
+
+        globals.remove(name);
     }
 
     public void dump(OutputStream out) {
@@ -73,7 +89,9 @@ public class LispNamespace {
 
     public void dump(PrintStream out) {
         dumpHeader(out);
-        dumpLayers(out);
+        dumpLayer(out, builtins, "Builtins");
+        dumpLayer(out, globals, "Globals");
+        dumpOverlays(out);
         dumpFooter(out);
     }
 
@@ -81,24 +99,24 @@ public class LispNamespace {
         out.printf("Namespace 0x%x: {", System.identityHashCode(this));
     }
 
-    private void dumpLayers(PrintStream out) {
-        if (layers.isEmpty()) {
+    private void dumpOverlays(PrintStream out) {
+        if (overlays.isEmpty()) {
             return;
         }
 
-        Iterator<Map<String, LispObject>> it = layers.iterator();
-        Map<String, LispObject> layer = it.next();
+        Iterator<Layer> it = overlays.iterator();
+        Layer layer = it.next();
         out.print("\n  ");
-        dumpLayer(out, layer);
+        dumpLayer(out, layer, "Overlay");
 
         while (it.hasNext()) {
             out.print(",\n  ");
-            dumpLayer(out, it.next());
+            dumpLayer(out, it.next(), "Overlay");
         }
     }
 
-    private void dumpLayer(PrintStream out, Map<String, LispObject> layer) {
-        out.printf("Map 0x%x: {", System.identityHashCode(layer));
+    private void dumpLayer(PrintStream out, Layer layer, String name) {
+        out.printf("\n  %s 0x%x: {", name, System.identityHashCode(layer));
         Map<String, LispObject> sorted = new TreeMap<String, LispObject>(layer);
         Iterator<Map.Entry<String, LispObject>> it = sorted.entrySet().iterator();
 
@@ -116,9 +134,19 @@ public class LispNamespace {
     }
 
     private void dumpFooter(PrintStream out) {
-        if (!layers.isEmpty()) {
-            out.print('\n');
+        out.println("\n}");
+    }
+
+    public static class Layer extends HashMap<String, LispObject> {
+
+        boolean sticky;
+
+        public Layer(Map<String, LispObject> map) {
+            super(map);
         }
-        out.println("}");
+
+        public Layer(boolean sticky) {
+            this.sticky = sticky;
+        }
     }
 }

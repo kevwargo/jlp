@@ -12,10 +12,6 @@ public class LispRuntime {
     private InputStream in;
     private OutputStream out;
 
-    public LispRuntime() {
-        this(new LispNamespace(), System.in, System.out);
-    }
-
     public LispRuntime(LispNamespace ns, InputStream in, OutputStream out) {
         this.ns = ns;
         this.in = in;

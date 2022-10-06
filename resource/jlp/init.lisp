@@ -3,6 +3,20 @@
    (for (elt lst)
         (yield (func elt)))))
 
+(defmacro setq (&rest defs)
+  `(progn
+     ,@(let ((it (iterator defs)))
+         (collect
+          (for ((has-next it))
+               (yield `(set ',(next it) ,(next it))))))))
+
+(defmacro setq-global (&rest defs)
+  `(progn
+     ,@(let ((it (iterator defs)))
+         (collect
+          (for ((has-next it))
+               (yield `(set-global ',(next it) ,(next it))))))))
+
 (defun car (list)
   (nth 0 list))
 

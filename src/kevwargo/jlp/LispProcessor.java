@@ -9,6 +9,7 @@ import kevwargo.jlp.objects.builtins.functions.LFApply;
 import kevwargo.jlp.objects.builtins.functions.LFBoundp;
 import kevwargo.jlp.objects.builtins.functions.LFCapitalize;
 import kevwargo.jlp.objects.builtins.functions.LFConcat;
+import kevwargo.jlp.objects.builtins.functions.LFDel;
 import kevwargo.jlp.objects.builtins.functions.LFEq;
 import kevwargo.jlp.objects.builtins.functions.LFEqualp;
 import kevwargo.jlp.objects.builtins.functions.LFEval;
@@ -20,6 +21,8 @@ import kevwargo.jlp.objects.builtins.functions.LFNot;
 import kevwargo.jlp.objects.builtins.functions.LFNth;
 import kevwargo.jlp.objects.builtins.functions.LFPrint;
 import kevwargo.jlp.objects.builtins.functions.LFPrintNamespace;
+import kevwargo.jlp.objects.builtins.functions.LFSet;
+import kevwargo.jlp.objects.builtins.functions.LFSetGlobal;
 import kevwargo.jlp.objects.builtins.functions.math.LFDivide;
 import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
 import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
@@ -36,7 +39,6 @@ import kevwargo.jlp.objects.builtins.macros.LMLet;
 import kevwargo.jlp.objects.builtins.macros.LMLetStar;
 import kevwargo.jlp.objects.builtins.macros.LMProgn;
 import kevwargo.jlp.objects.builtins.macros.LMQuote;
-import kevwargo.jlp.objects.builtins.macros.LMSetq;
 import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.runtime.LispNamespace;
@@ -55,8 +57,7 @@ public class LispProcessor {
 
     private static LispProcessor instance;
     private LispNamespace namespace;
-
-    private boolean verbose;
+    private LispNamespace.Layer builtins;
 
     public static LispProcessor getInstance() {
         if (instance == null) {
@@ -66,12 +67,14 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
-        namespace = new LispNamespace();
-        initNamespace();
+        builtins = new LispNamespace.Layer(false);
+        namespace = new LispNamespace(builtins);
+
+        initBuiltins();
         loadInitFile();
     }
 
-    private void initNamespace() {
+    private void initBuiltins() {
         define("object", LispType.OBJECT);
         define("type", LispType.TYPE);
         define("builtin-function", LispType.FUNCTION);
@@ -106,7 +109,9 @@ public class LispProcessor {
         define(new LMProgn());
         define(new LFNth());
         define(new LMLambda());
-        define(new LMSetq());
+        define(new LFSet());
+        define(new LFSetGlobal());
+        define(new LFDel());
         define(new LFEval());
         define(new LFPrintNamespace());
         define(new LMDot());
@@ -140,7 +145,7 @@ public class LispProcessor {
     }
 
     public void define(String name, LispObject definition) {
-        namespace.bind(name, definition);
+        builtins.put(name, definition);
     }
 
     public void define(LispFunction function) {
