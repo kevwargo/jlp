@@ -8,3 +8,19 @@
 
 (print (type t))
 (print (type nil))
+(print (type '()))
+(print (isinstance '() list))
+(print (isinstance () list))
+(print (isinstance nil list))
+(print "")
+
+(print (eq () ()))
+(print (equalp () ()))
+(print (equalp () nil))
+(print "")
+
+(print (bool ""))
+(print (bool ()))
+(print (bool 0))
+(print (bool 0.1))
+(print (bool 0.0))

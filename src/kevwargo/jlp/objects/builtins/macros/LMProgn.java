@@ -9,22 +9,26 @@ import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.FormalArguments;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class LMProgn extends LispFunction {
 
+    public static final String NAME = "progn";
+    public static final String ARG_BODY = "body";
+
     public LMProgn() {
-        super(LispType.MACRO, "progn", new FormalArguments().rest("body"));
+        super(LispType.MACRO, NAME, new FormalArguments().rest(ARG_BODY));
     }
 
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
+        LispList body = (LispList) arguments.get(ARG_BODY);
+
         LispObject result = LispNil.NIL;
-        Iterator<LispObject> iterator = ((LispList) arguments.get("body")).iterator();
-        while (iterator.hasNext()) {
-            result = iterator.next().eval(runtime);
+        for (LispObject form : body) {
+            result = form.eval(runtime);
         }
+
         return result;
     }
 }

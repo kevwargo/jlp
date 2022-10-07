@@ -9,7 +9,6 @@ import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -29,14 +28,6 @@ public class LispParser {
     }
 
     public LispObject read() throws LispException {
-        LispObject object = readInternal();
-        if (object != null && object.isInstance(LispType.LIST) && ((LispList) object).isEmpty()) {
-            return LispNil.NIL;
-        }
-        return object;
-    }
-
-    private LispObject readInternal() throws LispException {
         currentSexp = null;
         LispToken token;
         while ((token = scanner.nextLispToken()) != null) {
