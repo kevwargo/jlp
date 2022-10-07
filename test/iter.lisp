@@ -1,14 +1,14 @@
-(for (c "lepecbeke")
-     (print c))
+(for-each (c "lepecbeke")
+          (print c))
 (print "")
 
-(for (word (java.util.Scanner "one two three"))
-     (printf "word: %s" word))
+(for-each (word (java.util.Scanner "one two three"))
+          (printf "word: %s" word))
 
 (let ((it (iterator (java.util.Scanner "one two three"))))
-  (for ((has-next it))
-       (print (next it))))
+  (while (has-next it)
+         (print (next it))))
 
 ; empty iterator
-(for (i (iterator))
-     (print i))
+(for-each (i (iterator))
+          (print i))
