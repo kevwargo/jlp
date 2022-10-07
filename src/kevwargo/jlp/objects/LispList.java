@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class LispList extends LispBaseObject implements Iterable<LispObject> {
+public class LispList extends LispBaseObject implements LispIterable {
 
     private List<LispObject> contents;
     private boolean special;

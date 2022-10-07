@@ -2,11 +2,10 @@ package kevwargo.jlp.objects.builtins.macros.loop;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBool;
-import kevwargo.jlp.objects.LispInt;
+import kevwargo.jlp.objects.LispIterable;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispRuntime;
@@ -79,50 +78,28 @@ public class LMFor extends LoopBase {
             LispList cond, LispList body, LispRuntime runtime, LispList collector)
             throws LispException {
         String var = ((LispSymbol) cond.get(0).cast(LispType.SYMBOL)).getName();
-        LispObject iterator = cond.get(1).eval(runtime);
+        LispObject it = cond.get(1).eval(runtime);
 
-        if (iterator.isInstance(LispType.LIST)) {
-            executeList(var, (LispList) iterator.cast(LispType.LIST), body, runtime, collector);
-        } else if (iterator.isInstance(LispType.STRING)) {
-            executeString(
-                    var, (LispString) iterator.cast(LispType.STRING), body, runtime, collector);
-        } else if (iterator.isInstance(LispType.JAVA_OBJECT)) {
+        if (it.isInstance(LispType.JAVA_OBJECT)) {
             executeJavaIterator(
-                    var,
-                    (LispJavaObject) iterator.cast(LispType.JAVA_OBJECT),
-                    body,
-                    runtime,
-                    collector);
+                    var, (LispJavaObject) it.cast(LispType.JAVA_OBJECT), body, runtime, collector);
+        } else if (it instanceof LispIterable) {
+            executeLispIterator(var, ((LispIterable) it).iterator(), body, runtime, collector);
         } else {
-            throw new LispException(
-                    "object of type '%s' is not iterable", iterator.getType().getName());
+            throw new LispException("object '%s' is not iterable", it.getType().getName());
         }
     }
 
-    private void executeList(
-            String var, LispList list, LispList body, LispRuntime runtime, LispList collector)
-            throws LispException {
-        Map<String, LispObject> map = new HashMap<String, LispObject>();
-        for (LispObject val : list) {
-            map.put(var, val);
-            if (executeBody(runtime.with(map), body, collector)) {
-                return;
-            }
-        }
-    }
-
-    private void executeString(
+    private void executeLispIterator(
             String var,
-            LispString lispString,
+            Iterator<LispObject> it,
             LispList body,
             LispRuntime runtime,
             LispList collector)
             throws LispException {
-        String string = lispString.getValue();
         Map<String, LispObject> map = new HashMap<String, LispObject>();
-        int length = string.length();
-        for (int i = 0; i < length; i++) {
-            map.put(var, new LispInt(string.codePointAt(i)));
+        while (it.hasNext()) {
+            map.put(var, it.next());
             if (executeBody(runtime.with(map), body, collector)) {
                 return;
             }

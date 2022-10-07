@@ -5,7 +5,10 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispString extends LispBaseObject {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class LispString extends LispBaseObject implements LispIterable {
 
     private String value;
 
@@ -50,6 +53,10 @@ public class LispString extends LispBaseObject {
         }
     }
 
+    public Iterator<LispObject> iterator() {
+        return new StringIterator(value);
+    }
+
     public Object getJavaObject() {
         return value;
     }
@@ -72,5 +79,27 @@ class StringType extends LispType {
         } else {
             return new LispString("");
         }
+    }
+}
+
+class StringIterator implements Iterator<LispObject> {
+
+    private String value;
+    private int pos;
+
+    StringIterator(String value) {
+        this.value = value;
+    }
+
+    public boolean hasNext() {
+        return pos < value.length();
+    }
+
+    public LispObject next() throws NoSuchElementException {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+
+        return new LispInt(value.charAt(pos++));
     }
 }

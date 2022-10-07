@@ -1,16 +1,36 @@
 package kevwargo.jlp.objects;
 
+import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public abstract class LispIterator extends LispBaseObject implements Iterator<LispObject> {
+public abstract class LispIterator extends LispBaseObject
+        implements LispIterable, Iterator<LispObject> {
 
     public LispIterator() {
         super(LispType.ITERATOR);
+    }
+
+    public Iterator<LispObject> iterator() {
+        return this;
+    }
+
+    public static boolean isIterable(LispObject obj) {
+        if (obj instanceof LispIterable) {
+            return true;
+        }
+
+        try {
+            Object object = ((LispJavaObject) obj.cast(LispType.JAVA_OBJECT)).getObject();
+            return (object instanceof Iterator)
+                    || (object instanceof Iterable)
+                    || object.getClass().isArray();
+        } catch (LispCastException exc) {
+            return false;
+        }
     }
 }
 
@@ -23,90 +43,37 @@ class IteratorType extends LispType {
     public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
         if (!arguments.hasNext()) {
-            return new LispListIterator(new LispList());
+            return new LispIteratorImpl(new LispList().iterator());
         }
 
         LispObject obj = arguments.next();
-        if (obj.isInstance(ITERATOR)) {
-            return obj.cast(ITERATOR);
+        if (obj instanceof LispIterable) {
+            return new LispIteratorImpl(((LispIterable) obj).iterator());
         }
-        if (obj.isInstance(JAVA_OBJECT)) {
-            return handleJavaObject(((LispJavaObject) obj.cast(JAVA_OBJECT)).getObject());
-        }
-        if (obj.isInstance(LIST)) {
-            return new LispListIterator((LispList) obj.cast(LIST));
-        }
-        if (obj.isInstance(STRING)) {
-            return new LispStringIterator((LispString) obj.cast(STRING));
-        }
-        throw new LispException("object '%s' is not an iterator", obj);
-    }
 
-    @SuppressWarnings("unchecked")
-    private LispIterator handleJavaObject(Object obj) throws LispException {
-        if (obj.getClass().isArray()) {
-            return new JavaArrayIterator((Object[]) obj);
+        if (obj.isInstance(LispType.JAVA_OBJECT)) {
+            Object object = ((LispJavaObject) obj.cast(LispType.JAVA_OBJECT)).getObject();
+
+            if (object instanceof Iterator) {
+                return new JavaIterator((Iterator) object);
+            }
+            if (object instanceof Iterable) {
+                return new JavaIterable((Iterable) object);
+            }
+            if (object.getClass().isArray()) {
+                return new JavaArray((Object[]) object);
+            }
         }
-        if (obj instanceof Iterable) {
-            return new JavaIterator(((Iterable<Object>) obj).iterator());
-        }
-        if (obj instanceof Iterator) {
-            return new JavaIterator((Iterator<Object>) obj);
-        }
-        throw new LispException("java-object '%s' is not iterable", obj);
+
+        throw new LispCastException("object '%s' is not iterable", obj.getType().getName());
     }
 }
 
-class LispListIterator extends LispIterator {
+class LispIteratorImpl extends LispIterator {
 
     private Iterator<LispObject> it;
 
-    public LispListIterator(LispList list) {
-        super();
-        it = list.iterator();
-    }
-
-    public boolean hasNext() {
-        return it.hasNext();
-    }
-
-    public LispObject next() throws NoSuchElementException {
-        return it.next();
-    }
-}
-
-class LispStringIterator extends LispIterator {
-
-    private String string;
-    private int pos;
-    private int length;
-
-    public LispStringIterator(LispString string) {
-        super();
-        this.string = string.getValue();
-        length = this.string.length();
-        pos = 0;
-    }
-
-    public boolean hasNext() {
-        return pos < length;
-    }
-
-    public LispObject next() throws NoSuchElementException {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        char chr = string.charAt(pos++);
-        return new LispInt(chr);
-    }
-}
-
-class JavaIterator extends LispIterator {
-
-    private Iterator<Object> it;
-
-    public JavaIterator(Iterator<Object> it) {
-        super();
+    LispIteratorImpl(Iterator<LispObject> it) {
         this.it = it;
     }
 
@@ -114,32 +81,49 @@ class JavaIterator extends LispIterator {
         return it.hasNext();
     }
 
-    public LispObject next() throws NoSuchElementException {
-        return new LispJavaObject(it.next());
+    public LispObject next() {
+        return it.next();
     }
 }
 
-class JavaArrayIterator extends LispIterator {
+class JavaIterator extends LispIterator {
 
-    private Object array[];
-    private int pos;
-    private int length;
+    private Iterator it;
 
-    public JavaArrayIterator(Object array[]) {
-        super();
-        this.array = array;
-        length = array.length;
-        pos = 0;
+    JavaIterator(Iterator it) {
+        this.it = it;
     }
 
     public boolean hasNext() {
-        return pos < length;
+        return it.hasNext();
     }
 
-    public LispObject next() throws NoSuchElementException {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        return new LispJavaObject(array[pos++]);
+    public LispObject next() {
+        return LispBaseObject.wrap(it.next());
+    }
+}
+
+class JavaIterable extends JavaIterator {
+
+    JavaIterable(Iterable it) {
+        super(it.iterator());
+    }
+}
+
+class JavaArray extends LispIterator {
+
+    private Object array[];
+    private int pos;
+
+    JavaArray(Object array[]) {
+        this.array = array;
+    }
+
+    public boolean hasNext() {
+        return pos < array.length;
+    }
+
+    public LispObject next() {
+        return LispBaseObject.wrap(array[pos++]);
     }
 }
