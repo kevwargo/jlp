@@ -1,6 +1,8 @@
 package kevwargo.jlp.objects.builtins.macros;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.objects.LispBaseObject;
+import kevwargo.jlp.objects.LispCallable;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
@@ -60,17 +62,17 @@ public class LMDefclass extends LispFunction {
 
         public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
                 throws LispException {
-            LispObject instance = new LispObject(this);
+            LispBaseObject instance = new LispBaseObject(this);
             LispObject constructor = getDict().get("@init@");
-            if (constructor != null) {
+            if (constructor instanceof LispCallable) {
                 arguments.setFirst(instance);
-                constructor.call(runtime, arguments);
+                ((LispCallable) constructor).call(runtime, arguments);
             }
             defineCastsRecursively(runtime, instance);
             return instance;
         }
 
-        private void defineCastsRecursively(LispRuntime runtime, LispObject instance)
+        private void defineCastsRecursively(LispRuntime runtime, LispBaseObject instance)
                 throws LispException {
             for (LispType type : getBases()) {
                 if (type instanceof LispClass) {

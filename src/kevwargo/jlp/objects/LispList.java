@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class LispList extends LispObject implements Iterable<LispObject> {
+public class LispList extends LispBaseObject implements Iterable<LispObject> {
 
     private List<LispObject> contents;
     private boolean special;
@@ -69,11 +69,16 @@ public class LispList extends LispObject implements Iterable<LispObject> {
             return LispBool.NIL;
         }
 
-        LispObject function = it.next().eval(runtime);
-        LispRuntime evalRuntime = function.isInstance(LispType.MACRO) ? null : runtime;
+        LispObject head = it.next().eval(runtime);
+        if (!(head instanceof LispCallable)) {
+            throw new LispException("Object '%s' is not callable", head.getType().getName());
+        }
+        LispCallable callable = (LispCallable) head;
+
+        LispRuntime evalRuntime = callable.isInstance(LispType.MACRO) ? null : runtime;
         ArgumentsIterator args = new ArgumentsIterator(it, evalRuntime, contents.size() - 1);
 
-        return function.call(runtime, args);
+        return callable.call(runtime, args);
     }
 
     public String repr() {

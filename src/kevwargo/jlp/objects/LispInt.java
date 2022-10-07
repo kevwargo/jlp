@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispInt extends LispObject {
+public class LispInt extends LispBaseObject {
 
     private long value;
     private Class<?> cls;

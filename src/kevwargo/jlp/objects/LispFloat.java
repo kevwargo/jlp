@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispFloat extends LispObject {
+public class LispFloat extends LispBaseObject {
 
     private double value;
     private Class<?> cls;

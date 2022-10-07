@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LispJavaObject extends LispObject {
+public class LispJavaObject extends LispBaseObject {
 
     private Object obj;
     protected Class<?> cls;
@@ -68,7 +68,7 @@ public class LispJavaObject extends LispObject {
         }
 
         try {
-            return LispObject.wrap(f.get(obj), f.getType());
+            return LispBaseObject.wrap(f.get(obj), f.getType());
         } catch (IllegalAccessException e) {
             return null;
         }
@@ -78,7 +78,6 @@ public class LispJavaObject extends LispObject {
         if (!name.startsWith("#")) {
             throw new LispException("Cannot overwrite Java method");
         }
-        ;
 
         name = name.substring(1);
         Field f = fields.get(name);
@@ -137,8 +136,9 @@ public class LispJavaObject extends LispObject {
             return String.format("Java method %s.%s", LispJavaObject.this.cls, name);
         }
 
-        // No varargs
-        // No choosing the nearest by inheritance distance between actual vs declared arguments
+        // TODO: varargs
+        // TODO: choose the nearest method by the inheritance distance between actual vs declared
+        // arguments
         protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> args)
                 throws LispException {
             LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispType.LIST);
@@ -161,7 +161,7 @@ public class LispJavaObject extends LispObject {
 
             try {
                 Object result = method.invoke(LispJavaObject.this.obj, arguments);
-                return LispObject.wrap(result, method.getReturnType());
+                return LispBaseObject.wrap(result, method.getReturnType());
             } catch (IllegalAccessException
                     | IllegalArgumentException
                     | InvocationTargetException

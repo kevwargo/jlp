@@ -3,11 +3,15 @@ package kevwargo.jlp.objects;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.FormalArguments;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class LispJavaClass extends LispJavaObject {
+public class LispJavaClass extends LispJavaObject implements LispCallable {
+
+    private static final String ARG_ARGS = "args";
+    private static final FormalArguments callArgs = new FormalArguments().rest(ARG_ARGS);
 
     private Constructor<?> constructors[];
 
@@ -55,6 +59,10 @@ public class LispJavaClass extends LispJavaObject {
         }
     }
 
+    public FormalArguments getFormalArgs() {
+        return callArgs;
+    }
+
     public LispObject call(LispRuntime runtime, ArgumentsIterator args) throws LispException {
         Object arguments[] = new Object[args.getLength()];
         Class<?> classes[] = new Class<?>[args.getLength()];
@@ -76,7 +84,7 @@ public class LispJavaClass extends LispJavaObject {
 
         try {
             Object result = constructor.newInstance(arguments);
-            return LispObject.wrap(result, cls);
+            return LispBaseObject.wrap(result, cls);
         } catch (IllegalAccessException
                 | IllegalArgumentException
                 | InstantiationException

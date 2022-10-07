@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispMethod extends LispObject {
+public class LispMethod extends LispBaseObject {
 
     protected LispObject object;
     protected LispFunction function;

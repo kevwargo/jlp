@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispBool extends LispObject {
+public class LispBool extends LispBaseObject {
 
     public static final LispBool T = new LispBool(true);
     public static final LispBool NIL = new LispBool(false);

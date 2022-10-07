@@ -3,8 +3,9 @@ package kevwargo.jlp.objects;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.FormalArguments;
 
-public abstract class LispType extends LispObject {
+public abstract class LispType extends LispBaseObject implements LispCallable {
 
     public static final LispType OBJECT = new ObjectType();
     public static final LispType TYPE = new Type();
@@ -21,6 +22,9 @@ public abstract class LispType extends LispObject {
     public static final LispType METHOD = new FunctionType("method", FUNCTION);
     public static final LispType JAVA_OBJECT = new JavaObjectType();
     public static final LispType ITERATOR = new IteratorType();
+
+    protected static final String ARG_ARGS = "args";
+    private static final FormalArguments callArgs = new FormalArguments().rest(ARG_ARGS);
 
     static {
         OBJECT.setType(TYPE);
@@ -71,6 +75,10 @@ public abstract class LispType extends LispObject {
         return String.format("<type '%s'>", name);
     }
 
+    public FormalArguments getFormalArgs() {
+        return callArgs;
+    }
+
     public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         return makeInstance(runtime, arguments);
     }
@@ -97,18 +105,21 @@ class Type extends LispType {
         if (arguments.getLength() != 2) {
             throw new LispException("(%s) takes 1 or 2 arguments", getName());
         }
+
         String name = ((LispString) arguments.next().cast(STRING)).getValue();
+
         LispList basesList = (LispList) arguments.next().cast(LIST);
         LispType bases[] = new LispType[basesList.size()];
         int pos = 0;
         for (LispObject base : basesList) {
             bases[pos++] = (LispType) base.cast(TYPE);
         }
+
         return new LispType(name, bases) {
             public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
                     throws LispException {
                 // TODO: maybe bring back default constructor, idk
-                return new LispObject(Type.this);
+                return new LispBaseObject(Type.this);
             }
         };
     }

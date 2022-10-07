@@ -6,7 +6,7 @@ import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 
-public class LispSymbol extends LispObject {
+public class LispSymbol extends LispBaseObject {
 
     private String name;
 

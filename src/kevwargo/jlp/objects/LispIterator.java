@@ -7,7 +7,7 @@ import kevwargo.jlp.utils.ArgumentsIterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class LispIterator extends LispObject implements Iterator<LispObject> {
+public abstract class LispIterator extends LispBaseObject implements Iterator<LispObject> {
 
     public LispIterator() {
         super(LispType.ITERATOR);

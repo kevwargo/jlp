@@ -1,6 +1,5 @@
 package kevwargo.jlp.objects;
 
-import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
@@ -9,7 +8,7 @@ import kevwargo.jlp.utils.FormalArguments;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class LispFunction extends LispObject {
+public abstract class LispFunction extends LispBaseObject implements LispCallable {
 
     protected String name;
     protected FormalArguments formalArguments;
@@ -28,7 +27,7 @@ public abstract class LispFunction extends LispObject {
         return name;
     }
 
-    public FormalArguments getFormalArguments() {
+    public FormalArguments getFormalArgs() {
         return formalArguments;
     }
 
@@ -79,38 +78,6 @@ class FunctionType extends LispType {
 
     public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
-        LispObject callable = arguments.next();
-
-        String name = "<anonymous>";
-        FormalArguments formalArguments = new FormalArguments();
-        try {
-            LispFunction func = (LispFunction) callable.cast(LispType.FUNCTION);
-            name = func.getName();
-            formalArguments = func.getFormalArguments();
-        } catch (LispCastException e) {
-        }
-
-        return new WrappedFunction(callable, this, name, formalArguments);
-    }
-}
-
-class WrappedFunction extends LispFunction {
-
-    private LispObject callable;
-
-    public WrappedFunction(
-            LispObject callable, LispType type, String name, FormalArguments formalArguments) {
-        super(type, name, formalArguments);
-        this.callable = callable;
-    }
-
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
-        return callable.call(runtime, arguments);
-    }
-
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        // This method will never be called since the `call()` is overriden.
-        return null;
+        throw new LispException("Cannot instantiate '%s'", getName());
     }
 }
