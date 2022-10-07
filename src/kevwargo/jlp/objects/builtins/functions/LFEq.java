@@ -27,16 +27,16 @@ public class LFEq extends LispFunction {
         LispObject obj2 = arguments.get("arg2");
 
         if (obj1 == obj2) {
-            return LispBool.T;
+            return LispBool.TRUE;
         }
 
         if (obj1.isInstance(LispType.JAVA_OBJECT) && obj2.isInstance(LispType.JAVA_OBJECT)) {
             if (((LispJavaObject) obj1.cast(LispType.JAVA_OBJECT)).getObject()
                     == ((LispJavaObject) obj2.cast(LispType.JAVA_OBJECT)).getObject()) {
-                return LispBool.T;
+                return LispBool.TRUE;
             }
         }
 
-        return LispBool.NIL;
+        return LispBool.FALSE;
     }
 }

@@ -20,17 +20,18 @@ public class LMIf extends LispFunction {
 
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        LispObject result;
-        if (arguments.get("condition").eval(runtime) != LispBool.NIL) {
+        LispObject result = LispBool.FALSE;
+
+        if (arguments.get("condition").eval(runtime).bool()) {
             result = arguments.get("true").eval(runtime);
         } else {
-            result = LispBool.NIL;
             Iterator<LispObject> iterator =
                     ((LispList) arguments.get("false").cast(LispType.LIST)).iterator();
             while (iterator.hasNext()) {
                 result = iterator.next().eval(runtime);
             }
         }
+
         return result;
     }
 }

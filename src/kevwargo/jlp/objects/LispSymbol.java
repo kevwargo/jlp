@@ -42,6 +42,10 @@ public class LispSymbol extends LispBaseObject {
         return name;
     }
 
+    public boolean bool() {
+        return true;
+    }
+
     public boolean equals(Object obj) {
         if (!(obj instanceof LispObject)) {
             return false;

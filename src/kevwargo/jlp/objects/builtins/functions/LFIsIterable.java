@@ -23,8 +23,8 @@ public class LFIsIterable extends LispFunction {
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         if (LispIterator.isIterable(arguments.get(ARG_OBJ))) {
-            return LispBool.T;
+            return LispBool.TRUE;
         }
-        return LispBool.NIL;
+        return LispBool.FALSE;
     }
 }

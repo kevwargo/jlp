@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects.builtins.macros;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
@@ -95,7 +95,7 @@ public class LMDefun extends LispFunction {
             LispNamespace bodyNamespace = defNamespace.with(arguments).with(map);
 
             Iterator<LispObject> bodyIterator = body.iterator();
-            LispObject result = LispBool.NIL;
+            LispObject result = LispNil.NIL;
             try {
                 while (bodyIterator.hasNext()) {
                     result = bodyIterator.next().eval(runtime.with(bodyNamespace));

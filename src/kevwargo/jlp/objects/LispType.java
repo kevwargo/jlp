@@ -13,6 +13,7 @@ public abstract class LispType extends LispBaseObject implements LispCallable {
     public static final LispType STRING = new StringType();
     public static final LispType LIST = new ListType();
     public static final LispType BOOL = new BoolType();
+    public static final LispType NIL = new NilType();
     public static final LispType INT = new IntType();
     public static final LispType FLOAT = new FloatType();
     public static final LispType FUNCTION = new FunctionType("builtin-function");
@@ -73,6 +74,10 @@ public abstract class LispType extends LispBaseObject implements LispCallable {
 
     public String repr() {
         return String.format("<type '%s'>", name);
+    }
+
+    public boolean bool() {
+        return true;
     }
 
     public FormalArguments getFormalArgs() {

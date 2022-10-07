@@ -29,4 +29,8 @@ public class LispMethod extends LispBaseObject {
     public String repr() {
         return String.format("<bound method %s of %s>", name, object.repr());
     }
+
+    public boolean bool() {
+        return true;
+    }
 }

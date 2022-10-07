@@ -15,8 +15,8 @@ one
 two
 three
 
-nil
+false
 t
-nil
+false
 t
 t

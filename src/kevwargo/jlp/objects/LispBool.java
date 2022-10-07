@@ -6,8 +6,8 @@ import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispBool extends LispBaseObject {
 
-    public static final LispBool T = new LispBool(true);
-    public static final LispBool NIL = new LispBool(false);
+    public static final LispBool TRUE = new LispBool(true);
+    public static final LispBool FALSE = new LispBool(false);
 
     private boolean value;
 
@@ -21,7 +21,11 @@ public class LispBool extends LispBaseObject {
     }
 
     public String repr() {
-        return value ? "t" : "nil";
+        return value ? "t" : "false";
+    }
+
+    public boolean bool() {
+        return value;
     }
 
     public Object getJavaObject() {
@@ -41,9 +45,10 @@ class BoolType extends LispType {
 
     public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
             throws LispException {
-        if (arguments.getLength() < 1) {
-            return LispBool.NIL;
+        if (!arguments.hasNext()) {
+            return LispBool.FALSE;
         }
-        return arguments.next() == LispBool.NIL ? LispBool.NIL : LispBool.T;
+
+        return arguments.next().bool() ? LispBool.TRUE : LispBool.FALSE;
     }
 }

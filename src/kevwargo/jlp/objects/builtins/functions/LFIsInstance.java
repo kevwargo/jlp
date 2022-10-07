@@ -21,8 +21,8 @@ public class LFIsInstance extends LispFunction {
         LispObject obj = arguments.get("obj");
         LispType type = (LispType) arguments.get("type").cast(LispType.TYPE);
         if (obj.isInstance(type)) {
-            return LispBool.T;
+            return LispBool.TRUE;
         }
-        return LispBool.NIL;
+        return LispBool.FALSE;
     }
 }

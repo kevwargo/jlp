@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispRuntime;
@@ -32,7 +32,7 @@ public class LFAppend extends LispFunction {
             }
         }
         if (result.isEmpty()) {
-            return LispBool.NIL;
+            return LispNil.NIL;
         }
         return new LispList(result);
     }

@@ -5,6 +5,7 @@ import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFloat;
 import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispSymbol;
@@ -30,7 +31,7 @@ public class LispParser {
     public LispObject read() throws LispException {
         LispObject object = readInternal();
         if (object != null && object.isInstance(LispType.LIST) && ((LispList) object).isEmpty()) {
-            return LispBool.NIL;
+            return LispNil.NIL;
         }
         return object;
     }
@@ -101,9 +102,11 @@ public class LispParser {
         switch (token.getType()) {
             case SYMBOL:
                 if (token.getValue().equals("t")) {
-                    object = LispBool.T;
+                    object = LispBool.TRUE;
+                } else if (token.getValue().equals("false")) {
+                    object = LispBool.FALSE;
                 } else if (token.getValue().equals("nil")) {
-                    object = LispBool.NIL;
+                    object = LispNil.NIL;
                 } else {
                     object = parseNumber(token.getValue());
                     if (object == null) {

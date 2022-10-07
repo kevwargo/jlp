@@ -47,6 +47,10 @@ public class LispInt extends LispBaseObject {
         return Long.toString(value);
     }
 
+    public boolean bool() {
+        return value != 0;
+    }
+
     public Object format() {
         return Long.valueOf(value);
     }

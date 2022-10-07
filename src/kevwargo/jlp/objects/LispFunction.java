@@ -35,6 +35,10 @@ public abstract class LispFunction extends LispBaseObject implements LispCallabl
         return String.format("function '%s' at 0x%x", name, System.identityHashCode(this));
     }
 
+    public boolean bool() {
+        return true;
+    }
+
     public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
         Map<String, LispObject> argMap = new HashMap<String, LispObject>();
         int al = arguments.getLength();

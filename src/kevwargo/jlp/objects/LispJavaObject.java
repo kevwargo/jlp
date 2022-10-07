@@ -41,6 +41,10 @@ public class LispJavaObject extends LispBaseObject {
         return toString();
     }
 
+    public boolean bool() {
+        return true;
+    }
+
     public String toString() {
         return obj.toString();
     }

@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects.builtins.macros;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
@@ -37,11 +37,11 @@ public class LMLet extends LispFunction {
 
         for (LispObject mapping : mappings) {
             if (mapping.isInstance(LispType.SYMBOL)) {
-                bindings.put(((LispSymbol) mapping).getName(), LispBool.NIL);
+                bindings.put(((LispSymbol) mapping).getName(), LispNil.NIL);
             } else if (mapping.isInstance(LispType.LIST)) {
                 Iterator<LispObject> it = ((LispList) mapping).iterator();
                 LispSymbol variable = (LispSymbol) it.next().cast(LispType.SYMBOL);
-                LispObject value = LispBool.NIL;
+                LispObject value = LispNil.NIL;
                 if (it.hasNext()) {
                     value = it.next().eval(usePrevMappings ? runtime.with(bindings) : runtime);
                 }
@@ -58,7 +58,7 @@ public class LMLet extends LispFunction {
         }
 
         LispRuntime localRuntime = runtime.with(bindings);
-        LispObject result = LispBool.NIL;
+        LispObject result = LispNil.NIL;
         Iterator<LispObject> bodyIterator = ((LispList) arguments.get(ARG_BODY)).iterator();
         while (bodyIterator.hasNext()) {
             result = bodyIterator.next().eval(localRuntime);

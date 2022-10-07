@@ -35,6 +35,10 @@ public class LispFloat extends LispBaseObject {
         return Double.toString(value);
     }
 
+    public boolean bool() {
+        return value != 0.0;
+    }
+
     public Object format() {
         return Double.valueOf(value);
     }

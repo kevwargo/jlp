@@ -23,13 +23,13 @@ public class LFEqualp extends LFEq {
 
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        if (super.callInternal(runtime, arguments) == LispBool.T) {
-            return LispBool.T;
+        if (super.callInternal(runtime, arguments) == LispBool.TRUE) {
+            return LispBool.TRUE;
         }
         if (equalp(arguments.get("arg1"), arguments.get("arg2"))) {
-            return LispBool.T;
+            return LispBool.TRUE;
         }
-        return LispBool.NIL;
+        return LispBool.FALSE;
     }
 
     private boolean equalp(LispObject obj1, LispObject obj2) throws LispException {

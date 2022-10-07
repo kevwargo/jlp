@@ -1,8 +1,8 @@
 package kevwargo.jlp.objects.builtins.functions;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
@@ -24,6 +24,7 @@ public class LFDel extends LispFunction {
             throws LispException {
         String name = ((LispSymbol) arguments.get(ARG_SYMBOL).cast(LispType.SYMBOL)).getName();
         runtime.getNS().delete(name);
-        return LispBool.NIL;
+
+        return LispNil.NIL;
     }
 }

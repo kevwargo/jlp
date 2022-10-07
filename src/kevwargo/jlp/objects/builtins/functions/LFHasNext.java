@@ -20,10 +20,8 @@ public class LFHasNext extends LispFunction {
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispObject obj = arguments.get("obj");
-        if (!obj.isInstance(LispType.ITERATOR)) {
-            throw new LispException("object '%s' is not an iterator");
-        }
         boolean hasNext = ((LispIterator) obj.cast(LispType.ITERATOR)).hasNext();
-        return hasNext ? LispBool.T : LispBool.NIL;
+
+        return hasNext ? LispBool.TRUE : LispBool.FALSE;
     }
 }

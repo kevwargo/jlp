@@ -22,6 +22,8 @@ public interface LispObject {
 
     public Object format();
 
+    public boolean bool();
+
     public Object getJavaObject();
 
     public Class<?> getJavaClass();

@@ -66,7 +66,7 @@ public class LispList extends LispBaseObject implements LispIterable {
     public LispObject eval(LispRuntime runtime) throws LispException {
         Iterator<LispObject> it = this.iterator();
         if (!it.hasNext()) {
-            return LispBool.NIL;
+            return LispNil.NIL;
         }
 
         LispObject head = it.next().eval(runtime);
@@ -95,6 +95,10 @@ public class LispList extends LispBaseObject implements LispIterable {
         sb.append(")");
         return sb.toString();
     }
+
+    public boolean bool() {
+        return !isEmpty();
+    }
 }
 
 class ListType extends LispType {
@@ -110,7 +114,7 @@ class ListType extends LispType {
             result.add(arguments.next());
         }
         if (result.isEmpty()) {
-            return LispBool.NIL;
+            return LispNil.NIL;
         }
         return new LispList(result);
     }

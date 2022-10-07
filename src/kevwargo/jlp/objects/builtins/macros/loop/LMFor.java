@@ -1,7 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros.loop;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
@@ -44,7 +43,7 @@ public class LMFor extends LoopBase {
 
         init.eval(runtime);
 
-        while (cond.eval(runtime) != LispBool.NIL) {
+        while (cond.eval(runtime).bool()) {
             if (executeBody(runtime, body, collector)) {
                 return;
             }

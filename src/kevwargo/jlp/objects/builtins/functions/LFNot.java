@@ -12,15 +12,15 @@ import java.util.Map;
 
 public class LFNot extends LispFunction {
 
+    public static final String NAME = "!";
+    public static final String ARG_OBJ = "!";
+
     public LFNot() {
-        super(LispType.FUNCTION, "not", new FormalArguments("obj"));
+        super(LispType.FUNCTION, NAME, new FormalArguments(ARG_OBJ));
     }
 
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
-        if (arguments.get("obj") == LispBool.NIL) {
-            return LispBool.T;
-        }
-        return LispBool.NIL;
+        return arguments.get(ARG_OBJ).bool() ? LispBool.FALSE : LispBool.TRUE;
     }
 }

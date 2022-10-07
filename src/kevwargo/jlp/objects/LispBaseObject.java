@@ -29,13 +29,13 @@ public class LispBaseObject implements LispObject {
     // TODO: arrays
     public static LispObject wrap(Object obj, Class<?> cls) {
         if (obj == null) {
-            return LispBool.NIL;
+            return LispNil.NIL;
         }
         if (cls == boolean.class) {
             if ((boolean) obj) {
-                return LispBool.T;
+                return LispBool.TRUE;
             }
-            return LispBool.NIL;
+            return LispBool.FALSE;
         }
 
         if (cls == long.class) {
@@ -165,6 +165,10 @@ public class LispBaseObject implements LispObject {
     // main interface method
     public String repr() {
         return String.format("'%s' object at 0x%x", type.getName(), System.identityHashCode(this));
+    }
+
+    public boolean bool() {
+        return true;
     }
 
     public String toString() {

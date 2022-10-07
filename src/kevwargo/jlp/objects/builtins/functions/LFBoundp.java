@@ -23,6 +23,6 @@ public class LFBoundp extends LispFunction {
     protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
             throws LispException {
         LispSymbol symbol = (LispSymbol) arguments.get(ARG_SYMBOL).cast(LispType.SYMBOL);
-        return runtime.getNS().get(symbol.getName()) == null ? LispBool.NIL : LispBool.T;
+        return runtime.getNS().get(symbol.getName()) == null ? LispBool.FALSE : LispBool.TRUE;
     }
 }

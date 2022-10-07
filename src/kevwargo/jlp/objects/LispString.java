@@ -34,6 +34,10 @@ public class LispString extends LispBaseObject implements LispIterable {
                 + "\"";
     }
 
+    public boolean bool() {
+        return !value.isEmpty();
+    }
+
     public int hashCode() {
         return value.hashCode();
     }
