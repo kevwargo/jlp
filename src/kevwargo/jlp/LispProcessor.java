@@ -16,6 +16,7 @@ import kevwargo.jlp.objects.builtins.functions.LFEval;
 import kevwargo.jlp.objects.builtins.functions.LFFormat;
 import kevwargo.jlp.objects.builtins.functions.LFHasNext;
 import kevwargo.jlp.objects.builtins.functions.LFIsInstance;
+import kevwargo.jlp.objects.builtins.functions.LFIsIterable;
 import kevwargo.jlp.objects.builtins.functions.LFNext;
 import kevwargo.jlp.objects.builtins.functions.LFNot;
 import kevwargo.jlp.objects.builtins.functions.LFNth;
@@ -126,6 +127,7 @@ public class LispProcessor {
         define(new LFEq());
         define(new LFEqualp());
         define(new LFIsInstance());
+        define(new LFIsIterable());
         define(new LFBoundp());
     }
 

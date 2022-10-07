@@ -14,3 +14,9 @@ word: three
 one
 two
 three
+
+nil
+t
+nil
+t
+t
