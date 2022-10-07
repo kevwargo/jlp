@@ -28,7 +28,6 @@ import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
 import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
 import kevwargo.jlp.objects.builtins.functions.math.LFPlus;
 import kevwargo.jlp.objects.builtins.macros.LMBackquote;
-import kevwargo.jlp.objects.builtins.macros.LMCollect;
 import kevwargo.jlp.objects.builtins.macros.LMDefclass;
 import kevwargo.jlp.objects.builtins.macros.LMDefmacro;
 import kevwargo.jlp.objects.builtins.macros.LMDefun;
@@ -127,7 +126,6 @@ public class LispProcessor {
         define(new LFEq());
         define(new LFEqualp());
         define(new LFIsInstance());
-        define(new LMCollect());
         define(new LFBoundp());
     }
 
