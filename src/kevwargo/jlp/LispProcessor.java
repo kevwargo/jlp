@@ -1,7 +1,7 @@
 package kevwargo.jlp;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
+import kevwargo.jlp.objects.LispNamedObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.objects.builtins.functions.LFAppend;
@@ -70,65 +70,72 @@ public class LispProcessor {
         builtins = new LispNamespace.Layer(false);
         namespace = new LispNamespace(builtins);
 
-        initBuiltins();
+        defineBuiltins();
         loadInitFile();
     }
 
-    private void initBuiltins() {
-        define("object", LispType.OBJECT);
-        define("type", LispType.TYPE);
-        define("builtin-function", LispType.FUNCTION);
-        define("builtin-macro", LispType.MACRO);
-        define("function", LispType.FUNCTION);
-        define("macro", LispType.MACRO);
-        define("str", LispType.STRING);
-        define("bool", LispType.BOOL);
-        define("int", LispType.INT);
-        define("float", LispType.FLOAT);
-        define("list", LispType.LIST);
-        define("symbol", LispType.SYMBOL);
-        define("method", LispType.METHOD);
-        define("java-object", LispType.JAVA_OBJECT);
-        define("iterator", LispType.ITERATOR);
+    private void defineBuiltins() {
+        defineFunctions();
+        defineMacros();
+        defineTypes();
+    }
 
-        define(new LMBackquote());
-        define(new LFPrint());
-        define(new LFFormat());
-        define(new LMQuote());
+    private void defineFunctions() {
+        define(new LFAppend());
         define(new LFApply());
+        define(new LFBoundp());
         define(new LFCapitalize());
         define(new LFConcat());
-        define(new LMDefun());
-        define(new LMDefmacro());
-        define(new LMDefclass());
-        define(new LMLet());
-        define(new LMLetStar());
-        define(new LFAppend());
-        define(new LMIf());
-        define(new LMFor());
-        define(new LMProgn());
-        define(new LFNth());
-        define(new LMLambda());
-        define(new LFSet());
-        define(new LFSetGlobal());
         define(new LFDel());
-        define(new LFEval());
-        define(new LFPrintNamespace());
-        define(new LMDot());
-        define(new LFNext());
-        define(new LFHasNext());
-
-        define(new LFPlus());
-        define(new LFMinus());
-        define(new LFMultiply());
         define(new LFDivide());
-
-        define(new LFNot());
         define(new LFEq());
         define(new LFEqualp());
+        define(new LFEval());
+        define(new LFFormat());
+        define(new LFHasNext());
         define(new LFIsInstance());
         define(new LFIsIterable());
-        define(new LFBoundp());
+        define(new LFMinus());
+        define(new LFMultiply());
+        define(new LFNext());
+        define(new LFNot());
+        define(new LFNth());
+        define(new LFPlus());
+        define(new LFPrint());
+        define(new LFPrintNamespace());
+        define(new LFSet());
+        define(new LFSetGlobal());
+    }
+
+    private void defineMacros() {
+        define(new LMBackquote());
+        define(new LMDefclass());
+        define(new LMDefmacro());
+        define(new LMDefun());
+        define(new LMDot());
+        define(new LMFor());
+        define(new LMIf());
+        define(new LMLambda());
+        define(new LMLet());
+        define(new LMLetStar());
+        define(new LMProgn());
+        define(new LMQuote());
+    }
+
+    private void defineTypes() {
+        define(LispType.BOOL);
+        define(LispType.FLOAT);
+        define(LispType.FUNCTION);
+        define(LispType.INT);
+        define(LispType.ITERATOR);
+        define(LispType.JAVA_OBJECT);
+        define(LispType.LIST);
+        define(LispType.MACRO);
+        define(LispType.METHOD);
+        define(LispType.OBJECT);
+        define(LispType.STRING);
+        define(LispType.SYMBOL);
+        define(LispType.TYPE);
     }
 
     private void loadInitFile() {
@@ -144,12 +151,8 @@ public class LispProcessor {
         }
     }
 
-    public void define(String name, LispObject definition) {
-        builtins.put(name, definition);
-    }
-
-    public void define(LispFunction function) {
-        define(function.getName(), function);
+    public void define(LispNamedObject obj) {
+        builtins.put(obj.getName(), obj);
     }
 
     public void run(InputStream in) throws LispException {

@@ -8,7 +8,7 @@ import kevwargo.jlp.utils.FormalArguments;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class LispFunction extends LispBaseObject implements LispCallable {
+public abstract class LispFunction extends LispBaseObject implements LispCallable, LispNamedObject {
 
     protected String name;
     protected FormalArguments formalArguments;

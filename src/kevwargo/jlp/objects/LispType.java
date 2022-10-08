@@ -5,7 +5,7 @@ import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.ArgumentsIterator;
 import kevwargo.jlp.utils.FormalArguments;
 
-public abstract class LispType extends LispBaseObject implements LispCallable {
+public abstract class LispType extends LispBaseObject implements LispCallable, LispNamedObject {
 
     public static final LispType OBJECT = new ObjectType();
     public static final LispType TYPE = new Type();
