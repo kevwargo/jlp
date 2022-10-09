@@ -114,8 +114,10 @@ public class LispList extends LispBaseObject implements LispIterable {
 
     public String repr() {
         StringBuffer sb = new StringBuffer();
-        sb.append("(");
         Iterator<LispObject> it = iterator();
+
+        sb.append("(");
+
         if (it.hasNext()) {
             sb.append(it.next().repr());
         }
@@ -123,8 +125,8 @@ public class LispList extends LispBaseObject implements LispIterable {
             sb.append(" ");
             sb.append(it.next().repr());
         }
-        sb.append(")");
-        return sb.toString();
+
+        return sb.append(")").toString();
     }
 
     public boolean bool() {
