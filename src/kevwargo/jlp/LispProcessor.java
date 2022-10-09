@@ -205,7 +205,7 @@ public class LispProcessor {
 
                 LispObject result = expr.eval(runtime);
                 if (interactive) {
-                    printOut.println(result);
+                    printOut.println(result.repr());
                 }
             } catch (LispException exc) {
                 if (!interactive) {
