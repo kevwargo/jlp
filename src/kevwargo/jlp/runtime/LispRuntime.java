@@ -1,10 +1,8 @@
 package kevwargo.jlp.runtime;
 
-import kevwargo.jlp.objects.LispObject;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
 
 public class LispRuntime {
 
@@ -34,7 +32,7 @@ public class LispRuntime {
         return new LispRuntime(ns, in, out);
     }
 
-    public LispRuntime with(Map<String, LispObject> layer) {
+    public LispRuntime with(LispNamespace.Layer layer) {
         return new LispRuntime(ns.with(layer), in, out);
     }
 

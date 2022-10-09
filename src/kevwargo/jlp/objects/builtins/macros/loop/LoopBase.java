@@ -10,9 +10,6 @@ import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.CallArgs;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class LoopBase extends LispFunction {
 
     public static final String FN_BREAK = "break";
@@ -25,7 +22,7 @@ public abstract class LoopBase extends LispFunction {
 
     protected boolean executeBody(LispRuntime runtime, LispList body, LispList collector)
             throws LispException {
-        Map<String, LispObject> map = new HashMap<String, LispObject>();
+        LispNamespace.Layer map = new LispNamespace.Layer();
         map.put(FN_BREAK, new LoopExit(false));
         map.put(FN_CONTINUE, new LoopExit(true));
         map.put(FN_EMIT, new Emit(collector));

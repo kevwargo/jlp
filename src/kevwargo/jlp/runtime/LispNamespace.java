@@ -24,10 +24,6 @@ public class LispNamespace {
         this.overlays = new ArrayList<Layer>();
     }
 
-    public LispNamespace with(Map<String, LispObject> layer) {
-        return with(new Layer(layer));
-    }
-
     public LispNamespace with(Layer layer) {
         LispNamespace clone = new LispNamespace(builtins);
         clone.globals = globals;

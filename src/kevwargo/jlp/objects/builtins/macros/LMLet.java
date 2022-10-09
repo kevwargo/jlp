@@ -11,9 +11,7 @@ import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.CallArgs;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class LMLet extends LispFunction {
 
@@ -33,7 +31,7 @@ public class LMLet extends LispFunction {
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
         LispList mappings = (LispList) args.get(ARG_MAPPINGS).cast(LispType.LIST);
-        Map<String, LispObject> bindings = new HashMap<String, LispObject>();
+        LispNamespace.Layer bindings = new LispNamespace.Layer();
 
         for (LispObject mapping : mappings) {
             if (mapping.isInstance(LispType.SYMBOL)) {

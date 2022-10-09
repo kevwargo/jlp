@@ -9,8 +9,6 @@ import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.utils.CallArgs;
 
-import java.util.Map;
-
 public class LMDot extends LispFunction {
 
     public static final String NAME = ".";
@@ -40,7 +38,7 @@ public class LMDot extends LispFunction {
         return attr;
     }
 
-    private static String getAttrName(LispRuntime runtime, Map<String, LispObject> args)
+    private static String getAttrName(LispRuntime runtime, LispNamespace.Layer args)
             throws LispException {
         LispObject attr = args.get(ARG_ATTR);
         if (attr.isInstance(LispType.SYMBOL)) {
