@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.CallArgs;
+import kevwargo.jlp.calls.CallArgs;
 
 public class LFSet extends LispFunction {
 

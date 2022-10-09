@@ -3,7 +3,7 @@ package kevwargo.jlp.objects;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.CallArgs;
+import kevwargo.jlp.calls.CallArgs;
 
 public abstract class LispType extends LispBaseObject implements LispCallable, LispNamedObject {
 

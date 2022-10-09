@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.CallArgs;
+import kevwargo.jlp.calls.CallArgs;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package kevwargo.jlp.utils;
+package kevwargo.jlp.calls;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispList;
@@ -70,17 +70,9 @@ public class CallArgs {
         return positional.remove(0);
     }
 
-    public List<String> opt() {
-        return optional;
-    }
-
     public CallArgs opt(String arg) {
         optional.add(arg);
         return this;
-    }
-
-    public String rest() {
-        return rest;
     }
 
     public CallArgs rest(String rest) {
