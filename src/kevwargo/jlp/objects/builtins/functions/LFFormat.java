@@ -12,18 +12,23 @@ import kevwargo.jlp.utils.CallArgs;
 
 public class LFFormat extends LispFunction {
 
+    public static final String NAME = "format";
+    public static final String ARG_FMT = "fmt";
+    public static final String ARG_ARGS = "args";
+
     public LFFormat() {
-        super(LispType.FUNCTION, "format", new CallArgs("fmt").rest("args"));
+        super(LispType.FUNCTION, NAME, new CallArgs(ARG_FMT).rest(ARG_ARGS));
     }
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
-        LispList argsList = (LispList) args.get("args");
-        Object fmtArgs[] = new Object[argsList.size()];
-        int pos = 0;
-        for (LispObject arg : argsList) {
-            fmtArgs[pos++] = arg.format();
+        String fmt = ((LispString) args.get(ARG_FMT).cast(LispType.STRING)).getValue();
+
+        LispList arglist = (LispList) args.get(ARG_ARGS);
+        Object fmtArgs[] = new Object[arglist.size()];
+        for (int i = 0; i < fmtArgs.length; i++) {
+            fmtArgs[i] = arglist.get(0).format();
         }
-        String fmt = ((LispString) args.get("fmt").cast(LispType.STRING)).getValue();
+
         return new LispString(String.format(fmt, fmtArgs));
     }
 }
