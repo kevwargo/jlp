@@ -6,10 +6,9 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LMProgn extends LispFunction {
 
@@ -17,12 +16,11 @@ public class LMProgn extends LispFunction {
     public static final String ARG_BODY = "body";
 
     public LMProgn() {
-        super(LispType.MACRO, NAME, new FormalArguments().rest(ARG_BODY));
+        super(LispType.MACRO, NAME, new CallArgs().rest(ARG_BODY));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispList body = (LispList) arguments.get(ARG_BODY);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispList body = (LispList) args.get(ARG_BODY);
 
         LispObject result = LispNil.NIL;
         for (LispObject form : body) {

@@ -6,30 +6,29 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Iterator;
-import java.util.Map;
 
 public class LFDivide extends ArithmeticFunction {
 
     public static final String ARG_FIRST = "first";
 
     public LFDivide() {
-        super("/", new FormalArguments(ARG_FIRST));
+        super("/", new CallArgs(ARG_FIRST));
     }
 
-    protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        LispObject first = arguments.get(ARG_FIRST);
+    protected Params parseParams(LispNamespace.Layer args) throws LispCastException {
+        LispObject first = args.get(ARG_FIRST);
         long lv = ((LispInt) first.cast(LispType.INT)).getValue();
         double dv = ((LispFloat) first.cast(LispType.FLOAT)).getValue();
-        Iterator<LispObject> it =
-                ((LispList) arguments.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
+        Iterator<LispObject> it = ((LispList) args.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
         return new Params(lv, dv, it);
     }
 
-    protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
-        LispObject first = arguments.get(ARG_FIRST);
+    protected boolean isDouble(LispNamespace.Layer args) throws LispCastException {
+        LispObject first = args.get(ARG_FIRST);
         if (first.isInstance(LispType.FLOAT)) {
             return true;
         } else if (first.isInstance(LispType.INT)) {

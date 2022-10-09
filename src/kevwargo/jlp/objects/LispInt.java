@@ -1,8 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LispInt extends LispBaseObject {
 
@@ -78,17 +79,18 @@ public class LispInt extends LispBaseObject {
 
 class IntType extends LispType {
 
+    private static final String ARG_RADIX = "radix";
+
     IntType() {
-        super("int", new LispType[] {OBJECT});
+        super("int", new LispType[] {OBJECT}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (!arguments.hasNext()) {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_OBJ)) {
             return new LispInt(0);
         }
 
-        LispObject object = arguments.next();
+        LispObject object = args.get(ARG_OBJ);
         if (object.isInstance(INT)) {
             return new LispInt(((LispInt) object.cast(INT)).getValue());
         }
@@ -98,12 +100,12 @@ class IntType extends LispType {
         }
 
         if (object.isInstance(STRING)) {
+            String number = ((LispString) object.cast(STRING)).getValue();
             int radix = 10;
-            if (arguments.hasNext()) {
-                radix = (int) ((LispInt) arguments.next().cast(INT)).getValue();
+            if (args.containsKey(ARG_RADIX)) {
+                radix = (int) ((LispInt) args.get(ARG_RADIX).cast(INT)).getValue();
             }
-            return new LispInt(
-                    Long.parseLong(((LispString) object.cast(STRING)).getValue(), radix));
+            return new LispInt(Long.parseLong(number, radix));
         }
 
         if (object.isInstance(JAVA_OBJECT)) {

@@ -7,8 +7,9 @@ import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,13 +27,12 @@ public class LMLet extends LispFunction {
     }
 
     protected LMLet(String name, boolean usePrevMappings) {
-        super(LispType.MACRO, name, new FormalArguments(ARG_MAPPINGS).rest(ARG_BODY));
+        super(LispType.MACRO, name, new CallArgs(ARG_MAPPINGS).rest(ARG_BODY));
         this.usePrevMappings = usePrevMappings;
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispList mappings = (LispList) arguments.get(ARG_MAPPINGS).cast(LispType.LIST);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispList mappings = (LispList) args.get(ARG_MAPPINGS).cast(LispType.LIST);
         Map<String, LispObject> bindings = new HashMap<String, LispObject>();
 
         for (LispObject mapping : mappings) {
@@ -59,7 +59,7 @@ public class LMLet extends LispFunction {
 
         LispRuntime localRuntime = runtime.with(bindings);
         LispObject result = LispNil.NIL;
-        Iterator<LispObject> bodyIterator = ((LispList) arguments.get(ARG_BODY)).iterator();
+        Iterator<LispObject> bodyIterator = ((LispList) args.get(ARG_BODY)).iterator();
         while (bodyIterator.hasNext()) {
             result = bodyIterator.next().eval(localRuntime);
         }

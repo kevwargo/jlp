@@ -2,8 +2,8 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -76,13 +76,12 @@ class StringType extends LispType {
         super("str", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (arguments.hasNext()) {
-            return new LispString(arguments.next().toString());
-        } else {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_OBJ)) {
             return new LispString("");
         }
+
+        return new LispString(args.get(ARG_OBJ).toString());
     }
 }
 

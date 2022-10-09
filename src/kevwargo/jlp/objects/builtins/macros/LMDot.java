@@ -5,8 +5,9 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Map;
 
@@ -18,14 +19,13 @@ public class LMDot extends LispFunction {
     public static final String ARG_VALUE = "value";
 
     public LMDot() {
-        super(LispType.MACRO, ".", new FormalArguments(ARG_OBJ, ARG_ATTR).opt(ARG_VALUE));
+        super(LispType.MACRO, ".", new CallArgs(ARG_OBJ, ARG_ATTR).opt(ARG_VALUE));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispObject obj = arguments.get(ARG_OBJ).eval(runtime);
-        String attrName = getAttrName(runtime, arguments);
-        LispObject value = arguments.get(ARG_VALUE);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispObject obj = args.get(ARG_OBJ).eval(runtime);
+        String attrName = getAttrName(runtime, args);
+        LispObject value = args.get(ARG_VALUE);
 
         if (value != null) {
             obj.setAttr(attrName, value);
@@ -40,9 +40,9 @@ public class LMDot extends LispFunction {
         return attr;
     }
 
-    private static String getAttrName(LispRuntime runtime, Map<String, LispObject> arguments)
+    private static String getAttrName(LispRuntime runtime, Map<String, LispObject> args)
             throws LispException {
-        LispObject attr = arguments.get(ARG_ATTR);
+        LispObject attr = args.get(ARG_ATTR);
         if (attr.isInstance(LispType.SYMBOL)) {
             return ((LispSymbol) attr.cast(LispType.SYMBOL)).getName();
         }

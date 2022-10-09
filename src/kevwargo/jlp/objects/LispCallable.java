@@ -1,13 +1,13 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 public interface LispCallable extends LispObject {
 
-    public FormalArguments getFormalArgs();
+    public CallArgs getCallArgs();
 
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException;
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException;
 }

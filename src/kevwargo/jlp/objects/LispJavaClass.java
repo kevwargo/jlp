@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 public class LispJavaClass extends LispJavaObject implements LispCallable {
 
     private static final String ARG_ARGS = "args";
-    private static final FormalArguments callArgs = new FormalArguments().rest(ARG_ARGS);
+    private static final CallArgs callArgs = new CallArgs().rest(ARG_ARGS);
 
     private Constructor<?> constructors[];
 
@@ -59,20 +59,18 @@ public class LispJavaClass extends LispJavaObject implements LispCallable {
         }
     }
 
-    public FormalArguments getFormalArgs() {
+    public CallArgs getCallArgs() {
         return callArgs;
     }
 
-    public LispObject call(LispRuntime runtime, ArgumentsIterator args) throws LispException {
-        Object arguments[] = new Object[args.getLength()];
-        Class<?> classes[] = new Class<?>[args.getLength()];
-        int index = 0;
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispList params = (LispList) args.get(ARG_ARGS);
 
-        while (args.hasNext()) {
-            LispObject obj = args.next();
-            arguments[index] = obj.getJavaObject();
-            classes[index] = obj.getJavaClass();
-            index++;
+        Object arguments[] = new Object[params.size()];
+        Class<?> classes[] = new Class<?>[params.size()];
+        for (int i = 0; i < params.size(); i++) {
+            arguments[i] = params.get(i).getJavaObject();
+            classes[i] = params.get(i).getJavaClass();
         }
 
         Constructor constructor = findConstructor(classes);

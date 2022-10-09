@@ -1,8 +1,8 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispFloat extends LispBaseObject {
 
@@ -61,13 +61,12 @@ class FloatType extends LispType {
         super("float", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (!arguments.hasNext()) {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_OBJ)) {
             return new LispFloat(0.0);
         }
 
-        LispObject object = arguments.next();
+        LispObject object = args.get(ARG_OBJ);
         if (object.isInstance(INT)) {
             return new LispFloat((double) ((LispInt) object.cast(INT)).getValue());
         }

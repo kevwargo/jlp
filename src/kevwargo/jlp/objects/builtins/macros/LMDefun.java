@@ -9,11 +9,9 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class LMDefun extends LispFunction {
 
@@ -22,83 +20,62 @@ public class LMDefun extends LispFunction {
     public static String ARG_ARGLIST = "arglist";
     public static String ARG_BODY = "body";
 
+    private static CallArgs namedArgs = new CallArgs(ARG_NAME, ARG_ARGLIST).rest(ARG_BODY);
+    private static CallArgs anonymousArgs = new CallArgs(ARG_ARGLIST).rest(ARG_BODY);
+    private boolean isMacro;
+    private boolean isAnonymous;
+
     public LMDefun() {
-        this(NAME);
+        this(NAME, false, false);
     }
 
-    public LMDefun(String name) {
-        this(name, new FormalArguments(ARG_NAME, ARG_ARGLIST).rest(ARG_BODY));
+    protected LMDefun(String name, boolean isMacro, boolean isAnonymous) {
+        super(LispType.MACRO, name, isAnonymous ? anonymousArgs : namedArgs);
+        this.isMacro = isMacro;
+        this.isAnonymous = isAnonymous;
     }
 
-    public LMDefun(String name, FormalArguments formalArguments) {
-        super(LispType.MACRO, name, formalArguments);
-    }
-
-    protected FormalArguments buildArgs(LispList arglist) throws LispException {
-        FormalArguments args = new FormalArguments();
-        Iterator<LispObject> iterator = arglist.iterator();
-        while (iterator.hasNext()) {
-            LispObject object = iterator.next().cast(LispType.SYMBOL);
-            LispSymbol symbol = (LispSymbol) object;
-            if (symbol.getName().equals("&rest")) {
-                if (!iterator.hasNext()) {
-                    throw new LispException("&rest keyword must be followed by a symbol");
-                }
-                LispObject restObject = iterator.next().cast(LispType.SYMBOL);
-                args.rest(((LispSymbol) restObject).getName());
-                break;
-            }
-            args.pos(symbol.getName());
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        String name;
+        if (isAnonymous) {
+            name = "<lambda>";
+        } else {
+            name = ((LispSymbol) args.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
         }
-        return args;
-    }
 
-    protected LispFunction createFunction(
-            String name, FormalArguments formalArguments, LispList body, LispNamespace namespace) {
-        return new Function(LispType.LISP_FUNCTION, name, formalArguments, body, namespace);
-    }
-
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        String name = ((LispSymbol) arguments.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
-        LispList arglist = (LispList) arguments.get(ARG_ARGLIST).cast(LispType.LIST);
-        LispList body = (LispList) arguments.get(ARG_BODY).cast(LispType.LIST);
-
+        LispList arglist = (LispList) args.get(ARG_ARGLIST).cast(LispType.LIST);
+        LispList body = (LispList) args.get(ARG_BODY).cast(LispType.LIST);
         LispNamespace namespace = runtime.getNS();
-        LispFunction function = createFunction(name, buildArgs(arglist), body, namespace);
+
+        LispFunction function = new Function(name, new CallArgs(arglist), body, namespace);
         namespace.bind(name, function);
 
         return function;
     }
 
-    protected static class Function extends LispFunction {
+    private class Function extends LispFunction {
 
         LispList body;
         LispNamespace defNamespace;
 
-        public Function(
-                LispType type,
-                String name,
-                FormalArguments formalArguments,
-                LispList body,
-                LispNamespace namespace) {
-            super(type, name, formalArguments);
+        public Function(String name, CallArgs args, LispList body, LispNamespace namespace) {
+            super(LMDefun.this.isMacro ? LispType.LISP_MACRO : LispType.LISP_FUNCTION, name, args);
             this.body = body;
             defNamespace = namespace;
         }
 
-        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-                throws LispException {
-            Map<String, LispObject> map = new HashMap<String, LispObject>();
-            map.put("return", new ReturnFunction());
-            map.put("$", this);
-            LispNamespace bodyNamespace = defNamespace.with(arguments).with(map);
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+            LispNamespace.Layer layer = new LispNamespace.Layer();
+            layer.define(new ReturnFunction());
+            layer.put("$", this);
 
-            Iterator<LispObject> bodyIterator = body.iterator();
+            runtime = runtime.with(defNamespace).with(args).with(layer);
+
+            Iterator<LispObject> it = body.iterator();
             LispObject result = LispNil.NIL;
             try {
-                while (bodyIterator.hasNext()) {
-                    result = bodyIterator.next().eval(runtime.with(bodyNamespace));
+                while (it.hasNext()) {
+                    result = it.next().eval(runtime);
                 }
             } catch (ReturnException re) {
                 return re.object;
@@ -119,13 +96,14 @@ public class LMDefun extends LispFunction {
 
     private static class ReturnFunction extends LispFunction {
 
+        private static final String ARG_OBJ = "obj";
+
         public ReturnFunction() {
-            super(LispType.FUNCTION, "return", new FormalArguments("obj"));
+            super(LispType.FUNCTION, "return", new CallArgs(ARG_OBJ));
         }
 
-        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-                throws LispException {
-            throw new ReturnException(arguments.get("obj"));
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+            throw new ReturnException(args.get(ARG_OBJ));
         }
     }
 }

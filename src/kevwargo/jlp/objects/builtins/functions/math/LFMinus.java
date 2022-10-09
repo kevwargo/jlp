@@ -6,19 +6,19 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Iterator;
-import java.util.Map;
 
 public class LFMinus extends ArithmeticFunction {
 
     public LFMinus() {
-        super("-", new FormalArguments());
+        super("-", new CallArgs());
     }
 
-    protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList) arguments.get(ARG_NUMBERS).cast(LispType.LIST);
+    protected Params parseParams(LispNamespace.Layer args) throws LispCastException {
+        LispList numbers = (LispList) args.get(ARG_NUMBERS).cast(LispType.LIST);
         Iterator<LispObject> it = numbers.iterator();
         if (it.hasNext()) {
             LispObject first = it.next();

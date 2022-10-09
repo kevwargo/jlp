@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -96,10 +96,6 @@ public class LispJavaObject extends LispBaseObject {
         }
     }
 
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
-        throw new LispException("The instance of '%s' is not callable", cls);
-    }
-
     private void initClass() {
         fields = new HashMap<String, Field>();
         methods = new HashMap<String, MethodProxy>();
@@ -126,7 +122,7 @@ public class LispJavaObject extends LispBaseObject {
         private String name;
 
         public MethodProxy(Method m) {
-            super(m.getName(), new FormalArguments().rest(ARG_PARAMS));
+            super(m.getName(), new CallArgs().rest(ARG_PARAMS));
             name = m.getName();
             methods = new ArrayList<Method>();
             methods.add(m);
@@ -143,8 +139,7 @@ public class LispJavaObject extends LispBaseObject {
         // TODO: varargs
         // TODO: choose the nearest method by the inheritance distance between actual vs declared
         // arguments
-        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> args)
-                throws LispException {
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
             LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispType.LIST);
             Object arguments[] = new Object[argList.size()];
             Class<?> classes[] = new Class<?>[argList.size()];
@@ -228,15 +223,10 @@ public class LispJavaObject extends LispBaseObject {
 class JavaObjectType extends LispType {
 
     JavaObjectType() {
-        super("java-object", new LispType[] {OBJECT});
+        super("java-object", new LispType[] {OBJECT}, CallArgs.ignored());
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (arguments.hasNext()) {
-            throw new LispException("java-object's constructor does not accept any arguments");
-        }
-
-        return new LispJavaObject(new Object());
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        throw new LispException("Cannot instantiate '%s'", getName());
     }
 }

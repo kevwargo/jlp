@@ -1,5 +1,6 @@
 package kevwargo.jlp.runtime;
 
+import kevwargo.jlp.objects.LispNamedObject;
 import kevwargo.jlp.objects.LispObject;
 
 import java.io.OutputStream;
@@ -141,12 +142,20 @@ public class LispNamespace {
 
         boolean sticky;
 
+        public Layer() {
+            super();
+        }
+
         public Layer(Map<String, LispObject> map) {
             super(map);
         }
 
         public Layer(boolean sticky) {
             this.sticky = sticky;
+        }
+
+        public void define(LispNamedObject obj) {
+            put(obj.getName(), obj);
         }
     }
 }

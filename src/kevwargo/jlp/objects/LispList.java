@@ -1,8 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,6 +48,16 @@ public class LispList extends LispBaseObject implements LispIterable {
         return this;
     }
 
+    public LispList add(int index, LispObject object) {
+        contents.add(index, object);
+        return this;
+    }
+
+    public LispList addAll(LispList list) {
+        contents.addAll(list.contents);
+        return this;
+    }
+
     public LispObject get(int index) {
         return this.contents.get(index);
     }
@@ -64,21 +75,41 @@ public class LispList extends LispBaseObject implements LispIterable {
     }
 
     public LispObject eval(LispRuntime runtime) throws LispException {
-        Iterator<LispObject> it = this.iterator();
-        if (!it.hasNext()) {
+        if (isEmpty()) {
             return this;
         }
 
-        LispObject head = it.next().eval(runtime);
+        LispObject head = get(0).eval(runtime);
         if (!(head instanceof LispCallable)) {
             throw new LispException("Object '%s' is not callable", head.getType().getName());
         }
-        LispCallable callable = (LispCallable) head;
 
-        LispRuntime evalRuntime = callable.isInstance(LispType.MACRO) ? null : runtime;
-        ArgumentsIterator args = new ArgumentsIterator(it, evalRuntime, contents.size() - 1);
+        LispList arglist = new LispList(contents.subList(1, size()));
+        return arglist.applyCallable((LispCallable) head, runtime);
+    }
 
-        return callable.call(runtime, args);
+    public LispObject applyCallable(LispCallable callable, LispRuntime runtime)
+            throws LispException {
+        LispList arglist = this;
+        if (!callable.isInstance(LispType.MACRO)) {
+            arglist = arglist.evalElements(runtime);
+        }
+
+        LispObject result = callable.call(runtime, callable.getCallArgs().apply(arglist));
+        if (callable.isInstance(LispType.LISP_MACRO)) {
+            result = result.eval(runtime);
+        }
+
+        return result;
+    }
+
+    private LispList evalElements(LispRuntime runtime) throws LispException {
+        LispList list = new LispList();
+        for (LispObject element : contents) {
+            list.add(element.eval(runtime));
+        }
+
+        return list;
     }
 
     public String repr() {
@@ -103,17 +134,13 @@ public class LispList extends LispBaseObject implements LispIterable {
 
 class ListType extends LispType {
 
+    private static final String ARG_ARGS = "args";
+
     ListType() {
-        super("list", new LispType[] {OBJECT});
+        super("list", new LispType[] {OBJECT}, new CallArgs().rest(ARG_ARGS));
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        LispList result = new LispList();
-        while (arguments.hasNext()) {
-            result.add(arguments.next());
-        }
-
-        return result;
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        return args.get(ARG_ARGS);
     }
 }

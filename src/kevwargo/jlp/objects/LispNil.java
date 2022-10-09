@@ -1,8 +1,8 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispNil extends LispBaseObject {
 
@@ -35,8 +35,7 @@ class NilType extends LispType {
         super("nil", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
         throw new LispException("Cannot instantiate nil");
     }
 }

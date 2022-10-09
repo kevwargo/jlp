@@ -2,8 +2,9 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.HashMap;
 import java.util.List;
@@ -207,11 +208,10 @@ public class LispBaseObject implements LispObject {
 class ObjectType extends LispType {
 
     ObjectType() {
-        super("object");
+        super("object", new CallArgs());
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
         return new LispBaseObject(this);
     }
 }

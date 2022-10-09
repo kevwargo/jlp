@@ -1,9 +1,9 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 public abstract class LispType extends LispBaseObject implements LispCallable, LispNamedObject {
 
@@ -24,8 +24,8 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
     public static final LispType JAVA_OBJECT = new JavaObjectType();
     public static final LispType ITERATOR = new IteratorType();
 
-    protected static final String ARG_ARGS = "args";
-    private static final FormalArguments callArgs = new FormalArguments().rest(ARG_ARGS);
+    protected static final String ARG_OBJ = "obj";
+    protected CallArgs callArgs;
 
     static {
         OBJECT.setType(TYPE);
@@ -38,14 +38,20 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
     private String name;
 
     public LispType(String name, LispType[] bases) {
+        this(name, bases, new CallArgs().opt(ARG_OBJ));
+    }
+
+    public LispType(String name, LispType[] bases, CallArgs callArgs) {
         super(TYPE);
         this.name = name;
         this.bases = bases;
+        this.callArgs = callArgs;
     }
 
-    LispType(String name) {
+    LispType(String name, CallArgs callArgs) {
         super();
         this.name = name;
+        this.callArgs = callArgs;
     }
 
     void setBases(LispType[] bases) {
@@ -80,51 +86,37 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
         return true;
     }
 
-    public FormalArguments getFormalArgs() {
+    public CallArgs getCallArgs() {
         return callArgs;
     }
-
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
-        return makeInstance(runtime, arguments);
-    }
-
-    public abstract LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException;
 }
 
 class Type extends LispType {
 
+    private static final String ARG_OBJ_OR_NAME = "obj-or-name";
+    private static final String ARG_BASES = "bases";
+
     Type() {
-        super("type");
+        super("type", new CallArgs(ARG_OBJ_OR_NAME).opt(ARG_BASES));
     }
 
-    public LispObject call(LispRuntime runtime, ArgumentsIterator arguments) throws LispException {
-        if (arguments.getLength() == 1) {
-            return arguments.next().getType();
-        }
-        return super.call(runtime, arguments);
-    }
-
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (arguments.getLength() != 2) {
-            throw new LispException("(%s) takes 1 or 2 arguments", getName());
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_BASES)) {
+            return args.get(ARG_OBJ_OR_NAME).getType();
         }
 
-        String name = ((LispString) arguments.next().cast(STRING)).getValue();
+        String name = ((LispString) args.get(ARG_OBJ_OR_NAME).cast(STRING)).getValue();
+        LispList bases = (LispList) args.get(ARG_BASES).cast(LIST);
 
-        LispList basesList = (LispList) arguments.next().cast(LIST);
-        LispType bases[] = new LispType[basesList.size()];
-        int pos = 0;
-        for (LispObject base : basesList) {
-            bases[pos++] = (LispType) base.cast(TYPE);
+        LispType baseTypes[] = new LispType[bases.size()];
+        for (int i = 0; i < baseTypes.length; i++) {
+            baseTypes[i] = (LispType) bases.get(i).cast(TYPE);
         }
 
-        return new LispType(name, bases) {
-            public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
+        return new LispType(name, baseTypes) {
+            public LispObject call(LispRuntime runtime, LispNamespace.Layer args)
                     throws LispException {
-                // TODO: maybe bring back default constructor, idk
-                return new LispBaseObject(Type.this);
+                return new LispBaseObject(this);
             }
         };
     }

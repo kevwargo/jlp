@@ -8,11 +8,11 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Iterator;
-import java.util.Map;
 
 public abstract class ArithmeticFunction extends LispFunction {
 
@@ -22,15 +22,14 @@ public abstract class ArithmeticFunction extends LispFunction {
 
     protected abstract double addDouble(double result, double value);
 
-    protected abstract Params parseParams(Map<String, LispObject> arguments)
-            throws LispCastException;
+    protected abstract Params parseParams(LispNamespace.Layer args) throws LispCastException;
 
-    protected ArithmeticFunction(String name, FormalArguments args) {
+    protected ArithmeticFunction(String name, CallArgs args) {
         super(LispType.FUNCTION, name, args.rest(ARG_NUMBERS));
     }
 
-    protected boolean isDouble(Map<String, LispObject> arguments) throws LispCastException {
-        LispList numbers = (LispList) arguments.get(ARG_NUMBERS);
+    protected boolean isDouble(LispNamespace.Layer args) throws LispCastException {
+        LispList numbers = (LispList) args.get(ARG_NUMBERS);
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
             if (first.isInstance(LispType.FLOAT)) {
@@ -40,10 +39,9 @@ public abstract class ArithmeticFunction extends LispFunction {
         return false;
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        Params params = parseParams(arguments);
-        boolean isDouble = isDouble(arguments);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        Params params = parseParams(args);
+        boolean isDouble = isDouble(args);
         long longResult = params.longInitial;
         double doubleResult = params.doubleInitial;
         while (params.numbers.hasNext()) {

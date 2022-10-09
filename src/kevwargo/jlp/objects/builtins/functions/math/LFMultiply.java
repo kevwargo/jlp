@@ -4,20 +4,19 @@ import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Iterator;
-import java.util.Map;
 
 public class LFMultiply extends ArithmeticFunction {
 
     public LFMultiply() {
-        super("*", new FormalArguments());
+        super("*", new CallArgs());
     }
 
-    protected Params parseParams(Map<String, LispObject> arguments) throws LispCastException {
-        Iterator<LispObject> it =
-                ((LispList) arguments.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
+    protected Params parseParams(LispNamespace.Layer args) throws LispCastException {
+        Iterator<LispObject> it = ((LispList) args.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
         return new Params(1, 1.0, it);
     }
 

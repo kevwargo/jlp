@@ -6,30 +6,29 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Iterator;
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LMIf extends LispFunction {
 
+    public static final String NAME = "if";
+    public static final String ARG_COND = "cond";
+    public static final String ARG_THEN = "then";
+    public static final String ARG_ELSE = "else";
+
     public LMIf() {
-        super(LispType.MACRO, "if", new FormalArguments("condition", "true").rest("false"));
+        super(LispType.MACRO, NAME, new CallArgs(ARG_COND, ARG_THEN).rest(ARG_ELSE));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispObject result = LispBool.FALSE;
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (args.get(ARG_COND).eval(runtime).bool()) {
+            return args.get(ARG_THEN).eval(runtime);
+        }
 
-        if (arguments.get("condition").eval(runtime).bool()) {
-            result = arguments.get("true").eval(runtime);
-        } else {
-            Iterator<LispObject> iterator =
-                    ((LispList) arguments.get("false").cast(LispType.LIST)).iterator();
-            while (iterator.hasNext()) {
-                result = iterator.next().eval(runtime);
-            }
+        LispObject result = LispBool.FALSE;
+        for (LispObject form : (LispList) args.get(ARG_ELSE)) {
+            result = form.eval(runtime);
         }
 
         return result;

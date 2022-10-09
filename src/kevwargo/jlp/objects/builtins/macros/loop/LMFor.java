@@ -4,10 +4,9 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LMFor extends LoopBase {
 
@@ -16,18 +15,17 @@ public class LMFor extends LoopBase {
     public static final String ARG_BODY = "body";
 
     public LMFor() {
-        super(NAME, new FormalArguments(ARG_COND).rest(ARG_BODY));
+        super(NAME, new CallArgs(ARG_COND).rest(ARG_BODY));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispList cond = (LispList) arguments.get(ARG_COND).cast(LispType.LIST);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispList cond = (LispList) args.get(ARG_COND).cast(LispType.LIST);
         if (cond.size() != 3) {
             throw new LispException(
                     "'for' loop condition must contain 3 elements, not %d (%s)", cond.size(), cond);
         }
 
-        LispList body = (LispList) arguments.get(ARG_BODY).cast(LispType.LIST);
+        LispList body = (LispList) args.get(ARG_BODY).cast(LispType.LIST);
         LispList collector = new LispList();
 
         execute(cond, body, runtime, collector);

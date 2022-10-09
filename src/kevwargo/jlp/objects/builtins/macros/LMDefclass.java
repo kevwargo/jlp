@@ -2,16 +2,15 @@ package kevwargo.jlp.objects.builtins.macros;
 
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispBaseObject;
-import kevwargo.jlp.objects.LispCallable;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispMethod;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,14 +18,13 @@ import java.util.Map;
 public class LMDefclass extends LispFunction {
 
     public LMDefclass() {
-        super(LispType.MACRO, "defclass", new FormalArguments("name", "bases").rest("body"));
+        super(LispType.MACRO, "defclass", new CallArgs("name", "bases").rest("body"));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        String name = ((LispSymbol) arguments.get("name").cast(LispType.SYMBOL)).getName();
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        String name = ((LispSymbol) args.get("name").cast(LispType.SYMBOL)).getName();
 
-        LispList basesList = (LispList) arguments.get("bases").cast(LispType.LIST);
+        LispList basesList = (LispList) args.get("bases").cast(LispType.LIST);
         LispType bases[];
         if (basesList.size() > 0) {
             bases = new LispType[basesList.size()];
@@ -40,7 +38,7 @@ public class LMDefclass extends LispFunction {
 
         LispNamespace.Layer overlay = new LispNamespace.Layer(true);
         LispRuntime classRuntime = runtime.with(overlay);
-        for (LispObject form : (LispList) arguments.get("body")) {
+        for (LispObject form : (LispList) args.get("body")) {
             form.eval(classRuntime);
         }
         LispClass cls = new LispClass(name, bases, overlay);
@@ -50,8 +48,10 @@ public class LMDefclass extends LispFunction {
 
     private static class LispClass extends LispType {
 
+        private static final String ARG_ARGLIST = "arglist";
+
         LispClass(String name, LispType bases[], Map<String, LispObject> dict) {
-            super(name, bases);
+            super(name, bases, new CallArgs().rest(ARG_ARGLIST));
             for (Map.Entry<String, LispObject> e : dict.entrySet()) {
                 try {
                     setAttr(e.getKey(), e.getValue());
@@ -60,13 +60,13 @@ public class LMDefclass extends LispFunction {
             }
         }
 
-        public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-                throws LispException {
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
             LispBaseObject instance = new LispBaseObject(this);
-            LispObject constructor = getDict().get("@init@");
-            if (constructor instanceof LispCallable) {
-                arguments.setFirst(instance);
-                ((LispCallable) constructor).call(runtime, arguments);
+            LispObject constructor = instance.getAttr("@init@");
+            if (constructor instanceof LispMethod) {
+                LispList arglist = (LispList) args.get(ARG_ARGLIST);
+                LispMethod method = (LispMethod) constructor;
+                method.call(runtime, method.getCallArgs().apply(arglist));
             }
             defineCastsRecursively(runtime, instance);
             return instance;
@@ -78,7 +78,7 @@ public class LMDefclass extends LispFunction {
                 if (type instanceof LispClass) {
                     ((LispClass) type).defineCastsRecursively(runtime, instance);
                 } else if (!instance.isCastDefined(type)) {
-                    instance.defineCast(type, type.makeInstance(runtime, new ArgumentsIterator()));
+                    instance.defineCast(type, type.call(runtime, new LispNamespace.Layer()));
                 }
             }
         }

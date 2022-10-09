@@ -6,10 +6,9 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispIterator;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LFIsIterable extends LispFunction {
 
@@ -17,12 +16,11 @@ public class LFIsIterable extends LispFunction {
     public static final String ARG_OBJ = "obj";
 
     public LFIsIterable() {
-        super(LispType.FUNCTION, NAME, new FormalArguments(ARG_OBJ));
+        super(LispType.FUNCTION, NAME, new CallArgs(ARG_OBJ));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        if (LispIterator.isIterable(arguments.get(ARG_OBJ))) {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (LispIterator.isIterable(args.get(ARG_OBJ))) {
             return LispBool.TRUE;
         }
         return LispBool.FALSE;

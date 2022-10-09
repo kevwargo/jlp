@@ -6,12 +6,12 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class LMBackquote extends LispFunction {
 
@@ -22,12 +22,11 @@ public class LMBackquote extends LispFunction {
     private static final LispSymbol symUnfold = new LispSymbol(",@");
 
     public LMBackquote() {
-        super(LispType.MACRO, NAME, new FormalArguments(ARG_EXPR));
+        super(LispType.MACRO, NAME, new CallArgs(ARG_EXPR));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispObject expr = arguments.get(ARG_EXPR);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispObject expr = args.get(ARG_EXPR);
 
         if (!expr.isInstance(LispType.LIST)) {
             return expr;

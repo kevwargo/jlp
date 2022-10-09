@@ -1,8 +1,8 @@
 package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
 
 public class LispBool extends LispBaseObject {
 
@@ -43,12 +43,11 @@ class BoolType extends LispType {
         super("bool", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (!arguments.hasNext()) {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_OBJ)) {
             return LispBool.FALSE;
         }
 
-        return arguments.next().bool() ? LispBool.TRUE : LispBool.FALSE;
+        return args.get(ARG_OBJ).bool() ? LispBool.TRUE : LispBool.FALSE;
     }
 }

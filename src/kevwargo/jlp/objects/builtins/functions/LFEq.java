@@ -6,25 +6,23 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LFEq extends LispFunction {
 
     LFEq(String name) {
-        super(LispType.FUNCTION, name, new FormalArguments("arg1", "arg2"));
+        super(LispType.FUNCTION, name, new CallArgs("arg1", "arg2"));
     }
 
     public LFEq() {
         this("eq");
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispObject obj1 = arguments.get("arg1");
-        LispObject obj2 = arguments.get("arg2");
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispObject obj1 = args.get("arg1");
+        LispObject obj2 = args.get("arg2");
 
         if (obj1 == obj2) {
             return LispBool.TRUE;

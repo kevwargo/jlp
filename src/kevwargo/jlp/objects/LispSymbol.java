@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LispSymbol extends LispBaseObject {
 
@@ -63,12 +63,11 @@ public class LispSymbol extends LispBaseObject {
 class SymbolType extends LispType {
 
     SymbolType() {
-        super("symbol", new LispType[] {OBJECT});
+        super("symbol", new LispType[] {OBJECT}, new CallArgs(ARG_OBJ));
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        LispObject obj = arguments.next();
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispObject obj = args.get(ARG_OBJ);
         if (obj.isInstance(this)) {
             return obj;
         }

@@ -5,10 +5,9 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LFSet extends LispFunction {
 
@@ -23,14 +22,13 @@ public class LFSet extends LispFunction {
     }
 
     protected LFSet(String name, boolean global) {
-        super(LispType.FUNCTION, name, new FormalArguments(ARG_SYMBOL, ARG_DEFINITION));
+        super(LispType.FUNCTION, name, new CallArgs(ARG_SYMBOL, ARG_DEFINITION));
         this.global = global;
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        String name = ((LispSymbol) arguments.get(ARG_SYMBOL).cast(LispType.SYMBOL)).getName();
-        LispObject definition = arguments.get(ARG_DEFINITION);
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        String name = ((LispSymbol) args.get(ARG_SYMBOL).cast(LispType.SYMBOL)).getName();
+        LispObject definition = args.get(ARG_DEFINITION);
 
         runtime.getNS().bind(name, definition, global);
         return definition;

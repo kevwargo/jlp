@@ -6,23 +6,24 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
-import kevwargo.jlp.utils.FormalArguments;
-
-import java.util.Map;
+import kevwargo.jlp.utils.CallArgs;
 
 public class LFApply extends LispFunction {
 
+    public static final String NAME = "apply";
+    public static final String ARG_CALLABLE = "callable";
+    public static final String ARG_ARGS = "args";
+
     public LFApply() {
-        super(LispType.FUNCTION, "apply", new FormalArguments("func", "args"));
+        super(LispType.FUNCTION, NAME, new CallArgs(ARG_CALLABLE, ARG_ARGS));
     }
 
-    protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-            throws LispException {
-        LispCallable func = (LispCallable) arguments.get("func");
-        LispList args = (LispList) arguments.get("args").cast(LispType.LIST);
-        LispRuntime argsRuntime = func.isInstance(LispType.MACRO) ? null : runtime;
-        return func.call(runtime, new ArgumentsIterator(args.iterator(), argsRuntime, args.size()));
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        LispCallable callable = (LispCallable) args.get(ARG_CALLABLE);
+        LispList arglist = (LispList) args.get(ARG_ARGS).cast(LispType.LIST);
+
+        return arglist.applyCallable(callable, runtime);
     }
 }

@@ -6,8 +6,9 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.FormalArguments;
+import kevwargo.jlp.utils.CallArgs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,8 @@ public abstract class LoopBase extends LispFunction {
     public static final String FN_CONTINUE = "continue";
     public static final String FN_EMIT = "emit";
 
-    public LoopBase(String name, FormalArguments formalArguments) {
-        super(LispType.MACRO, name, formalArguments);
+    public LoopBase(String name, CallArgs callArgs) {
+        super(LispType.MACRO, name, callArgs);
     }
 
     protected boolean executeBody(LispRuntime runtime, LispList body, LispList collector)
@@ -57,14 +58,13 @@ public abstract class LoopBase extends LispFunction {
             super(
                     LispType.FUNCTION,
                     (isContinue ? FN_CONTINUE : FN_BREAK),
-                    new FormalArguments().opt(ARG_LEVEL));
+                    new CallArgs().opt(ARG_LEVEL));
             this.isContinue = isContinue;
         }
 
-        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-                throws LispException {
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
             long level = 1;
-            LispObject levelObject = arguments.get(ARG_LEVEL);
+            LispObject levelObject = args.get(ARG_LEVEL);
             if (levelObject != null) {
                 level = ((LispInt) levelObject.cast(LispType.INT)).getValue();
             }
@@ -78,13 +78,12 @@ public abstract class LoopBase extends LispFunction {
         private LispList collector;
 
         Emit(LispList collector) {
-            super(LispType.FUNCTION, FN_EMIT, new FormalArguments(ARG_OBJ));
+            super(LispType.FUNCTION, FN_EMIT, new CallArgs(ARG_OBJ));
             this.collector = collector;
         }
 
-        protected LispObject callInternal(LispRuntime runtime, Map<String, LispObject> arguments)
-                throws LispException {
-            LispObject obj = arguments.get(ARG_OBJ);
+        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+            LispObject obj = args.get(ARG_OBJ);
             collector.add(obj);
             return obj;
         }

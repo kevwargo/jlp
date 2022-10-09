@@ -2,8 +2,8 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.utils.ArgumentsIterator;
 
 import java.util.Iterator;
 
@@ -40,13 +40,12 @@ class IteratorType extends LispType {
         super("iterator", new LispType[] {OBJECT});
     }
 
-    public LispObject makeInstance(LispRuntime runtime, ArgumentsIterator arguments)
-            throws LispException {
-        if (!arguments.hasNext()) {
+    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        if (!args.containsKey(ARG_OBJ)) {
             return new LispIteratorImpl(new LispList().iterator());
         }
 
-        LispObject obj = arguments.next();
+        LispObject obj = args.get(ARG_OBJ);
         if (obj instanceof LispIterable) {
             return new LispIteratorImpl(((LispIterable) obj).iterator());
         }
