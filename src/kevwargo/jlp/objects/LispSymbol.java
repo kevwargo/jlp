@@ -1,10 +1,10 @@
 package kevwargo.jlp.objects;
 
+import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.calls.CallArgs;
 
 public class LispSymbol extends LispBaseObject {
 
@@ -16,7 +16,7 @@ public class LispSymbol extends LispBaseObject {
     }
 
     public LispObject eval(LispRuntime runtime) throws LispException {
-        if (name.startsWith(":")) {
+        if (isKeyword()) {
             return this;
         }
 
@@ -36,6 +36,10 @@ public class LispSymbol extends LispBaseObject {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isKeyword() {
+        return name.startsWith(":");
     }
 
     public String repr() {

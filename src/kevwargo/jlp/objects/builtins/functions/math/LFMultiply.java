@@ -1,11 +1,11 @@
 package kevwargo.jlp.objects.builtins.functions.math;
 
+import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
-import kevwargo.jlp.calls.CallArgs;
 
 import java.util.Iterator;
 

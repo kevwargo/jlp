@@ -1,5 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros;
 
+import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
@@ -7,7 +8,6 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.calls.CallArgs;
 
 public class LMDot extends LispFunction {
 
@@ -23,8 +23,8 @@ public class LMDot extends LispFunction {
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
         LispObject obj = args.get(ARG_OBJ).eval(runtime);
         String attrName = getAttrName(runtime, args);
-        LispObject value = args.get(ARG_VALUE);
 
+        LispObject value = args.get(ARG_VALUE);
         if (value != null) {
             obj.setAttr(attrName, value);
             return value;

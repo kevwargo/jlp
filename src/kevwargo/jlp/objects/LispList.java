@@ -1,13 +1,14 @@
 package kevwargo.jlp.objects;
 
+import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.calls.CallArgs;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class LispList extends LispBaseObject implements LispIterable {
 
@@ -41,6 +42,10 @@ public class LispList extends LispBaseObject implements LispIterable {
 
     public Iterator<LispObject> iterator() {
         return contents.iterator();
+    }
+
+    public ListIterator<LispObject> listIterator() {
+        return contents.listIterator();
     }
 
     public LispList add(LispObject object) {

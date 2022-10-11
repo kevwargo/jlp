@@ -1,5 +1,6 @@
 package kevwargo.jlp.objects.builtins.macros;
 
+import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
@@ -9,7 +10,6 @@ import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
-import kevwargo.jlp.calls.CallArgs;
 
 import java.util.Iterator;
 
@@ -47,7 +47,7 @@ public class LMDefun extends LispFunction {
         LispList body = (LispList) args.get(ARG_BODY).cast(LispType.LIST);
         LispNamespace namespace = runtime.getNS();
 
-        LispFunction function = new Function(name, new CallArgs(arglist), body, namespace);
+        LispFunction function = new Function(name, new CallArgs(arglist, runtime), body, namespace);
         namespace.bind(name, function);
 
         return function;

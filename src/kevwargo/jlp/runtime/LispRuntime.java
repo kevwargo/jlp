@@ -1,6 +1,5 @@
 package kevwargo.jlp.runtime;
 
-
 import java.io.InputStream;
 import java.io.OutputStream;
 
