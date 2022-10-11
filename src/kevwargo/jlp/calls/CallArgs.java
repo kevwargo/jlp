@@ -231,6 +231,11 @@ public class CallArgs {
         return this;
     }
 
+    public CallArgs key(String arg, LispObject defaultValue) {
+        keys.put(arg, defaultValue);
+        return this;
+    }
+
     private void checkArg(String arg) throws DuplicatedArgException {
         if (origin != null) {
             origin.checkArg(arg);
