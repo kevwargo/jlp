@@ -13,10 +13,12 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 public class CallArgs {
 
@@ -88,6 +90,7 @@ public class CallArgs {
             LispObject arg = it.next();
             if (arg.isInstance(LispType.SYMBOL)) {
                 String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+                checkArg(name);
                 positionals.add(new Positional(name));
             } else if (arg.isInstance(LispType.LIST)) {
                 LispList list = (LispList) arg.cast(LispType.LIST);
@@ -107,12 +110,15 @@ public class CallArgs {
 
         while (it.hasNext() && !atKeyword(it)) {
             OptionalDefault optDef = new OptionalDefault(it.next(), runtime);
-            optionals.add(optDef.getName());
+            String name = optDef.getName();
             LispObject defaultValue = optDef.getDefault();
+
+            checkArg(name);
+            optionals.add(name);
             if (defaultValue == null) {
                 defaultValue = LispNil.NIL;
             }
-            optionalDefaults.put(optDef.getName(), defaultValue);
+            optionalDefaults.put(name, defaultValue);
         }
     }
 
@@ -124,6 +130,7 @@ public class CallArgs {
         LispObject arg = it.next();
         if (arg.isInstance(LispType.SYMBOL)) {
             String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+            checkArg(name);
             rest = name;
         } else {
             throw new LispException("expected symbol, not '%s'", arg.getType().getName());
@@ -137,8 +144,10 @@ public class CallArgs {
 
         while (it.hasNext() && !atKeyword(it)) {
             OptionalDefault optDef = new OptionalDefault(it.next(), runtime);
-            LispObject defaultValue = optDef.getDefault();
-            keys.put(optDef.getName(), defaultValue);
+            String name = optDef.getName();
+
+            checkArg(name);
+            keys.put(name, optDef.getDefault());
         }
     }
 
@@ -150,6 +159,7 @@ public class CallArgs {
         LispObject arg = it.next();
         if (arg.isInstance(LispType.SYMBOL)) {
             String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+            checkArg(name);
             otherKeys = name;
         } else {
             throw new LispException("expected symbol, not '%s'", arg.getType().getName());
@@ -226,7 +236,7 @@ public class CallArgs {
             origin.checkArg(arg);
         }
 
-        if (positionals.contains(arg)) {
+        if (positionals.contains(new Positional(arg))) {
             throw new DuplicatedArgException(arg);
         }
         if (optionals.contains(arg)) {
@@ -294,6 +304,7 @@ public class CallArgs {
         LispList nonKeys = new LispList();
         // TODO: change to LispDict
         LispList otherKeys = new LispList();
+        Set<String> usedKeys = new HashSet<String>();
 
         Iterator<LispObject> it = args.iterator();
         while (it.hasNext()) {
@@ -305,6 +316,11 @@ public class CallArgs {
                     if (!it.hasNext()) {
                         throw new LispException("Key '%s' specified without a value", name);
                     }
+
+                    if (usedKeys.contains(name)) {
+                        throw new LispException("Key '%s' specified more than once", name);
+                    }
+                    usedKeys.add(name);
 
                     if (keys.containsKey(name)) {
                         layer.put(name, it.next());
@@ -321,7 +337,17 @@ public class CallArgs {
             nonKeys.add(arg);
         }
 
-        // TODO: fill defaults and throw when keys without defaults aren't defined
+        for (Map.Entry<String, LispObject> e : keys.entrySet()) {
+            String name = e.getKey();
+            LispObject value = e.getValue();
+
+            if (!layer.containsKey(name)) {
+                if (value == null) {
+                    throw new LispException("Missing required key '%s'", name);
+                }
+                layer.put(name, value);
+            }
+        }
 
         if (this.otherKeys != null) {
             layer.put(this.otherKeys, otherKeys);

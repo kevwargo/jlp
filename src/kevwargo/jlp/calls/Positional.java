@@ -20,4 +20,12 @@ public class Positional {
     public CallArgs getStruct() {
         return struct;
     }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof Positional)) {
+            return false;
+        }
+
+        return getName().equals(((Positional) other).getName());
+    }
 }
