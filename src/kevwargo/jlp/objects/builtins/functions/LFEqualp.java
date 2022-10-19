@@ -8,7 +8,6 @@ import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
@@ -17,15 +16,17 @@ import java.util.Iterator;
 
 public class LFEqualp extends LFEq {
 
+    public static final String NAME = "equalp";
+
     public LFEqualp() {
-        super("equalp");
+        super(NAME);
     }
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
         if (super.call(runtime, args) == LispBool.TRUE) {
             return LispBool.TRUE;
         }
-        if (equalp(args.get("arg1"), args.get("arg2"))) {
+        if (equalp(args.get(ARG_OBJ1), args.get(ARG_OBJ2))) {
             return LispBool.TRUE;
         }
         return LispBool.FALSE;
@@ -72,13 +73,6 @@ public class LFEqualp extends LFEq {
                 }
             }
             if (!it1.hasNext() && !it2.hasNext()) {
-                return true;
-            }
-        }
-        if (obj1.isInstance(LispType.SYMBOL) && obj2.isInstance(LispType.SYMBOL)) {
-            if (((LispSymbol) obj1.cast(LispType.SYMBOL))
-                    .getName()
-                    .equals(((LispSymbol) obj2.cast(LispType.SYMBOL)).getName())) {
                 return true;
             }
         }

@@ -1,0 +1,6 @@
+(print (eq 'asdf 'asdf))
+(print (equalp 'asdf 'asdf))
+(print (eq "asdf" "asdf"))
+(print (equalp "asdf" "asdf"))
+(print (eq 123 123))
+(print (equalp 123 123))

@@ -12,17 +12,21 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFEq extends LispFunction {
 
-    LFEq(String name) {
-        super(LispType.FUNCTION, name, new CallArgs("arg1", "arg2"));
+    public static final String NAME = "eq";
+    public static final String ARG_OBJ1 = "obj1";
+    public static final String ARG_OBJ2 = "obj2";
+
+    protected LFEq(String name) {
+        super(LispType.FUNCTION, name, new CallArgs(ARG_OBJ1, ARG_OBJ2));
     }
 
     public LFEq() {
-        this("eq");
+        this(NAME);
     }
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
-        LispObject obj1 = args.get("arg1");
-        LispObject obj2 = args.get("arg2");
+        LispObject obj1 = args.get(ARG_OBJ1);
+        LispObject obj2 = args.get(ARG_OBJ2);
 
         if (obj1 == obj2) {
             return LispBool.TRUE;
