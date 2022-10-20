@@ -29,7 +29,7 @@ public abstract class LispFunction extends LispBaseObject implements LispCallabl
     }
 
     public String repr() {
-        return String.format("function '%s' at 0x%x", name, System.identityHashCode(this));
+        return String.format("%s '%s' at 0x%x", getType().getName(), name, System.identityHashCode(this));
     }
 
     public boolean bool() {

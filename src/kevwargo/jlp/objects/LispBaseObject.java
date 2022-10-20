@@ -123,13 +123,11 @@ public class LispBaseObject implements LispObject {
         LispObject instance = null;
         for (Map.Entry<LispType, LispObject> e : castMap.entrySet()) {
             if (e.getKey().isSubtype(type)) {
-                if (instance == this) {
+                if (e.getValue() == this) {
                     return this;
                 }
                 if (instance != null) {
-                    System.err.printf(
-                            "Warning: '%s' cast to '%s' is ambiguous\n",
-                            toString(), type.toString());
+                    System.err.printf("Warning: %s cast to %s is ambiguous\n", repr(), type.repr());
                 } else {
                     instance = e.getValue();
                 }
