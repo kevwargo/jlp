@@ -15,8 +15,8 @@
 (print "")
 
 (print (eq () ()))
-(print (equalp () ()))
-(print (equalp () nil))
+(print (== () ()))
+(print (== () nil))
 (print "")
 
 (print (bool ""))

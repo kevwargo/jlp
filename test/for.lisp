@@ -1,4 +1,4 @@
-(for ((setq i 0) (! (equalp i 10)) (setq i (+ i 1)))
+(for ((setq i 0) (! (== i 10)) (setq i (+ i 1)))
      (printf "i: %d" i))
 (print (boundp 'i))
 (print "")
@@ -8,7 +8,7 @@
 (print "")
 
 (setq x 0)
-(while (! (equalp x 10))
+(while (! (== x 10))
        (printf "x: %d" x)
        (setq-global x (+ x 2)))
 (print "")

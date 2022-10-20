@@ -73,7 +73,7 @@ public class LispJavaClass extends LispJavaObject implements LispCallable {
             classes[i] = params.get(i).getJavaClass();
         }
 
-        Constructor constructor = findConstructor(classes);
+        Constructor<?> constructor = findConstructor(classes);
         if (constructor == null) {
             throw new LispException(
                     "%s has no constructor for the provided arguments: %s",
@@ -92,11 +92,11 @@ public class LispJavaClass extends LispJavaObject implements LispCallable {
         }
     }
 
-    private Constructor findConstructor(Class<?> params[]) {
+    private Constructor<?> findConstructor(Class<?> params[]) {
         try {
             return cls.getConstructor(params);
         } catch (NoSuchMethodException exc) {
-            for (Constructor c : constructors) {
+            for (Constructor<?> c : constructors) {
                 if (paramsMatch(c.getParameterTypes(), params)) {
                     return c;
                 }

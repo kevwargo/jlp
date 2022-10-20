@@ -68,7 +68,7 @@ public class LispBaseObject implements LispObject {
 
         if (obj instanceof List) {
             LispList list = new LispList();
-            for (Object item : (List) obj) {
+            for (Object item : (List<?>) obj) {
                 list.add(wrap(item));
             }
             return list;
