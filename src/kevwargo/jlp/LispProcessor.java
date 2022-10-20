@@ -177,16 +177,31 @@ public class LispProcessor {
         ServerSocket server = new ServerSocket(port, 10, addr);
 
         while (!server.isClosed()) {
-            Socket clientSocket = server.accept();
-            InputStream in = clientSocket.getInputStream();
-            OutputStream out = clientSocket.getOutputStream();
-            System.out.printf("JLP client %s connected\n", clientSocket);
+            final Socket clientSocket = server.accept();
 
-            runInteractive(in, out, out);
+            new Thread() {
+                public void run() {
+                    try {
+                        System.out.printf("JLP client %s connected\n", clientSocket);
 
-            clientSocket.close();
-            System.out.printf("JLP client %s disconnected\n", clientSocket);
+                        InputStream in = clientSocket.getInputStream();
+                        OutputStream out = clientSocket.getOutputStream();
+                        runInteractive(in, out, out);
+
+                        System.out.printf("JLP client %s disconnected\n", clientSocket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         }
+        server.close();
     }
 
     private void run(InputStream in, OutputStream out, OutputStream err, boolean interactive)
