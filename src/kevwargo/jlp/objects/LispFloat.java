@@ -4,7 +4,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 
-public class LispFloat extends LispBaseObject {
+public class LispFloat extends LispBaseObject implements LispNumber {
 
     private double value;
     private Class<?> cls;
@@ -53,12 +53,16 @@ public class LispFloat extends LispBaseObject {
     public Class<?> getJavaClass() {
         return cls;
     }
+
+    public double getDoubleValue() {
+        return value;
+    }
 }
 
 class FloatType extends LispType {
 
     FloatType() {
-        super("float", new LispType[] {OBJECT});
+        super("float", new LispType[] {NUMBER});
     }
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {

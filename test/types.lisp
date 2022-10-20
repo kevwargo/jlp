@@ -24,3 +24,8 @@
 (print (bool 0))
 (print (bool 0.1))
 (print (bool 0.0))
+(print)
+
+(print (isinstance 1 number))
+(print (isinstance 1.3 number))
+(print (isinstance -1.0 number))

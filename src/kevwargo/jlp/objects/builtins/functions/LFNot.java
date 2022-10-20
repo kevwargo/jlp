@@ -12,7 +12,7 @@ import kevwargo.jlp.runtime.LispRuntime;
 public class LFNot extends LispFunction {
 
     public static final String NAME = "!";
-    public static final String ARG_OBJ = "!";
+    public static final String ARG_OBJ = "obj";
 
     public LFNot() {
         super(LispType.FUNCTION, NAME, new CallArgs(ARG_OBJ));

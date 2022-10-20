@@ -68,3 +68,9 @@
                                                    ,(capitalize (str getter)))))))
                    getters))
      ,@body))
+
+(defun >= (o1 o2)
+  (! (< o1 o2)))
+
+(defun <= (o1 o2)
+  (! (> o1 o2)))

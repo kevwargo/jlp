@@ -24,6 +24,8 @@ import kevwargo.jlp.objects.builtins.functions.LFSet;
 import kevwargo.jlp.objects.builtins.functions.LFSetGlobal;
 import kevwargo.jlp.objects.builtins.functions.compare.LFEq;
 import kevwargo.jlp.objects.builtins.functions.compare.LFEqStrict;
+import kevwargo.jlp.objects.builtins.functions.compare.LFGreater;
+import kevwargo.jlp.objects.builtins.functions.compare.LFLess;
 import kevwargo.jlp.objects.builtins.functions.math.LFDivide;
 import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
 import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
@@ -90,6 +92,8 @@ public class LispProcessor {
         define(new LFDivide());
         define(new LFEqStrict());
         define(new LFEq());
+        define(new LFLess());
+        define(new LFGreater());
         define(new LFEval());
         define(new LFFormat());
         define(new LFHasNext());
@@ -126,6 +130,7 @@ public class LispProcessor {
         define(LispType.BOOL);
         define(LispType.FLOAT);
         define(LispType.FUNCTION);
+        define(LispType.NUMBER);
         define(LispType.INT);
         define(LispType.ITERATOR);
         define(LispType.JAVA_OBJECT);

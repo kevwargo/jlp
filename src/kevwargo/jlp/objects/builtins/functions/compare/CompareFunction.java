@@ -2,11 +2,10 @@ package kevwargo.jlp.objects.builtins.functions.compare;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.objects.LispFloat;
+import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispJavaObject;
 import kevwargo.jlp.objects.LispList;
+import kevwargo.jlp.objects.LispNumber;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
@@ -22,114 +21,75 @@ public abstract class CompareFunction extends LispFunction {
         super(LispType.FUNCTION, name, new CallArgs(ARG_OBJ1, ARG_OBJ2));
     }
 
-    protected boolean equalp(LispObject obj1, LispObject obj2, boolean strict) {
-        if (obj1 == obj2) {
-            return true;
+    protected int compare(LispObject obj1, LispObject obj2) throws LispException {
+        Integer result;
+
+        if ((result = compareNumbers(obj1, obj2)) != null) {
+            return result.intValue();
+        }
+        if ((result = compareStrings(obj1, obj2)) != null) {
+            return result.intValue();
+        }
+        if ((result = compareLists(obj1, obj2)) != null) {
+            return result.intValue();
         }
 
-        if (strict) {
-            return equalObjects(obj1, obj2, true);
-        }
-
-        if (equalFloatFloat(obj1, obj2)) {
-            return true;
-        }
-        if (equalIntInt(obj1, obj2)) {
-            return true;
-        }
-        if (equalIntFloat(obj1, obj2)) {
-            return true;
-        }
-        if (equalFloatInt(obj1, obj2)) {
-            return true;
-        }
-
-        if (equalStrings(obj1, obj2)) {
-            return true;
-        }
-        if (equalLists(obj1, obj2)) {
-            return true;
-        }
-
-        return equalObjects(obj1, obj2, false);
+        throw new LispException(
+                "Comparison between '%s' and '%s' is not supported",
+                obj1.getType().getName(), obj2.getType().getName());
     }
 
-    private boolean equalLists(LispObject obj1, LispObject obj2) {
+    private Integer compareNumbers(LispObject obj1, LispObject obj2) throws LispException {
+        try {
+            double number1 = ((LispNumber) obj1.cast(LispType.NUMBER)).getDoubleValue();
+            checkType(obj2, LispType.NUMBER);
+            double number2 = ((LispNumber) obj2.cast(LispType.NUMBER)).getDoubleValue();
+
+            if (number1 == number2) {
+                return 0;
+            }
+            return number1 < number2 ? -1 : 1;
+        } catch (LispCastException e) {
+            return null;
+        }
+    }
+
+    private Integer compareStrings(LispObject obj1, LispObject obj2) throws LispException {
+        try {
+            String str1 = ((LispString) obj1.cast(LispType.STRING)).getValue();
+            checkType(obj2, LispType.STRING);
+            return str1.compareTo(((LispString) obj2.cast(LispType.STRING)).getValue());
+        } catch (LispCastException e) {
+            return null;
+        }
+    }
+
+    private Integer compareLists(LispObject obj1, LispObject obj2) throws LispException {
         try {
             Iterator<LispObject> it1 = ((LispList) obj1.cast(LispType.LIST)).iterator();
+            checkType(obj2, LispType.LIST);
             Iterator<LispObject> it2 = ((LispList) obj2.cast(LispType.LIST)).iterator();
+
+            int result = 0;
             while (it1.hasNext() && it2.hasNext()) {
-                if (!equalp(it1.next(), it2.next(), false)) {
-                    return false;
+                if ((result = compare(it1.next(), it2.next())) != 0) {
+                    return result;
                 }
             }
-            if (!it1.hasNext() && !it2.hasNext()) {
-                return true;
-            }
-        } catch (LispCastException e) {
-        }
 
-        return false;
-    }
-
-    private boolean equalStrings(LispObject obj1, LispObject obj2) {
-        try {
-            return ((LispString) obj1.cast(LispType.STRING))
-                    .getValue()
-                    .equals(((LispString) obj2.cast(LispType.STRING)).getValue());
+            return it2.hasNext() ? -1 : 1;
         } catch (LispCastException e) {
-            return false;
+            return null;
         }
     }
 
-    private boolean equalFloatFloat(LispObject obj1, LispObject obj2) {
-        try {
-            return ((LispFloat) obj1.cast(LispType.FLOAT)).getValue()
-                    == ((LispFloat) obj2.cast(LispType.FLOAT)).getValue();
-        } catch (LispCastException e) {
-            return false;
+    private void checkType(LispObject obj, LispType type) throws LispException {
+        if (obj.isInstance(type)) {
+            return;
         }
-    }
 
-    private boolean equalIntInt(LispObject obj1, LispObject obj2) {
-        try {
-            return ((LispInt) obj1.cast(LispType.INT)).getValue()
-                    == ((LispInt) obj2.cast(LispType.INT)).getValue();
-        } catch (LispCastException e) {
-            return false;
-        }
-    }
-
-    private boolean equalIntFloat(LispObject obj1, LispObject obj2) {
-        try {
-            return ((LispInt) obj1.cast(LispType.INT)).getValue()
-                    == ((LispFloat) obj2.cast(LispType.FLOAT)).getValue();
-        } catch (LispCastException e) {
-            return false;
-        }
-    }
-
-    private boolean equalFloatInt(LispObject obj1, LispObject obj2) {
-        try {
-            return ((LispFloat) obj1.cast(LispType.FLOAT)).getValue()
-                    == ((LispInt) obj2.cast(LispType.INT)).getValue();
-        } catch (LispCastException e) {
-            return false;
-        }
-    }
-
-    private boolean equalObjects(LispObject obj1, LispObject obj2, boolean strict) {
-        try {
-            Object o1 = ((LispJavaObject) obj1.cast(LispType.JAVA_OBJECT)).getObject();
-            Object o2 = ((LispJavaObject) obj2.cast(LispType.JAVA_OBJECT)).getObject();
-
-            if (strict) {
-                return o1 == o2;
-            }
-
-            return o1.equals(o2);
-        } catch (LispCastException e) {
-            return false;
-        }
+        throw new LispException(
+                "Comparison between '%s' and '%s' is not supported",
+                type.getName(), obj.getType().getName());
     }
 }

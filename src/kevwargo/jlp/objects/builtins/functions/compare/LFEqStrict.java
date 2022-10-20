@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
-public class LFEqStrict extends CompareFunction {
+public class LFEqStrict extends CheckEqualityFunction {
 
     public static final String NAME = "eq";
 

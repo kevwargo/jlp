@@ -14,6 +14,7 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
     public static final LispType LIST = new ListType();
     public static final LispType BOOL = new BoolType();
     public static final LispType NIL = new NilType();
+    public static final LispType NUMBER = new NumberType();
     public static final LispType INT = new IntType();
     public static final LispType FLOAT = new FloatType();
     public static final LispType FUNCTION = new FunctionType("builtin-function");

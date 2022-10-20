@@ -5,7 +5,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispRuntime;
 
-public class LispInt extends LispBaseObject {
+public class LispInt extends LispBaseObject implements LispNumber {
 
     private long value;
     private Class<?> cls;
@@ -75,6 +75,10 @@ public class LispInt extends LispBaseObject {
     public Class<?> getJavaClass() {
         return cls;
     }
+
+    public double getDoubleValue() {
+        return (double) value;
+    }
 }
 
 class IntType extends LispType {
@@ -82,7 +86,7 @@ class IntType extends LispType {
     private static final String ARG_RADIX = "radix";
 
     IntType() {
-        super("int", new LispType[] {OBJECT}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
+        super("int", new LispType[] {NUMBER}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
     }
 
     public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
