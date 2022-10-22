@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class LMBackquote extends LispFunction {
         super(LispType.MACRO, NAME, new CallArgs(ARG_EXPR));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject expr = args.get(ARG_EXPR);
 
         if (!expr.isInstance(LispType.LIST)) {

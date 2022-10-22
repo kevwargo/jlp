@@ -9,6 +9,7 @@ import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
@@ -35,7 +36,7 @@ public class LMDefun extends LispFunction {
         this.isAnonymous = isAnonymous;
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         String name;
         if (isAnonymous) {
             name = "<lambda>";
@@ -64,8 +65,8 @@ public class LMDefun extends LispFunction {
             defNamespace = namespace;
         }
 
-        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
-            LispNamespace.Layer layer = new LispNamespace.Layer();
+        public LispObject call(LispRuntime runtime, Layer args) throws LispException {
+            Layer layer = new Layer();
             layer.define(new ReturnFunction());
             layer.put("$", this);
 
@@ -102,7 +103,7 @@ public class LMDefun extends LispFunction {
             super(LispType.FUNCTION, "return", new CallArgs(ARG_OBJ));
         }
 
-        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        public LispObject call(LispRuntime runtime, Layer args) throws LispException {
             throw new ReturnException(args.get(ARG_OBJ));
         }
     }

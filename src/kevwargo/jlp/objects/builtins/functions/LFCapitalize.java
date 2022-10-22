@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFCapitalize extends LispFunction {
@@ -18,7 +18,7 @@ public class LFCapitalize extends LispFunction {
         super(LispType.FUNCTION, NAME, new CallArgs(ARG_STRING));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         String string = ((LispString) args.get(ARG_STRING).cast(LispType.STRING)).getValue();
         return new LispString(string.substring(0, 1).toUpperCase() + string.substring(1));
     }

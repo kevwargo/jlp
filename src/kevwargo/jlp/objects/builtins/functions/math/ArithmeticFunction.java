@@ -9,7 +9,7 @@ import kevwargo.jlp.objects.LispInt;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
@@ -22,13 +22,13 @@ public abstract class ArithmeticFunction extends LispFunction {
 
     protected abstract double addDouble(double result, double value);
 
-    protected abstract Params parseParams(LispNamespace.Layer args) throws LispCastException;
+    protected abstract Params parseParams(Layer args) throws LispCastException;
 
     protected ArithmeticFunction(String name, CallArgs args) {
         super(LispType.FUNCTION, name, args.rest(ARG_NUMBERS));
     }
 
-    protected boolean isDouble(LispNamespace.Layer args) throws LispCastException {
+    protected boolean isDouble(Layer args) throws LispCastException {
         LispList numbers = (LispList) args.get(ARG_NUMBERS);
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
@@ -39,7 +39,7 @@ public abstract class ArithmeticFunction extends LispFunction {
         return false;
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         Params params = parseParams(args);
         boolean isDouble = isDouble(args);
         long longResult = params.longInitial;

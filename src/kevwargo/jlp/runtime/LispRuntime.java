@@ -1,5 +1,7 @@
 package kevwargo.jlp.runtime;
 
+import kevwargo.jlp.runtime.LispNamespace.Layer;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -31,7 +33,7 @@ public class LispRuntime {
         return new LispRuntime(ns, in, out);
     }
 
-    public LispRuntime with(LispNamespace.Layer layer) {
+    public LispRuntime with(Layer layer) {
         return new LispRuntime(ns.with(layer), in, out);
     }
 

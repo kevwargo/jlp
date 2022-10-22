@@ -4,6 +4,7 @@ import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispSymbol extends LispBaseObject {
@@ -70,7 +71,7 @@ class SymbolType extends LispType {
         super("symbol", new LispType[] {OBJECT}, new CallArgs(ARG_OBJ));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject obj = args.get(ARG_OBJ);
         if (obj.isInstance(this)) {
             return obj;

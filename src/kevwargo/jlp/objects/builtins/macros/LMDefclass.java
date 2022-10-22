@@ -9,7 +9,7 @@ import kevwargo.jlp.objects.LispMethod;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
@@ -21,7 +21,7 @@ public class LMDefclass extends LispFunction {
         super(LispType.MACRO, "defclass", new CallArgs("name", "bases").rest("body"));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         String name = ((LispSymbol) args.get("name").cast(LispType.SYMBOL)).getName();
 
         LispList basesList = (LispList) args.get("bases").cast(LispType.LIST);
@@ -36,7 +36,7 @@ public class LMDefclass extends LispFunction {
             bases[i] = (LispType) it.next().eval(runtime).cast(LispType.TYPE);
         }
 
-        LispNamespace.Layer overlay = new LispNamespace.Layer(true);
+        Layer overlay = new Layer(true);
         LispRuntime classRuntime = runtime.with(overlay);
         for (LispObject form : (LispList) args.get("body")) {
             form.eval(classRuntime);
@@ -60,7 +60,7 @@ public class LMDefclass extends LispFunction {
             }
         }
 
-        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        public LispObject call(LispRuntime runtime, Layer args) throws LispException {
             LispBaseObject instance = new LispBaseObject(this);
             LispObject constructor = instance.getAttr("@init@");
             if (constructor instanceof LispMethod) {
@@ -78,7 +78,7 @@ public class LMDefclass extends LispFunction {
                 if (type instanceof LispClass) {
                     ((LispClass) type).defineCastsRecursively(runtime, instance);
                 } else if (!instance.isCastDefined(type)) {
-                    instance.defineCast(type, type.call(runtime, new LispNamespace.Layer()));
+                    instance.defineCast(type, type.call(runtime, new Layer()));
                 }
             }
         }

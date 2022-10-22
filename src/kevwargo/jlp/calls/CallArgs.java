@@ -8,7 +8,7 @@ import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.ArrayList;
@@ -258,17 +258,17 @@ public class CallArgs {
         }
     }
 
-    public LispNamespace.Layer apply(LispList args) throws LispException {
+    public Layer apply(LispList args) throws LispException {
         if (ignore) {
             return null;
         }
 
-        LispNamespace.Layer layer = new LispNamespace.Layer();
+        Layer layer = new Layer();
         apply(layer, args);
         return layer;
     }
 
-    private void apply(LispNamespace.Layer layer, LispList args) throws LispException {
+    private void apply(Layer layer, LispList args) throws LispException {
         args = applyKeys(layer, args);
 
         if (args.size() < positionals.size()) {
@@ -305,7 +305,7 @@ public class CallArgs {
         }
     }
 
-    private LispList applyKeys(LispNamespace.Layer layer, LispList args) throws LispException {
+    private LispList applyKeys(Layer layer, LispList args) throws LispException {
         LispList nonKeys = new LispList();
         // TODO: change to LispDict
         LispList otherKeys = new LispList();

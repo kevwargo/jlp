@@ -4,46 +4,14 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.LispNamedObject;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.objects.builtins.functions.LFAppend;
-import kevwargo.jlp.objects.builtins.functions.LFApply;
-import kevwargo.jlp.objects.builtins.functions.LFBoundp;
-import kevwargo.jlp.objects.builtins.functions.LFCapitalize;
-import kevwargo.jlp.objects.builtins.functions.LFConcat;
-import kevwargo.jlp.objects.builtins.functions.LFDel;
-import kevwargo.jlp.objects.builtins.functions.LFEval;
-import kevwargo.jlp.objects.builtins.functions.LFFormat;
-import kevwargo.jlp.objects.builtins.functions.LFHasNext;
-import kevwargo.jlp.objects.builtins.functions.LFIsInstance;
-import kevwargo.jlp.objects.builtins.functions.LFIsIterable;
-import kevwargo.jlp.objects.builtins.functions.LFNext;
-import kevwargo.jlp.objects.builtins.functions.LFNot;
-import kevwargo.jlp.objects.builtins.functions.LFNth;
-import kevwargo.jlp.objects.builtins.functions.LFPrint;
-import kevwargo.jlp.objects.builtins.functions.LFPrintNamespace;
-import kevwargo.jlp.objects.builtins.functions.LFSet;
-import kevwargo.jlp.objects.builtins.functions.LFSetGlobal;
-import kevwargo.jlp.objects.builtins.functions.compare.LFEq;
-import kevwargo.jlp.objects.builtins.functions.compare.LFEqStrict;
-import kevwargo.jlp.objects.builtins.functions.compare.LFGreater;
-import kevwargo.jlp.objects.builtins.functions.compare.LFLess;
-import kevwargo.jlp.objects.builtins.functions.math.LFDivide;
-import kevwargo.jlp.objects.builtins.functions.math.LFMinus;
-import kevwargo.jlp.objects.builtins.functions.math.LFMultiply;
-import kevwargo.jlp.objects.builtins.functions.math.LFPlus;
-import kevwargo.jlp.objects.builtins.macros.LMBackquote;
-import kevwargo.jlp.objects.builtins.macros.LMDefclass;
-import kevwargo.jlp.objects.builtins.macros.LMDefmacro;
-import kevwargo.jlp.objects.builtins.macros.LMDefun;
-import kevwargo.jlp.objects.builtins.macros.LMDot;
-import kevwargo.jlp.objects.builtins.macros.LMIf;
-import kevwargo.jlp.objects.builtins.macros.LMLambda;
-import kevwargo.jlp.objects.builtins.macros.LMLet;
-import kevwargo.jlp.objects.builtins.macros.LMLetStar;
-import kevwargo.jlp.objects.builtins.macros.LMProgn;
-import kevwargo.jlp.objects.builtins.macros.LMQuote;
-import kevwargo.jlp.objects.builtins.macros.loop.LMFor;
+import kevwargo.jlp.objects.builtins.functions.*;
+import kevwargo.jlp.objects.builtins.functions.compare.*;
+import kevwargo.jlp.objects.builtins.functions.math.*;
+import kevwargo.jlp.objects.builtins.macros.*;
+import kevwargo.jlp.objects.builtins.macros.loop.*;
 import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.io.IOException;
@@ -59,7 +27,7 @@ public class LispProcessor {
 
     private static LispProcessor instance;
     private LispNamespace namespace;
-    private LispNamespace.Layer builtins;
+    private Layer builtins;
 
     public static LispProcessor getInstance() {
         if (instance == null) {
@@ -69,7 +37,7 @@ public class LispProcessor {
     }
 
     private LispProcessor() {
-        builtins = new LispNamespace.Layer(false);
+        builtins = new Layer(false);
         namespace = new LispNamespace(builtins);
 
         defineBuiltins();

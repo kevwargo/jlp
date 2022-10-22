@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispMethod extends LispBaseObject implements LispCallable, LispNamedObject {
@@ -25,7 +25,7 @@ public class LispMethod extends LispBaseObject implements LispCallable, LispName
         return callArgs;
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         args.put(instanceArgName, instance);
         return function.call(runtime, args);
     }

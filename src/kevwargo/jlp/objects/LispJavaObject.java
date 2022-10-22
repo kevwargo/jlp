@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.lang.reflect.Field;
@@ -139,7 +139,7 @@ public class LispJavaObject extends LispBaseObject {
         // TODO: varargs
         // TODO: choose the nearest method by the inheritance distance between actual vs declared
         // arguments
-        public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+        public LispObject call(LispRuntime runtime, Layer args) throws LispException {
             LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispType.LIST);
             Object arguments[] = new Object[argList.size()];
             Class<?> classes[] = new Class<?>[argList.size()];
@@ -226,7 +226,7 @@ class JavaObjectType extends LispType {
         super("java-object", new LispType[] {OBJECT}, CallArgs.ignored());
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         throw new LispException("Cannot instantiate '%s'", getName());
     }
 }

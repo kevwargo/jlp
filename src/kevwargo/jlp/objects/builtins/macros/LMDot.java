@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LMDot extends LispFunction {
@@ -20,7 +20,7 @@ public class LMDot extends LispFunction {
         super(LispType.MACRO, ".", new CallArgs(ARG_OBJ, ARG_ATTR).opt(ARG_VALUE));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject obj = args.get(ARG_OBJ).eval(runtime);
         String attrName = getAttrName(runtime, args);
 
@@ -38,8 +38,7 @@ public class LMDot extends LispFunction {
         return attr;
     }
 
-    private static String getAttrName(LispRuntime runtime, LispNamespace.Layer args)
-            throws LispException {
+    private static String getAttrName(LispRuntime runtime, Layer args) throws LispException {
         LispObject attr = args.get(ARG_ATTR);
         if (attr.isInstance(LispType.SYMBOL)) {
             return ((LispSymbol) attr.cast(LispType.SYMBOL)).getName();

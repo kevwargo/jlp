@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispString;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFFormat extends LispFunction {
@@ -20,7 +20,7 @@ public class LFFormat extends LispFunction {
         super(LispType.FUNCTION, NAME, new CallArgs(ARG_FMT).rest(ARG_ARGS));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         String fmt = ((LispString) args.get(ARG_FMT).cast(LispType.STRING)).getValue();
 
         LispList arglist = (LispList) args.get(ARG_ARGS);

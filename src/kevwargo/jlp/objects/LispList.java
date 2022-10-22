@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ class ListType extends LispType {
         super("list", new LispType[] {OBJECT}, new CallArgs().rest(ARG_ARGS));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         return args.get(ARG_ARGS);
     }
 }

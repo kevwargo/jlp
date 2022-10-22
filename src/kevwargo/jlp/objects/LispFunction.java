@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public abstract class LispFunction extends LispBaseObject implements LispCallable, LispNamedObject {
@@ -29,7 +29,8 @@ public abstract class LispFunction extends LispBaseObject implements LispCallabl
     }
 
     public String repr() {
-        return String.format("%s '%s' at 0x%x", getType().getName(), name, System.identityHashCode(this));
+        return String.format(
+                "%s '%s' at 0x%x", getType().getName(), name, System.identityHashCode(this));
     }
 
     public boolean bool() {
@@ -47,7 +48,7 @@ class FunctionType extends LispType {
         super(name, new LispType[] {base}, CallArgs.ignored());
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         throw new LispException("Cannot instantiate '%s'", getName());
     }
 }

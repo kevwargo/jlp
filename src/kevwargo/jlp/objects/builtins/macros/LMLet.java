@@ -8,7 +8,7 @@ import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
@@ -29,9 +29,9 @@ public class LMLet extends LispFunction {
         this.usePrevMappings = usePrevMappings;
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispList mappings = (LispList) args.get(ARG_MAPPINGS).cast(LispType.LIST);
-        LispNamespace.Layer bindings = new LispNamespace.Layer();
+        Layer bindings = new Layer();
 
         for (LispObject mapping : mappings) {
             if (mapping.isInstance(LispType.SYMBOL)) {

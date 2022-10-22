@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFBoundp extends LispFunction {
@@ -19,7 +19,7 @@ public class LFBoundp extends LispFunction {
         super(LispType.FUNCTION, NAME, new CallArgs(ARG_SYMBOL));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispSymbol symbol = (LispSymbol) args.get(ARG_SYMBOL).cast(LispType.SYMBOL);
         return runtime.getNS().get(symbol.getName()) == null ? LispBool.FALSE : LispBool.TRUE;
     }

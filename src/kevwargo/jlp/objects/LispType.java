@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public abstract class LispType extends LispBaseObject implements LispCallable, LispNamedObject {
@@ -101,7 +101,7 @@ class Type extends LispType {
         super("type", new CallArgs(ARG_OBJ_OR_NAME).opt(ARG_BASES));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         if (!args.containsKey(ARG_BASES)) {
             return args.get(ARG_OBJ_OR_NAME).getType();
         }
@@ -115,8 +115,7 @@ class Type extends LispType {
         }
 
         return new LispType(name, baseTypes) {
-            public LispObject call(LispRuntime runtime, LispNamespace.Layer args)
-                    throws LispException {
+            public LispObject call(LispRuntime runtime, Layer args) throws LispException {
                 return new LispBaseObject(this);
             }
         };

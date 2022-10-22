@@ -8,7 +8,7 @@ import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispNil;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.io.OutputStream;
@@ -28,7 +28,7 @@ public class LFPrint extends LispFunction {
                 new CallArgs().rest(ARG_OBJECTS).key(ARG_STREAM, LispNil.NIL));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         PrintStream out;
         if (args.get(ARG_STREAM) != LispNil.NIL) {
             LispJavaObject streamObj =

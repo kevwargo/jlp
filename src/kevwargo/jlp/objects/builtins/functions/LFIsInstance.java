@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispBool;
 import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFIsInstance extends LispFunction {
@@ -15,7 +15,7 @@ public class LFIsInstance extends LispFunction {
         super(LispType.FUNCTION, "isinstance", new CallArgs("obj", "type"));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject obj = args.get("obj");
         LispType type = (LispType) args.get("type").cast(LispType.TYPE);
         if (obj.isInstance(type)) {

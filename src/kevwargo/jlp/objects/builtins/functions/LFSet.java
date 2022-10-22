@@ -6,7 +6,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispSymbol;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFSet extends LispFunction {
@@ -26,7 +26,7 @@ public class LFSet extends LispFunction {
         this.global = global;
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         String name = ((LispSymbol) args.get(ARG_SYMBOL).cast(LispType.SYMBOL)).getName();
         LispObject definition = args.get(ARG_DEFINITION);
 

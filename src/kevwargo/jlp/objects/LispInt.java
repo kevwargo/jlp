@@ -2,7 +2,7 @@ package kevwargo.jlp.objects;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispInt extends LispBaseObject implements LispNumber {
@@ -89,7 +89,7 @@ class IntType extends LispType {
         super("int", new LispType[] {NUMBER}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         if (!args.containsKey(ARG_OBJ)) {
             return new LispInt(0);
         }

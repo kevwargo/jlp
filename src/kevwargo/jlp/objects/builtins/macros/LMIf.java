@@ -7,7 +7,7 @@ import kevwargo.jlp.objects.LispFunction;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LMIf extends LispFunction {
@@ -21,7 +21,7 @@ public class LMIf extends LispFunction {
         super(LispType.MACRO, NAME, new CallArgs(ARG_COND, ARG_THEN).rest(ARG_ELSE));
     }
 
-    public LispObject call(LispRuntime runtime, LispNamespace.Layer args) throws LispException {
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         if (args.get(ARG_COND).eval(runtime).bool()) {
             return args.get(ARG_THEN).eval(runtime);
         }

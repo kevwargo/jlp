@@ -5,7 +5,7 @@ import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.LispList;
 import kevwargo.jlp.objects.LispObject;
 import kevwargo.jlp.objects.LispType;
-import kevwargo.jlp.runtime.LispNamespace;
+import kevwargo.jlp.runtime.LispNamespace.Layer;
 
 import java.util.Iterator;
 
@@ -15,7 +15,7 @@ public class LFMultiply extends ArithmeticFunction {
         super("*", new CallArgs());
     }
 
-    protected Params parseParams(LispNamespace.Layer args) throws LispCastException {
+    protected Params parseParams(Layer args) throws LispCastException {
         Iterator<LispObject> it = ((LispList) args.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
         return new Params(1, 1.0, it);
     }
