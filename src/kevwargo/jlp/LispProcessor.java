@@ -92,6 +92,7 @@ public class LispProcessor {
         define(new LMLetStar());
         define(new LMProgn());
         define(new LMQuote());
+        define(new LMStartThread());
     }
 
     private void defineTypes() {

@@ -32,7 +32,6 @@ public class LispParser {
         LispToken token;
         while ((token = scanner.nextLispToken()) != null) {
             LispObject object;
-            LispList sexp;
             String specialName;
             switch (token.getType()) {
                 case OPEN_PAREN:
