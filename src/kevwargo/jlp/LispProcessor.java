@@ -112,7 +112,7 @@ public class LispProcessor {
     }
 
     private void loadInitFile() {
-        InputStream in = getClass().getResourceAsStream("/jlp/init.lisp");
+        InputStream in = getClass().getResourceAsStream("/kevwargo/jlp/init.lisp");
         if (in == null) {
             return;
         }
