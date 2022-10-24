@@ -1,9 +1,9 @@
 (setq sb (StringBuffer))
-((. sb append) "foo ")
-((. sb append) 235)
-((. sb append) " bar")
+(-> sb append ("foo "))
+(-> sb append (235))
+(-> sb append (" bar"))
 (print sb)
 
 (setq sb (StringBuffer "init: "))
-((. sb append) "test")
+(-> sb append ("test"))
 (print sb)

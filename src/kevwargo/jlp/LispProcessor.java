@@ -84,7 +84,7 @@ public class LispProcessor {
         define(new LMDefclass());
         define(new LMDefmacro());
         define(new LMDefun());
-        define(new LMDot());
+        define(new LMChain());
         define(new LMFor());
         define(new LMIf());
         define(new LMLambda());
