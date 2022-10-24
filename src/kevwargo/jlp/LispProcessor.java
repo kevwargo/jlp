@@ -13,6 +13,7 @@ import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
+import kevwargo.jlp.runtime.builtins.range.LTRange;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,6 +111,7 @@ public class LispProcessor {
         define(LispType.STRING);
         define(LispType.SYMBOL);
         define(LispType.TYPE);
+        define(new LTRange());
     }
 
     private void loadInitFile() {

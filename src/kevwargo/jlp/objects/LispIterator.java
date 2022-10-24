@@ -54,10 +54,10 @@ class IteratorType extends LispType {
             Object object = ((LispJavaObject) obj.cast(LispType.JAVA_OBJECT)).getObject();
 
             if (object instanceof Iterator) {
-                return new JavaIterator((Iterator) object);
+                return new JavaIterator((Iterator<?>) object);
             }
             if (object instanceof Iterable) {
-                return new JavaIterable((Iterable) object);
+                return new JavaIterable((Iterable<?>) object);
             }
             if (object.getClass().isArray()) {
                 return new JavaArray((Object[]) object);
@@ -87,9 +87,9 @@ class LispIteratorImpl extends LispIterator {
 
 class JavaIterator extends LispIterator {
 
-    private Iterator it;
+    private Iterator<?> it;
 
-    JavaIterator(Iterator it) {
+    JavaIterator(Iterator<?> it) {
         this.it = it;
     }
 
@@ -104,7 +104,7 @@ class JavaIterator extends LispIterator {
 
 class JavaIterable extends JavaIterator {
 
-    JavaIterable(Iterable it) {
+    JavaIterable(Iterable<?> it) {
         super(it.iterator());
     }
 }

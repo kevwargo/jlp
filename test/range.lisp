@@ -1,0 +1,10 @@
+(for-each (i (range 0 4))
+          (print i))
+(print)
+
+(for-each (i (range 5 -5 -2))
+          (print i))
+(for-each (i (range 0 -10))
+          (print i))
+(for-each (i (range 0 10 0))
+          (print i))

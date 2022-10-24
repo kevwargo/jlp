@@ -133,7 +133,7 @@ public class LispJavaObject extends LispBaseObject {
         }
 
         public String repr() {
-            return String.format("Java method %s.%s", LispJavaObject.this.cls, name);
+            return String.format("Java method %s.%s", LispJavaObject.this.cls.getName(), name);
         }
 
         // TODO: varargs

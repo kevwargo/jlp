@@ -11,16 +11,18 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LFIsInstance extends LispFunction {
 
+    public static final String NAME = "isinstance";
+    public static final String ARG_OBJ = "obj";
+    public static final String ARG_TYPE = "type";
+
     public LFIsInstance() {
-        super(LispType.FUNCTION, "isinstance", new CallArgs("obj", "type"));
+        super(LispType.FUNCTION, NAME, new CallArgs(ARG_OBJ, ARG_TYPE));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        LispObject obj = args.get("obj");
-        LispType type = (LispType) args.get("type").cast(LispType.TYPE);
-        if (obj.isInstance(type)) {
-            return LispBool.TRUE;
-        }
-        return LispBool.FALSE;
+        LispObject obj = args.get(ARG_OBJ);
+        LispType type = (LispType) args.get(ARG_TYPE).cast(LispType.TYPE);
+
+        return obj.isInstance(type) ? LispBool.TRUE : LispBool.FALSE;
     }
 }
