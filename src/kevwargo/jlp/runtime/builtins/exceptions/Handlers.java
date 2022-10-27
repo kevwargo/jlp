@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Handlers {
 
-    private static final LispSymbol symFinally = new LispSymbol("finally");
+    private static final LispSymbol symFinally = LispSymbol.make("finally");
     private List<LispList> exceptClauses;
     private LispList finallyClause;
     private LispRuntime runtime;

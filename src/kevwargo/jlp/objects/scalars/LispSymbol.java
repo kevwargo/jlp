@@ -11,15 +11,27 @@ import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LispSymbol extends LispBaseObject {
 
     public static final LispType TYPE = new SymbolType();
 
+    private static Map<String, LispSymbol> cache = new HashMap<String, LispSymbol>();
     private String name;
 
-    public LispSymbol(String name) {
+    private LispSymbol(String name) {
         super(LispSymbol.TYPE);
         this.name = name;
+    }
+
+    public static LispSymbol make(String name) {
+        if (!cache.containsKey(name)) {
+            cache.put(name, new LispSymbol(name));
+        }
+
+        return cache.get(name);
     }
 
     public LispObject eval(LispRuntime runtime) throws LispException {
@@ -83,7 +95,7 @@ class SymbolType extends LispType {
             return obj;
         }
         if (obj.isInstance(LispString.TYPE)) {
-            return new LispSymbol(((LispString) obj.cast(LispString.TYPE)).getValue());
+            return LispSymbol.make(((LispString) obj.cast(LispString.TYPE)).getValue());
         }
 
         throw new LispCastException(

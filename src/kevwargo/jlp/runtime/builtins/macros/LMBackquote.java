@@ -17,8 +17,8 @@ public class LMBackquote extends LispFunction {
     public static final String NAME = "`";
     public static final String ARG_EXPR = "expr";
 
-    private static final LispSymbol symEval = new LispSymbol(",");
-    private static final LispSymbol symUnfold = new LispSymbol(",@");
+    private static final LispSymbol symEval = LispSymbol.make(",");
+    private static final LispSymbol symUnfold = LispSymbol.make(",@");
 
     public LMBackquote() {
         super(LispFunction.MACRO_TYPE, NAME, new CallArgs(ARG_EXPR));

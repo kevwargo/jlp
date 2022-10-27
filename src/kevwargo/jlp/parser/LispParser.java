@@ -11,7 +11,6 @@ import kevwargo.jlp.objects.scalars.numbers.LispFloat;
 import kevwargo.jlp.objects.scalars.numbers.LispInt;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Stack;
 
 public class LispParser {
@@ -19,12 +18,10 @@ public class LispParser {
     private LispScanner scanner;
     private Stack<LispList> sexpStack;
     private LispList currentSexp;
-    private HashMap<String, LispSymbol> symbolMap;
 
     public LispParser(InputStream stream) {
         scanner = new LispScanner(stream);
         sexpStack = new Stack<LispList>();
-        symbolMap = new HashMap<String, LispSymbol>();
     }
 
     public LispObject read() throws LispException {
@@ -63,7 +60,7 @@ public class LispParser {
                     if (specialName.equals("'")) {
                         specialName = "quote";
                     }
-                    currentSexp = (new LispList(true)).add(getSymbol(specialName));
+                    currentSexp = (new LispList(true)).add(LispSymbol.make(specialName));
                     break;
                 default:
                     if ((object = processToken(token)) != null) {
@@ -75,15 +72,6 @@ public class LispParser {
             throw new LispException("End of file during parsing");
         }
         return null;
-    }
-
-    private LispSymbol getSymbol(String name) {
-        LispSymbol symbol = symbolMap.get(name);
-        if (symbol == null) {
-            symbol = new LispSymbol(name);
-            symbolMap.put(name, symbol);
-        }
-        return symbol;
     }
 
     private LispObject processToken(LispToken token) throws LispException {
@@ -100,7 +88,7 @@ public class LispParser {
                 } else {
                     object = parseNumber(token.getValue());
                     if (object == null) {
-                        object = getSymbol(token.getValue());
+                        object = LispSymbol.make(token.getValue());
                     }
                 }
                 break;
