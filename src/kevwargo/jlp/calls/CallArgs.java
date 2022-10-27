@@ -4,6 +4,7 @@ import kevwargo.jlp.exceptions.DuplicatedArgException;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispDict;
 import kevwargo.jlp.objects.collections.LispList;
 import kevwargo.jlp.objects.scalars.LispNil;
 import kevwargo.jlp.objects.scalars.LispSymbol;
@@ -235,6 +236,11 @@ public class CallArgs {
         return this;
     }
 
+    public CallArgs otherKeys(String arg) {
+        otherKeys = arg;
+        return this;
+    }
+
     private void checkArg(String arg) throws DuplicatedArgException {
         if (origin != null) {
             origin.checkArg(arg);
@@ -306,8 +312,7 @@ public class CallArgs {
 
     private LispList applyKeys(Layer layer, LispList args) throws LispException {
         LispList nonKeys = new LispList();
-        // TODO: change to LispDict
-        LispList otherKeys = new LispList();
+        Map<String, LispObject> otherKeys = new HashMap<String, LispObject>();
         Set<String> usedKeys = new HashSet<String>();
 
         Iterator<LispObject> it = args.iterator();
@@ -329,8 +334,7 @@ public class CallArgs {
                     if (keys.containsKey(name)) {
                         layer.put(name, it.next());
                     } else if (this.otherKeys != null) {
-                        // TODO: use LispDict
-                        otherKeys.add(symbol).add(it.next());
+                        otherKeys.put(symbol.getName().substring(1), it.next());
                     } else {
                         throw new LispException("Unexpected key '%s'", name);
                     }
@@ -354,7 +358,7 @@ public class CallArgs {
         }
 
         if (this.otherKeys != null) {
-            layer.put(this.otherKeys, otherKeys);
+            layer.put(this.otherKeys, new LispDict(otherKeys));
         }
 
         return nonKeys;

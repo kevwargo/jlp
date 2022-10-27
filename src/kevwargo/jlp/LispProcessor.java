@@ -5,6 +5,7 @@ import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispNamedObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.collections.LispDict;
 import kevwargo.jlp.objects.collections.LispList;
 import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.objects.functions.LispMethod;
@@ -153,6 +154,7 @@ public class LispProcessor {
         define(LispIterator.TYPE);
         define(LispJavaObject.TYPE);
         define(LispList.TYPE);
+        define(LispDict.TYPE);
         define(LispFunction.MACRO_TYPE);
         define(LispMethod.TYPE);
         define(LispBaseObject.TYPE);
