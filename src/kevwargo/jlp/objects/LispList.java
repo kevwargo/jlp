@@ -40,6 +40,10 @@ public class LispList extends LispBaseObject implements LispIterable {
         this(new ArrayList<LispObject>(), false);
     }
 
+    public List<LispObject> contents() {
+        return contents;
+    }
+
     public Iterator<LispObject> iterator() {
         return contents.iterator();
     }

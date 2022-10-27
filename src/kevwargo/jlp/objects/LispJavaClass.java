@@ -44,6 +44,10 @@ public class LispJavaClass extends LispJavaObject implements LispCallable {
         return cls;
     }
 
+    public Class<?> getWrappedClass() {
+        return cls;
+    }
+
     public Class<?> getJavaClass() {
         return cls.getClass();
     }

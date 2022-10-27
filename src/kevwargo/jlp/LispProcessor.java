@@ -13,6 +13,7 @@ import kevwargo.jlp.parser.LispParser;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
+import kevwargo.jlp.runtime.builtins.exceptions.LMTry;
 import kevwargo.jlp.runtime.builtins.range.LTRange;
 
 import java.io.IOException;
@@ -94,6 +95,7 @@ public class LispProcessor {
         define(new LMProgn());
         define(new LMQuote());
         define(new LMStartThread());
+        define(new LMTry());
     }
 
     private void defineTypes() {
