@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class LispBaseObject implements LispObject {
 
+    public static final LispType TYPE = new ObjectType();
+
     private LispType type;
     private Map<String, LispObject> dict;
     private Map<LispType, LispObject> castMap;
@@ -162,7 +164,7 @@ public class LispBaseObject implements LispObject {
         attr = getAttr(name, type);
         if (attr != null) {
             try {
-                return new LispMethod(this, (LispFunction) attr.cast(LispType.FUNCTION));
+                return new LispMethod(this, (LispFunction) attr.cast(LispFunction.FUNCTION_TYPE));
             } catch (LispCastException e) {
             }
         }

@@ -1,14 +1,14 @@
-package kevwargo.jlp.objects.builtins.functions.compare;
+package kevwargo.jlp.runtime.builtins.functions.compare;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNumber;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.LispString;
+import kevwargo.jlp.objects.scalars.numbers.LispNumber;
 
 import java.util.Iterator;
 
@@ -18,7 +18,7 @@ public abstract class CompareFunction extends LispFunction {
     public static final String ARG_OBJ2 = "obj2";
 
     public CompareFunction(String name) {
-        super(LispType.FUNCTION, name, new CallArgs(ARG_OBJ1, ARG_OBJ2));
+        super(LispFunction.FUNCTION_TYPE, name, new CallArgs(ARG_OBJ1, ARG_OBJ2));
     }
 
     protected int compare(LispObject obj1, LispObject obj2) throws LispException {
@@ -41,9 +41,9 @@ public abstract class CompareFunction extends LispFunction {
 
     private Integer compareNumbers(LispObject obj1, LispObject obj2) throws LispException {
         try {
-            double number1 = ((LispNumber) obj1.cast(LispType.NUMBER)).getDoubleValue();
-            checkType(obj2, LispType.NUMBER);
-            double number2 = ((LispNumber) obj2.cast(LispType.NUMBER)).getDoubleValue();
+            double number1 = ((LispNumber) obj1.cast(LispNumber.TYPE)).getDoubleValue();
+            checkType(obj2, LispNumber.TYPE);
+            double number2 = ((LispNumber) obj2.cast(LispNumber.TYPE)).getDoubleValue();
 
             if (number1 == number2) {
                 return 0;
@@ -56,9 +56,9 @@ public abstract class CompareFunction extends LispFunction {
 
     private Integer compareStrings(LispObject obj1, LispObject obj2) throws LispException {
         try {
-            String str1 = ((LispString) obj1.cast(LispType.STRING)).getValue();
-            checkType(obj2, LispType.STRING);
-            return str1.compareTo(((LispString) obj2.cast(LispType.STRING)).getValue());
+            String str1 = ((LispString) obj1.cast(LispString.TYPE)).getValue();
+            checkType(obj2, LispString.TYPE);
+            return str1.compareTo(((LispString) obj2.cast(LispString.TYPE)).getValue());
         } catch (LispCastException e) {
             return null;
         }
@@ -66,9 +66,9 @@ public abstract class CompareFunction extends LispFunction {
 
     private Integer compareLists(LispObject obj1, LispObject obj2) throws LispException {
         try {
-            Iterator<LispObject> it1 = ((LispList) obj1.cast(LispType.LIST)).iterator();
-            checkType(obj2, LispType.LIST);
-            Iterator<LispObject> it2 = ((LispList) obj2.cast(LispType.LIST)).iterator();
+            Iterator<LispObject> it1 = ((LispList) obj1.cast(LispList.TYPE)).iterator();
+            checkType(obj2, LispList.TYPE);
+            Iterator<LispObject> it2 = ((LispList) obj2.cast(LispList.TYPE)).iterator();
 
             int result = 0;
             while (it1.hasNext() && it2.hasNext()) {

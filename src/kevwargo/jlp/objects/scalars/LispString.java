@@ -15,10 +15,12 @@ import java.util.NoSuchElementException;
 
 public class LispString extends LispBaseObject implements LispIterable {
 
+    public static final LispType TYPE = new StringType();
+
     private String value;
 
     public LispString(String value) {
-        super(LispType.STRING);
+        super(LispString.TYPE);
         this.value = value;
     }
 
@@ -56,7 +58,7 @@ public class LispString extends LispBaseObject implements LispIterable {
         }
         LispObject object = (LispObject) other;
         try {
-            return value.equals(((LispString) object.cast(LispType.STRING)).getValue());
+            return value.equals(((LispString) object.cast(LispString.TYPE)).getValue());
         } catch (LispCastException e) {
             return false;
         }
@@ -78,7 +80,7 @@ public class LispString extends LispBaseObject implements LispIterable {
 class StringType extends LispType {
 
     StringType() {
-        super("str", new LispType[] {OBJECT});
+        super("str", new LispType[] {LispBaseObject.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

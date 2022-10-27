@@ -6,6 +6,7 @@ import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.objects.functions.LispCallable;
+import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.objects.iter.LispIterable;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
@@ -17,11 +18,13 @@ import java.util.ListIterator;
 
 public class LispList extends LispBaseObject implements LispIterable {
 
+    public static final LispType TYPE = new ListType();
+
     private List<LispObject> contents;
     private boolean special;
 
     public LispList(List<LispObject> contents, boolean special) {
-        super(LispType.LIST);
+        super(LispList.TYPE);
         this.contents = contents;
         this.special = special;
     }
@@ -105,12 +108,12 @@ public class LispList extends LispBaseObject implements LispIterable {
     public LispObject applyCallable(LispCallable callable, LispRuntime runtime)
             throws LispException {
         LispList arglist = this;
-        if (!callable.isInstance(LispType.MACRO)) {
+        if (!callable.isInstance(LispFunction.MACRO_TYPE)) {
             arglist = arglist.evalElements(runtime);
         }
 
         LispObject result = callable.call(runtime, callable.getCallArgs().apply(arglist));
-        if (callable.isInstance(LispType.LISP_MACRO)) {
+        if (callable.isInstance(LispFunction.LISP_MACRO_TYPE)) {
             result = result.eval(runtime);
         }
 
@@ -153,7 +156,7 @@ class ListType extends LispType {
     private static final String ARG_ARGS = "args";
 
     ListType() {
-        super("list", new LispType[] {OBJECT}, new CallArgs().rest(ARG_ARGS));
+        super("list", new LispType[] {LispBaseObject.TYPE}, new CallArgs().rest(ARG_ARGS));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

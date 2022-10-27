@@ -10,33 +10,12 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public abstract class LispType extends LispBaseObject implements LispCallable, LispNamedObject {
 
-    public static final LispType OBJECT = new ObjectType();
     public static final LispType TYPE = new Type();
-    public static final LispType SYMBOL = new SymbolType();
-    public static final LispType STRING = new StringType();
-    public static final LispType LIST = new ListType();
-    public static final LispType BOOL = new BoolType();
-    public static final LispType NIL = new NilType();
-    public static final LispType NUMBER = new NumberType();
-    public static final LispType INT = new IntType();
-    public static final LispType FLOAT = new FloatType();
-    public static final LispType FUNCTION = new FunctionType("builtin-function");
-    public static final LispType MACRO = new FunctionType("builtin-macro", FUNCTION);
-    public static final LispType LISP_FUNCTION = new FunctionType("function", FUNCTION);
-    public static final LispType LISP_MACRO = new FunctionType("macro", MACRO);
-    public static final LispType METHOD = new FunctionType("method", FUNCTION);
-    public static final LispType JAVA_OBJECT = new JavaObjectType();
-    public static final LispType ITERATOR = new IteratorType();
 
     protected static final String ARG_OBJ = "obj";
     protected CallArgs callArgs;
 
-    static {
-        OBJECT.setType(TYPE);
-        OBJECT.setBases(new LispType[0]);
-        TYPE.setType(TYPE);
-        TYPE.setBases(new LispType[] {OBJECT});
-    }
+    private static boolean typesInitialized = false;
 
     private LispType bases[];
     private String name;
@@ -47,6 +26,15 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
 
     public LispType(String name, LispType[] bases, CallArgs callArgs) {
         super(TYPE);
+
+        if (!typesInitialized) {
+            LispType.TYPE.setType(LispType.TYPE);
+            LispType.TYPE.setBases(new LispType[] {LispBaseObject.TYPE});
+            LispBaseObject.TYPE.setType(LispType.TYPE);
+            LispBaseObject.TYPE.setBases(new LispType[0]);
+            typesInitialized = true;
+        }
+
         this.name = name;
         this.bases = bases;
         this.callArgs = callArgs;
@@ -56,9 +44,19 @@ public abstract class LispType extends LispBaseObject implements LispCallable, L
         super();
         this.name = name;
         this.callArgs = callArgs;
+
+        if (name.equals("object")) {
+            bases = new LispType[0];
+            if (TYPE == null) {}
+
+            setType(TYPE);
+        } else if (name.equals("type")) {
+            bases = new LispType[] {LispBaseObject.TYPE};
+            setType(this);
+        }
     }
 
-    void setBases(LispType[] bases) {
+    private void setBases(LispType[] bases) {
         this.bases = bases;
     }
 
@@ -109,8 +107,8 @@ class Type extends LispType {
             return args.get(ARG_OBJ_OR_NAME).getType();
         }
 
-        String name = ((LispString) args.get(ARG_OBJ_OR_NAME).cast(STRING)).getValue();
-        LispList bases = (LispList) args.get(ARG_BASES).cast(LIST);
+        String name = ((LispString) args.get(ARG_OBJ_OR_NAME).cast(LispString.TYPE)).getValue();
+        LispList bases = (LispList) args.get(ARG_BASES).cast(LispList.TYPE);
 
         LispType baseTypes[] = new LispType[bases.size()];
         for (int i = 0; i < baseTypes.length; i++) {

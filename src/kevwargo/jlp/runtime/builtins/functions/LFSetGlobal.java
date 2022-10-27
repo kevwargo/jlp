@@ -1,10 +1,8 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.runtime.builtins.functions;
 
 public class LFSetGlobal extends LFSet {
 
     public static final String NAME = "set-global";
-
-    private boolean global;
 
     public LFSetGlobal() {
         super(NAME, true);

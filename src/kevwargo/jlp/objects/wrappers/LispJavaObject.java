@@ -20,6 +20,8 @@ import java.util.Map;
 
 public class LispJavaObject extends LispBaseObject {
 
+    public static final LispType TYPE = new JavaObjectType();
+
     private Object obj;
     protected Class<?> cls;
     private Map<String, Field> fields;
@@ -30,7 +32,7 @@ public class LispJavaObject extends LispBaseObject {
     }
 
     protected LispJavaObject(Object obj, Class<?> cls) {
-        super(LispType.JAVA_OBJECT);
+        super(LispJavaObject.TYPE);
 
         this.obj = obj;
         this.cls = cls;
@@ -145,7 +147,7 @@ public class LispJavaObject extends LispBaseObject {
         // TODO: choose the nearest method by the inheritance distance between actual vs declared
         // arguments
         public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-            LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispType.LIST);
+            LispList argList = (LispList) args.get(ARG_PARAMS).cast(LispList.TYPE);
             Object arguments[] = new Object[argList.size()];
             Class<?> classes[] = new Class<?>[argList.size()];
             int index = 0;
@@ -228,7 +230,11 @@ public class LispJavaObject extends LispBaseObject {
 class JavaObjectType extends LispType {
 
     JavaObjectType() {
-        super("java-object", new LispType[] {OBJECT}, CallArgs.ignored());
+        this("java-object", new LispType[] {LispBaseObject.TYPE});
+    }
+
+    JavaObjectType(String name, LispType[] bases) {
+        super(name, bases, CallArgs.ignored());
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

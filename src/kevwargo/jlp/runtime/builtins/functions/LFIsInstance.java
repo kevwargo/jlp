@@ -1,11 +1,11 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.runtime.builtins.functions;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.LispBool;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -16,7 +16,7 @@ public class LFIsInstance extends LispFunction {
     public static final String ARG_TYPE = "type";
 
     public LFIsInstance() {
-        super(LispType.FUNCTION, NAME, new CallArgs(ARG_OBJ, ARG_TYPE));
+        super(LispFunction.FUNCTION_TYPE, NAME, new CallArgs(ARG_OBJ, ARG_TYPE));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

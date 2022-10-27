@@ -2,12 +2,12 @@ package kevwargo.jlp.runtime.builtins.exceptions;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBaseObject;
-import kevwargo.jlp.objects.LispJavaClass;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispBaseObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.scalars.LispSymbol;
+import kevwargo.jlp.objects.wrappers.LispJavaClass;
+import kevwargo.jlp.objects.wrappers.LispJavaObject;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -27,7 +27,7 @@ public class Handlers {
         exceptClauses = new ArrayList<LispList>();
         Iterator<LispObject> it = clauses.contents().iterator();
         while (it.hasNext()) {
-            LispList clause = (LispList) it.next().cast(LispType.LIST);
+            LispList clause = (LispList) it.next().cast(LispList.TYPE);
             if (clause.contents().isEmpty()) {
                 throw new LispException("Empty try-except-finally clauses are not allowed");
             }
@@ -46,16 +46,16 @@ public class Handlers {
             Iterator<LispObject> it = clause.contents().iterator();
             LispObject exc = it.next();
 
-            if (exc.isInstance(LispType.SYMBOL)) {
+            if (exc.isInstance(LispSymbol.TYPE)) {
                 if (exceptMatches(throwable, exc)) {
                     return new Handler(new LispList(it), runtime);
                 }
-            } else if (exc.isInstance(LispType.LIST)) {
-                LispList binding = (LispList) exc.cast(LispType.LIST);
+            } else if (exc.isInstance(LispList.TYPE)) {
+                LispList binding = (LispList) exc.cast(LispList.TYPE);
                 if (binding.contents().size() != 2) {
                     throw new LispException("%s does not match the (EXC VAR) form", binding.repr());
                 }
-                String var = ((LispSymbol) binding.get(1).cast(LispType.SYMBOL)).getName();
+                String var = ((LispSymbol) binding.get(1).cast(LispSymbol.TYPE)).getName();
 
                 if (exceptMatches(throwable, binding.get(0))) {
                     Layer layer = new Layer();
@@ -82,7 +82,7 @@ public class Handlers {
     }
 
     private boolean exceptMatches(Throwable throwable, LispObject exc) throws LispException {
-        LispObject excClassWrapper = exc.eval(runtime).cast(LispType.JAVA_OBJECT);
+        LispObject excClassWrapper = exc.eval(runtime).cast(LispJavaObject.TYPE);
         if (!(excClassWrapper instanceof LispJavaClass)) {
             throw new LispException("%s is not a Java class", excClassWrapper.repr());
         }

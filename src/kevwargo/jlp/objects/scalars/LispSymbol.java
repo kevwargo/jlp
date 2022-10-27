@@ -13,10 +13,12 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispSymbol extends LispBaseObject {
 
+    public static final LispType TYPE = new SymbolType();
+
     private String name;
 
     public LispSymbol(String name) {
-        super(LispType.SYMBOL);
+        super(LispSymbol.TYPE);
         this.name = name;
     }
 
@@ -61,7 +63,7 @@ public class LispSymbol extends LispBaseObject {
         }
 
         try {
-            LispSymbol symbol = (LispSymbol) ((LispObject) obj).cast(LispType.SYMBOL);
+            LispSymbol symbol = (LispSymbol) ((LispObject) obj).cast(LispSymbol.TYPE);
             return symbol.getName().equals(getName());
         } catch (LispCastException e) {
             return false;
@@ -72,7 +74,7 @@ public class LispSymbol extends LispBaseObject {
 class SymbolType extends LispType {
 
     SymbolType() {
-        super("symbol", new LispType[] {OBJECT}, new CallArgs(ARG_OBJ));
+        super("symbol", new LispType[] {LispBaseObject.TYPE}, new CallArgs(ARG_OBJ));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
@@ -80,8 +82,8 @@ class SymbolType extends LispType {
         if (obj.isInstance(this)) {
             return obj;
         }
-        if (obj.isInstance(LispType.STRING)) {
-            return new LispSymbol(((LispString) obj.cast(LispType.STRING)).getValue());
+        if (obj.isInstance(LispString.TYPE)) {
+            return new LispSymbol(((LispString) obj.cast(LispString.TYPE)).getValue());
         }
 
         throw new LispCastException(

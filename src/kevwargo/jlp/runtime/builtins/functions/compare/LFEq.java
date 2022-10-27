@@ -1,8 +1,8 @@
-package kevwargo.jlp.objects.builtins.functions.compare;
+package kevwargo.jlp.runtime.builtins.functions.compare;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
-import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.scalars.LispBool;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 

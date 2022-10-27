@@ -2,10 +2,9 @@ package kevwargo.jlp.runtime.builtins.exceptions;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -18,7 +17,7 @@ public class LMTry extends LispFunction {
     public static final String ARG_CLAUSES = "clauses";
 
     public LMTry() {
-        super(LispType.MACRO, NAME, new CallArgs(ARG_FORM).rest(ARG_CLAUSES));
+        super(LispFunction.MACRO_TYPE, NAME, new CallArgs(ARG_FORM).rest(ARG_CLAUSES));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

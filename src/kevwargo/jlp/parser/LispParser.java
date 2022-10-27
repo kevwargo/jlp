@@ -1,14 +1,14 @@
 package kevwargo.jlp.parser;
 
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBool;
-import kevwargo.jlp.objects.LispFloat;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNil;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispSymbol;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.scalars.LispBool;
+import kevwargo.jlp.objects.scalars.LispNil;
+import kevwargo.jlp.objects.scalars.LispString;
+import kevwargo.jlp.objects.scalars.LispSymbol;
+import kevwargo.jlp.objects.scalars.numbers.LispFloat;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -153,13 +153,5 @@ public class LispParser {
         }
 
         return null;
-    }
-
-    private String stackToString() {
-        StringBuffer sb = new StringBuffer();
-        for (LispList s : sexpStack) {
-            sb.append(String.format("Sexp %d: %s\n", s.hashCode(), s.toString()));
-        }
-        return sb.toString();
     }
 }

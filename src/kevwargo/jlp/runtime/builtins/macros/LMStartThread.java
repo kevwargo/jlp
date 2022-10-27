@@ -1,12 +1,11 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBaseObject;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispBaseObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -18,7 +17,7 @@ public class LMStartThread extends LispFunction {
     public static final String ARG_BODY = "body";
 
     public LMStartThread() {
-        super(LispType.MACRO, NAME, new CallArgs().rest(ARG_BODY));
+        super(LispFunction.MACRO_TYPE, NAME, new CallArgs().rest(ARG_BODY));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

@@ -12,6 +12,8 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispInt extends LispBaseObject implements LispNumber {
 
+    public static final LispType TYPE = new IntType();
+
     private long value;
     private Class<?> cls;
 
@@ -36,12 +38,12 @@ public class LispInt extends LispBaseObject implements LispNumber {
     }
 
     LispInt(long value, LispFloat floatCast, Class<?> cls) {
-        super(LispType.INT);
+        super(LispInt.TYPE);
         this.cls = cls;
         this.value = value;
         if (floatCast != null) {
-            defineCast(LispType.FLOAT, floatCast);
-            floatCast.defineCast(LispType.INT, this);
+            defineCast(LispFloat.TYPE, floatCast);
+            floatCast.defineCast(LispInt.TYPE, this);
         }
     }
 
@@ -91,7 +93,7 @@ class IntType extends LispType {
     private static final String ARG_RADIX = "radix";
 
     IntType() {
-        super("int", new LispType[] {NUMBER}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
+        super("int", new LispType[] {LispNumber.TYPE}, new CallArgs().opt(ARG_OBJ).opt(ARG_RADIX));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
@@ -100,24 +102,24 @@ class IntType extends LispType {
         }
 
         LispObject object = args.get(ARG_OBJ);
-        if (object.isInstance(INT)) {
-            return new LispInt(((LispInt) object.cast(INT)).getValue());
+        if (object.isInstance(LispInt.TYPE)) {
+            return new LispInt(((LispInt) object.cast(LispInt.TYPE)).getValue());
         }
 
-        if (object.isInstance(FLOAT)) {
-            return new LispInt((long) ((LispFloat) object.cast(FLOAT)).getValue());
+        if (object.isInstance(LispFloat.TYPE)) {
+            return new LispInt((long) ((LispFloat) object.cast(LispFloat.TYPE)).getValue());
         }
 
-        if (object.isInstance(STRING)) {
-            String number = ((LispString) object.cast(STRING)).getValue();
+        if (object.isInstance(LispString.TYPE)) {
+            String number = ((LispString) object.cast(LispString.TYPE)).getValue();
             int radix = 10;
             if (args.containsKey(ARG_RADIX)) {
-                radix = (int) ((LispInt) args.get(ARG_RADIX).cast(INT)).getValue();
+                radix = (int) ((LispInt) args.get(ARG_RADIX).cast(LispInt.TYPE)).getValue();
             }
             return new LispInt(Long.parseLong(number, radix));
         }
 
-        if (object.isInstance(JAVA_OBJECT)) {
+        if (object.isInstance(LispJavaObject.TYPE)) {
             Object javaNumber = ((LispJavaObject) object).getObject();
             if (javaNumber instanceof Integer) {
                 return new LispInt(((Integer) javaNumber).longValue());

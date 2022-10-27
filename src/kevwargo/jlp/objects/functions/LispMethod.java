@@ -11,13 +11,15 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispMethod extends LispBaseObject implements LispCallable, LispNamedObject {
 
+    public static final LispType TYPE = new FunctionType("method", LispFunction.FUNCTION_TYPE);
+
     private LispObject instance;
     private LispFunction function;
     private String instanceArgName;
     private CallArgs callArgs;
 
     public LispMethod(LispObject instance, LispFunction function) {
-        super(LispType.METHOD);
+        super(LispMethod.TYPE);
         this.instance = instance;
         this.function = function;
 

@@ -9,13 +9,15 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispBool extends LispBaseObject {
 
+    public static final LispType TYPE = new BoolType();
+
     public static final LispBool TRUE = new LispBool(true);
     public static final LispBool FALSE = new LispBool(false);
 
     private boolean value;
 
     private LispBool(boolean value) {
-        super(LispType.BOOL);
+        super(LispBool.TYPE);
         this.value = value;
     }
 
@@ -43,7 +45,7 @@ public class LispBool extends LispBaseObject {
 class BoolType extends LispType {
 
     BoolType() {
-        super("bool", new LispType[] {OBJECT});
+        super("bool", new LispType[] {LispBaseObject.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

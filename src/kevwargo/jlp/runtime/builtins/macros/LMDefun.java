@@ -1,13 +1,13 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNil;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.LispNil;
+import kevwargo.jlp.objects.scalars.LispSymbol;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
@@ -23,16 +23,14 @@ public class LMDefun extends LispFunction {
 
     private static CallArgs namedArgs = new CallArgs(ARG_NAME, ARG_ARGLIST).rest(ARG_BODY);
     private static CallArgs anonymousArgs = new CallArgs(ARG_ARGLIST).rest(ARG_BODY);
-    private boolean isMacro;
     private boolean isAnonymous;
 
     public LMDefun() {
-        this(NAME, false, false);
+        this(NAME, false);
     }
 
-    protected LMDefun(String name, boolean isMacro, boolean isAnonymous) {
-        super(LispType.MACRO, name, isAnonymous ? anonymousArgs : namedArgs);
-        this.isMacro = isMacro;
+    protected LMDefun(String name, boolean isAnonymous) {
+        super(LispFunction.MACRO_TYPE, name, isAnonymous ? anonymousArgs : namedArgs);
         this.isAnonymous = isAnonymous;
     }
 
@@ -41,11 +39,11 @@ public class LMDefun extends LispFunction {
         if (isAnonymous) {
             name = "<lambda>";
         } else {
-            name = ((LispSymbol) args.get(ARG_NAME).cast(LispType.SYMBOL)).getName();
+            name = ((LispSymbol) args.get(ARG_NAME).cast(LispSymbol.TYPE)).getName();
         }
 
-        LispList arglist = (LispList) args.get(ARG_ARGLIST).cast(LispType.LIST);
-        LispList body = (LispList) args.get(ARG_BODY).cast(LispType.LIST);
+        LispList arglist = (LispList) args.get(ARG_ARGLIST).cast(LispList.TYPE);
+        LispList body = (LispList) args.get(ARG_BODY).cast(LispList.TYPE);
         LispNamespace namespace = runtime.getNS();
 
         LispFunction function = new Function(name, new CallArgs(arglist, runtime), body, namespace);
@@ -54,13 +52,17 @@ public class LMDefun extends LispFunction {
         return function;
     }
 
+    protected LispType getFunctionType() {
+        return LispFunction.LISP_FUNCTION_TYPE;
+    }
+
     private class Function extends LispFunction {
 
         LispList body;
         LispNamespace defNamespace;
 
         public Function(String name, CallArgs args, LispList body, LispNamespace namespace) {
-            super(LMDefun.this.isMacro ? LispType.LISP_MACRO : LispType.LISP_FUNCTION, name, args);
+            super(getFunctionType(), name, args);
             this.body = body;
             defNamespace = namespace;
         }
@@ -100,7 +102,7 @@ public class LMDefun extends LispFunction {
         private static final String ARG_OBJ = "obj";
 
         public ReturnFunction() {
-            super(LispType.FUNCTION, "return", new CallArgs(ARG_OBJ));
+            super(LispFunction.FUNCTION_TYPE, "return", new CallArgs(ARG_OBJ));
         }
 
         public LispObject call(LispRuntime runtime, Layer args) throws LispException {

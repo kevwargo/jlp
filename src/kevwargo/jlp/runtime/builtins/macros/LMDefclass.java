@@ -1,14 +1,14 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBaseObject;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispMethod;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispBaseObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.functions.LispMethod;
+import kevwargo.jlp.objects.scalars.LispSymbol;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -18,18 +18,18 @@ import java.util.Map;
 public class LMDefclass extends LispFunction {
 
     public LMDefclass() {
-        super(LispType.MACRO, "defclass", new CallArgs("name", "bases").rest("body"));
+        super(LispFunction.MACRO_TYPE, "defclass", new CallArgs("name", "bases").rest("body"));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        String name = ((LispSymbol) args.get("name").cast(LispType.SYMBOL)).getName();
+        String name = ((LispSymbol) args.get("name").cast(LispSymbol.TYPE)).getName();
 
-        LispList basesList = (LispList) args.get("bases").cast(LispType.LIST);
+        LispList basesList = (LispList) args.get("bases").cast(LispList.TYPE);
         LispType bases[];
         if (basesList.size() > 0) {
             bases = new LispType[basesList.size()];
         } else {
-            bases = new LispType[] {LispType.OBJECT};
+            bases = new LispType[] {LispBaseObject.TYPE};
         }
         Iterator<LispObject> it = basesList.iterator();
         for (int i = 0; it.hasNext(); i++) {

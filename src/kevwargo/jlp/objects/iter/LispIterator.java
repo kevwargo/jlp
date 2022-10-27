@@ -15,8 +15,10 @@ import java.util.Iterator;
 public abstract class LispIterator extends LispBaseObject
         implements LispIterable, Iterator<LispObject> {
 
+    public static final LispType TYPE = new IteratorType();
+
     public LispIterator() {
-        super(LispType.ITERATOR);
+        super(LispIterator.TYPE);
     }
 
     public Iterator<LispObject> iterator() {
@@ -29,7 +31,7 @@ public abstract class LispIterator extends LispBaseObject
         }
 
         try {
-            Object object = ((LispJavaObject) obj.cast(LispType.JAVA_OBJECT)).getObject();
+            Object object = ((LispJavaObject) obj.cast(LispJavaObject.TYPE)).getObject();
             return (object instanceof Iterator)
                     || (object instanceof Iterable)
                     || object.getClass().isArray();
@@ -42,7 +44,7 @@ public abstract class LispIterator extends LispBaseObject
 class IteratorType extends LispType {
 
     IteratorType() {
-        super("iterator", new LispType[] {OBJECT});
+        super("iterator", new LispType[] {LispBaseObject.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
@@ -55,8 +57,8 @@ class IteratorType extends LispType {
             return new LispIteratorImpl(((LispIterable) obj).iterator());
         }
 
-        if (obj.isInstance(LispType.JAVA_OBJECT)) {
-            Object object = ((LispJavaObject) obj.cast(LispType.JAVA_OBJECT)).getObject();
+        if (obj.isInstance(LispJavaObject.TYPE)) {
+            Object object = ((LispJavaObject) obj.cast(LispJavaObject.TYPE)).getObject();
 
             if (object instanceof Iterator) {
                 return new JavaIterator((Iterator<?>) object);

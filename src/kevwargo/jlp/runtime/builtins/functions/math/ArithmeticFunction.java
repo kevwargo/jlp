@@ -1,14 +1,13 @@
-package kevwargo.jlp.objects.builtins.functions.math;
+package kevwargo.jlp.runtime.builtins.functions.math;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFloat;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.numbers.LispFloat;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -25,14 +24,14 @@ public abstract class ArithmeticFunction extends LispFunction {
     protected abstract Params parseParams(Layer args) throws LispCastException;
 
     protected ArithmeticFunction(String name, CallArgs args) {
-        super(LispType.FUNCTION, name, args.rest(ARG_NUMBERS));
+        super(LispFunction.FUNCTION_TYPE, name, args.rest(ARG_NUMBERS));
     }
 
     protected boolean isDouble(Layer args) throws LispCastException {
         LispList numbers = (LispList) args.get(ARG_NUMBERS);
         if (numbers.size() > 0) {
             LispObject first = numbers.get(0);
-            if (first.isInstance(LispType.FLOAT)) {
+            if (first.isInstance(LispFloat.TYPE)) {
                 return true;
             }
         }
@@ -46,23 +45,23 @@ public abstract class ArithmeticFunction extends LispFunction {
         double doubleResult = params.doubleInitial;
         while (params.numbers.hasNext()) {
             LispObject number = params.numbers.next();
-            if (!number.isInstance(LispType.INT) && !number.isInstance(LispType.FLOAT)) {
+            if (!number.isInstance(LispInt.TYPE) && !number.isInstance(LispFloat.TYPE)) {
                 throw new LispException("'%s' is not a number", number);
             }
             if (isDouble) {
                 double value;
-                if (number.isInstance(LispType.FLOAT)) {
-                    value = ((LispFloat) number.cast(LispType.FLOAT)).getValue();
+                if (number.isInstance(LispFloat.TYPE)) {
+                    value = ((LispFloat) number.cast(LispFloat.TYPE)).getValue();
                 } else {
-                    value = (double) ((LispInt) number.cast(LispType.INT)).getValue();
+                    value = (double) ((LispInt) number.cast(LispInt.TYPE)).getValue();
                 }
                 doubleResult = addDouble(doubleResult, value);
-            } else if (number.isInstance(LispType.FLOAT)) {
-                double value = ((LispFloat) number.cast(LispType.FLOAT)).getValue();
+            } else if (number.isInstance(LispFloat.TYPE)) {
+                double value = ((LispFloat) number.cast(LispFloat.TYPE)).getValue();
                 isDouble = true;
                 doubleResult = addDouble((double) longResult, value);
             } else {
-                longResult = addLong(longResult, ((LispInt) number.cast(LispType.INT)).getValue());
+                longResult = addLong(longResult, ((LispInt) number.cast(LispInt.TYPE)).getValue());
             }
         }
         if (isDouble) {

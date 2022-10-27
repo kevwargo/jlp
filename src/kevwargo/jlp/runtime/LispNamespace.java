@@ -1,7 +1,7 @@
 package kevwargo.jlp.runtime;
 
-import kevwargo.jlp.objects.LispNamedObject;
-import kevwargo.jlp.objects.LispObject;
+import kevwargo.jlp.objects.base.LispNamedObject;
+import kevwargo.jlp.objects.base.LispObject;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

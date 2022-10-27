@@ -9,10 +9,12 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispNil extends LispBaseObject {
 
+    public static final LispType TYPE = new NilType();
+
     public static final LispNil NIL = new LispNil();
 
     private LispNil() {
-        super(LispType.NIL);
+        super(LispNil.TYPE);
     }
 
     public String repr() {
@@ -35,7 +37,7 @@ public class LispNil extends LispBaseObject {
 class NilType extends LispType {
 
     NilType() {
-        super("nil", new LispType[] {OBJECT});
+        super("nil", new LispType[] {LispBaseObject.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

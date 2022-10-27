@@ -1,10 +1,9 @@
-package kevwargo.jlp.objects.builtins.functions.math;
+package kevwargo.jlp.runtime.builtins.functions.math;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 
 import java.util.Iterator;
@@ -16,7 +15,7 @@ public class LFPlus extends ArithmeticFunction {
     }
 
     protected Params parseParams(Layer args) throws LispCastException {
-        Iterator<LispObject> it = ((LispList) args.get(ARG_NUMBERS).cast(LispType.LIST)).iterator();
+        Iterator<LispObject> it = ((LispList) args.get(ARG_NUMBERS).cast(LispList.TYPE)).iterator();
         return new Params(0, 0.0, it);
     }
 

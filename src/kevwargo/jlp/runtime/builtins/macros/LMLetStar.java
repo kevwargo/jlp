@@ -1,4 +1,4 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 public class LMLetStar extends LMLet {
 

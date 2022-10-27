@@ -2,12 +2,12 @@ package kevwargo.jlp.runtime.builtins.range;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispBaseObject;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispIterable;
-import kevwargo.jlp.objects.LispIterator;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispBaseObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.iter.LispIterable;
+import kevwargo.jlp.objects.iter.LispIterator;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -24,15 +24,15 @@ public class LTRange extends LispType {
     private static final CallArgs args = new CallArgs(ARG_FROM, ARG_TO).opt(ARG_STEP);
 
     public LTRange() {
-        super(NAME, new LispType[] {LispType.OBJECT}, args);
+        super(NAME, new LispType[] {LispBaseObject.TYPE}, args);
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        long from = ((LispInt) args.get(ARG_FROM).cast(INT)).getValue();
-        long to = ((LispInt) args.get(ARG_TO).cast(INT)).getValue();
+        long from = ((LispInt) args.get(ARG_FROM).cast(LispInt.TYPE)).getValue();
+        long to = ((LispInt) args.get(ARG_TO).cast(LispInt.TYPE)).getValue();
         long step = 1;
         if (args.get(ARG_STEP) != null) {
-            step = ((LispInt) args.get(ARG_STEP).cast(INT)).getValue();
+            step = ((LispInt) args.get(ARG_STEP).cast(LispInt.TYPE)).getValue();
         }
 
         return new Range(this, from, to, step);

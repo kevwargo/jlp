@@ -1,8 +1,8 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 public class LMLambda extends LMDefun {
 
     public LMLambda() {
-        super("lambda", false, true);
+        super("lambda", true);
     }
 }

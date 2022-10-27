@@ -1,12 +1,11 @@
-package kevwargo.jlp.objects.builtins.functions.compare;
+package kevwargo.jlp.runtime.builtins.functions.compare;
 
 import kevwargo.jlp.exceptions.LispCastException;
-import kevwargo.jlp.objects.LispJavaObject;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNumber;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispString;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.scalars.LispString;
+import kevwargo.jlp.objects.scalars.numbers.LispNumber;
+import kevwargo.jlp.objects.wrappers.LispJavaObject;
 
 import java.util.Iterator;
 
@@ -40,8 +39,8 @@ public abstract class CheckEqualityFunction extends CompareFunction {
 
     private boolean equalLists(LispObject obj1, LispObject obj2) {
         try {
-            Iterator<LispObject> it1 = ((LispList) obj1.cast(LispType.LIST)).iterator();
-            Iterator<LispObject> it2 = ((LispList) obj2.cast(LispType.LIST)).iterator();
+            Iterator<LispObject> it1 = ((LispList) obj1.cast(LispList.TYPE)).iterator();
+            Iterator<LispObject> it2 = ((LispList) obj2.cast(LispList.TYPE)).iterator();
             while (it1.hasNext() && it2.hasNext()) {
                 if (!equalp(it1.next(), it2.next(), false)) {
                     return false;
@@ -58,9 +57,9 @@ public abstract class CheckEqualityFunction extends CompareFunction {
 
     private boolean equalStrings(LispObject obj1, LispObject obj2) {
         try {
-            return ((LispString) obj1.cast(LispType.STRING))
+            return ((LispString) obj1.cast(LispString.TYPE))
                     .getValue()
-                    .equals(((LispString) obj2.cast(LispType.STRING)).getValue());
+                    .equals(((LispString) obj2.cast(LispString.TYPE)).getValue());
         } catch (LispCastException e) {
             return false;
         }
@@ -68,8 +67,8 @@ public abstract class CheckEqualityFunction extends CompareFunction {
 
     private boolean equalNumbers(LispObject obj1, LispObject obj2) {
         try {
-            return ((LispNumber) obj1.cast(LispType.NUMBER)).getDoubleValue()
-                    == ((LispNumber) obj2.cast(LispType.NUMBER)).getDoubleValue();
+            return ((LispNumber) obj1.cast(LispNumber.TYPE)).getDoubleValue()
+                    == ((LispNumber) obj2.cast(LispNumber.TYPE)).getDoubleValue();
         } catch (LispCastException e) {
             return false;
         }
@@ -77,8 +76,8 @@ public abstract class CheckEqualityFunction extends CompareFunction {
 
     private boolean equalObjects(LispObject obj1, LispObject obj2, boolean strict) {
         try {
-            Object o1 = ((LispJavaObject) obj1.cast(LispType.JAVA_OBJECT)).getObject();
-            Object o2 = ((LispJavaObject) obj2.cast(LispType.JAVA_OBJECT)).getObject();
+            Object o1 = ((LispJavaObject) obj1.cast(LispJavaObject.TYPE)).getObject();
+            Object o2 = ((LispJavaObject) obj2.cast(LispJavaObject.TYPE)).getObject();
 
             if (strict) {
                 return o1 == o2;

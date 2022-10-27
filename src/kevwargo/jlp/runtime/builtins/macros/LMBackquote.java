@@ -1,12 +1,11 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.LispSymbol;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -22,29 +21,29 @@ public class LMBackquote extends LispFunction {
     private static final LispSymbol symUnfold = new LispSymbol(",@");
 
     public LMBackquote() {
-        super(LispType.MACRO, NAME, new CallArgs(ARG_EXPR));
+        super(LispFunction.MACRO_TYPE, NAME, new CallArgs(ARG_EXPR));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject expr = args.get(ARG_EXPR);
 
-        if (!expr.isInstance(LispType.LIST)) {
+        if (!expr.isInstance(LispList.TYPE)) {
             return expr;
         }
 
-        return processList((LispList) expr.cast(LispType.LIST), runtime);
+        return processList((LispList) expr.cast(LispList.TYPE), runtime);
     }
 
     private LispList processList(LispList expr, LispRuntime runtime) throws LispException {
         List<LispObject> contents = new ArrayList<LispObject>();
 
         for (LispObject obj : expr) {
-            if (!obj.isInstance(LispType.LIST)) {
+            if (!obj.isInstance(LispList.TYPE)) {
                 contents.add(obj);
                 continue;
             }
 
-            LispList list = (LispList) obj.cast(LispType.LIST);
+            LispList list = (LispList) obj.cast(LispList.TYPE);
             LispObject first = list.get(0);
             if (symEval.equals(first)) {
                 LispObject second = list.get(1).eval(runtime);
@@ -53,7 +52,7 @@ public class LMBackquote extends LispFunction {
             }
             if (symUnfold.equals(first)) {
                 LispObject second = list.get(1).eval(runtime);
-                LispList sublist = (LispList) second.cast(LispType.LIST);
+                LispList sublist = (LispList) second.cast(LispList.TYPE);
                 // TODO: throw more readable exception if not a list
                 for (LispObject elt : sublist) {
                     contents.add(elt);

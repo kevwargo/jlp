@@ -1,17 +1,16 @@
-package kevwargo.jlp.objects.builtins.macros;
+package kevwargo.jlp.runtime.builtins.macros;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 public class LMQuote extends LispFunction {
 
     public LMQuote() {
-        super(LispType.MACRO, "quote", new CallArgs("obj"));
+        super(LispFunction.MACRO_TYPE, "quote", new CallArgs("obj"));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

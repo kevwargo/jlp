@@ -1,13 +1,12 @@
-package kevwargo.jlp.objects.builtins.functions;
+package kevwargo.jlp.runtime.builtins.functions;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispJavaObject;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNil;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.LispNil;
+import kevwargo.jlp.objects.wrappers.LispJavaObject;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -23,7 +22,7 @@ public class LFPrint extends LispFunction {
 
     public LFPrint() {
         super(
-                LispType.FUNCTION,
+                LispFunction.FUNCTION_TYPE,
                 NAME,
                 new CallArgs().rest(ARG_OBJECTS).key(ARG_STREAM, LispNil.NIL));
     }
@@ -32,7 +31,7 @@ public class LFPrint extends LispFunction {
         PrintStream out;
         if (args.get(ARG_STREAM) != LispNil.NIL) {
             LispJavaObject streamObj =
-                    (LispJavaObject) args.get(ARG_STREAM).cast(LispType.JAVA_OBJECT);
+                    (LispJavaObject) args.get(ARG_STREAM).cast(LispJavaObject.TYPE);
             if (!(streamObj.getObject() instanceof OutputStream)) {
                 throw new LispException(
                         "'%s' is not a java.io.OutputStream", streamObj.getObject());

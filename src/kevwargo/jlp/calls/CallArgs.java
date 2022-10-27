@@ -3,11 +3,10 @@ package kevwargo.jlp.calls;
 import kevwargo.jlp.exceptions.DuplicatedArgException;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispNil;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispSymbol;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.scalars.LispNil;
+import kevwargo.jlp.objects.scalars.LispSymbol;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -88,12 +87,12 @@ public class CallArgs {
             throws LispException {
         while (it.hasNext() && !atKeyword(it)) {
             LispObject arg = it.next();
-            if (arg.isInstance(LispType.SYMBOL)) {
-                String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+            if (arg.isInstance(LispSymbol.TYPE)) {
+                String name = ((LispSymbol) arg.cast(LispSymbol.TYPE)).getName();
                 checkArg(name);
                 positionals.add(new Positional(name));
-            } else if (arg.isInstance(LispType.LIST)) {
-                LispList list = (LispList) arg.cast(LispType.LIST);
+            } else if (arg.isInstance(LispList.TYPE)) {
+                LispList list = (LispList) arg.cast(LispList.TYPE);
                 positionals.add(new Positional(new CallArgs(list, runtime, this)));
             } else {
                 throw new LispException(
@@ -128,8 +127,8 @@ public class CallArgs {
         }
 
         LispObject arg = it.next();
-        if (arg.isInstance(LispType.SYMBOL)) {
-            String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+        if (arg.isInstance(LispSymbol.TYPE)) {
+            String name = ((LispSymbol) arg.cast(LispSymbol.TYPE)).getName();
             checkArg(name);
             rest = name;
         } else {
@@ -157,8 +156,8 @@ public class CallArgs {
         }
 
         LispObject arg = it.next();
-        if (arg.isInstance(LispType.SYMBOL)) {
-            String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+        if (arg.isInstance(LispSymbol.TYPE)) {
+            String name = ((LispSymbol) arg.cast(LispSymbol.TYPE)).getName();
             checkArg(name);
             otherKeys = name;
         } else {
@@ -174,7 +173,7 @@ public class CallArgs {
         LispObject arg = it.next();
         it.previous();
         try {
-            String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+            String name = ((LispSymbol) arg.cast(LispSymbol.TYPE)).getName();
             return name.equals(KEYWORD_OPTIONAL)
                     || name.equals(KEYWORD_REST)
                     || name.equals(KEYWORD_KEY)
@@ -191,7 +190,7 @@ public class CallArgs {
 
         LispObject arg = it.next();
         try {
-            String name = ((LispSymbol) arg.cast(LispType.SYMBOL)).getName();
+            String name = ((LispSymbol) arg.cast(LispSymbol.TYPE)).getName();
             if (name.equals(keyword)) {
                 return true;
             }
@@ -281,7 +280,7 @@ public class CallArgs {
             if (arg.getName() != null) {
                 layer.put(arg.getName(), it.next());
             } else {
-                arg.getStruct().apply(layer, (LispList) it.next().cast(LispType.LIST));
+                arg.getStruct().apply(layer, (LispList) it.next().cast(LispList.TYPE));
             }
         }
 
@@ -314,8 +313,8 @@ public class CallArgs {
         Iterator<LispObject> it = args.iterator();
         while (it.hasNext()) {
             LispObject arg = it.next();
-            if (arg.isInstance(LispType.SYMBOL)) {
-                LispSymbol symbol = (LispSymbol) arg.cast(LispType.SYMBOL);
+            if (arg.isInstance(LispSymbol.TYPE)) {
+                LispSymbol symbol = (LispSymbol) arg.cast(LispSymbol.TYPE);
                 if (symbol.isKeyword()) {
                     String name = symbol.getName().substring(1);
                     if (!it.hasNext()) {

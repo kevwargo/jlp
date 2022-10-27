@@ -1,12 +1,11 @@
-package kevwargo.jlp.objects.builtins.macros.loop;
+package kevwargo.jlp.runtime.builtins.macros.loop;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.LispFunction;
-import kevwargo.jlp.objects.LispInt;
-import kevwargo.jlp.objects.LispList;
-import kevwargo.jlp.objects.LispObject;
-import kevwargo.jlp.objects.LispType;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -20,11 +19,11 @@ public class LMFor extends LispFunction {
     public static final String FN_EMIT = "emit";
 
     public LMFor() {
-        super(LispType.MACRO, NAME, new CallArgs(ARG_COND).rest(ARG_BODY));
+        super(LispFunction.MACRO_TYPE, NAME, new CallArgs(ARG_COND).rest(ARG_BODY));
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        LispList cond = (LispList) args.get(ARG_COND).cast(LispType.LIST);
+        LispList cond = (LispList) args.get(ARG_COND).cast(LispList.TYPE);
         if (cond.size() != 3) {
             throw new LispException(
                     "'%s' loop condition must contain 3 elements, not %d (%s)",
@@ -88,7 +87,7 @@ public class LMFor extends LispFunction {
         private boolean isContinue;
 
         LoopExit(boolean isContinue) {
-            super(LispType.FUNCTION, (isContinue ? FN_CONTINUE : FN_BREAK), callArgs);
+            super(LispFunction.FUNCTION_TYPE, (isContinue ? FN_CONTINUE : FN_BREAK), callArgs);
             this.isContinue = isContinue;
         }
 
@@ -96,7 +95,7 @@ public class LMFor extends LispFunction {
             long level = 1;
             LispObject levelObject = args.get(ARG_LEVEL);
             if (levelObject != null) {
-                level = ((LispInt) levelObject.cast(LispType.INT)).getValue();
+                level = ((LispInt) levelObject.cast(LispInt.TYPE)).getValue();
             }
             throw new LispLoopException(isContinue, level);
         }
@@ -108,7 +107,7 @@ public class LMFor extends LispFunction {
         private LispList collector;
 
         Emit(LispList collector) {
-            super(LispType.FUNCTION, FN_EMIT, new CallArgs(ARG_OBJ));
+            super(LispFunction.FUNCTION_TYPE, FN_EMIT, new CallArgs(ARG_OBJ));
             this.collector = collector;
         }
 

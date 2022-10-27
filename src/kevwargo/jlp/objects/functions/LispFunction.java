@@ -11,11 +11,16 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public abstract class LispFunction extends LispBaseObject implements LispCallable, LispNamedObject {
 
+    public static final LispType FUNCTION_TYPE = new FunctionType("builtin-function");
+    public static final LispType MACRO_TYPE = new FunctionType("builtin-macro", FUNCTION_TYPE);
+    public static final LispType LISP_FUNCTION_TYPE = new FunctionType("function", FUNCTION_TYPE);
+    public static final LispType LISP_MACRO_TYPE = new FunctionType("macro", MACRO_TYPE);
+
     protected String name;
     protected CallArgs callArgs;
 
     public LispFunction(String name, CallArgs callArgs) {
-        this(LispType.FUNCTION, name, callArgs);
+        this(LispFunction.FUNCTION_TYPE, name, callArgs);
     }
 
     public LispFunction(LispType type, String name, CallArgs callArgs) {
@@ -45,7 +50,7 @@ public abstract class LispFunction extends LispBaseObject implements LispCallabl
 class FunctionType extends LispType {
 
     FunctionType(String name) {
-        this(name, OBJECT);
+        this(name, LispBaseObject.TYPE);
     }
 
     FunctionType(String name, LispType base) {

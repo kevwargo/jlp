@@ -11,16 +11,18 @@ import kevwargo.jlp.runtime.LispRuntime;
 
 public class LispFloat extends LispBaseObject implements LispNumber {
 
+    public static final LispType TYPE = new FloatType();
+
     private double value;
     private Class<?> cls;
 
     LispFloat(double value, LispInt intCast, Class<?> cls) {
-        super(LispType.FLOAT);
+        super(LispFloat.TYPE);
         this.value = value;
         this.cls = cls;
         if (intCast != null) {
-            defineCast(LispType.INT, intCast);
-            intCast.defineCast(LispType.FLOAT, this);
+            defineCast(LispInt.TYPE, intCast);
+            intCast.defineCast(LispFloat.TYPE, this);
         }
     }
 
@@ -67,7 +69,7 @@ public class LispFloat extends LispBaseObject implements LispNumber {
 class FloatType extends LispType {
 
     FloatType() {
-        super("float", new LispType[] {NUMBER});
+        super("float", new LispType[] {LispNumber.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
@@ -76,19 +78,20 @@ class FloatType extends LispType {
         }
 
         LispObject object = args.get(ARG_OBJ);
-        if (object.isInstance(INT)) {
-            return new LispFloat((double) ((LispInt) object.cast(INT)).getValue());
+        if (object.isInstance(LispInt.TYPE)) {
+            return new LispFloat((double) ((LispInt) object.cast(LispInt.TYPE)).getValue());
         }
 
-        if (object.isInstance(FLOAT)) {
-            return new LispFloat(((LispFloat) object.cast(FLOAT)).getValue());
+        if (object.isInstance(LispFloat.TYPE)) {
+            return new LispFloat(((LispFloat) object.cast(LispFloat.TYPE)).getValue());
         }
 
-        if (object.isInstance(STRING)) {
-            return new LispFloat(Double.parseDouble(((LispString) object.cast(STRING)).getValue()));
+        if (object.isInstance(LispString.TYPE)) {
+            return new LispFloat(
+                    Double.parseDouble(((LispString) object.cast(LispString.TYPE)).getValue()));
         }
 
-        if (object.isInstance(JAVA_OBJECT)) {
+        if (object.isInstance(LispJavaObject.TYPE)) {
             Object javaNumber = ((LispJavaObject) object).getObject();
             if (javaNumber instanceof Integer) {
                 return new LispFloat(((Integer) javaNumber).doubleValue());
