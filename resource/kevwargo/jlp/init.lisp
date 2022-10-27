@@ -42,15 +42,6 @@
                                     (cdr clause))
                             (car clause))))))
 
-
-(defmacro %~> (object &rest methods)
-  (for-each (method methods)
-            (setq object
-                  (if (isinstance method list)
-                      `((. ,object ,(car method)) ,@(cdr method))
-                      `((. ,object ,method)))))
-  object)
-
 (defmacro ++ (var)
   `(setq ,var (+ ,var 1)))
 
