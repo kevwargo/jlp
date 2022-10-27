@@ -1,20 +1,20 @@
 (defun outer (a)
-  (lambda () (list a)))
+  (lambda () `(,a)))
 (setq fn (outer 2))
 (print (fn))
 
 (setq fn (let ((a 5)
                (b 6))
            (let ((a 'override))
-             (lambda () (list a b)))))
+             (lambda () `(,a ,b)))))
 (print (fn))
 
 (setq fn (let (lexical)
-           (lambda () (list (boundp 'lexical) (boundp 'dynamic)))))
+           (lambda () `(,(boundp 'lexical) ,(boundp 'dynamic)))))
 (let (dynamic)
   (print (fn)))
 
-(setq use-global-var (lambda () (if (boundp 'global-var) (list global-var))))
+(setq use-global-var (lambda () (if (boundp 'global-var) `(,global-var))))
 
 (print (boundp 'outer))
 (print (boundp 'fn))

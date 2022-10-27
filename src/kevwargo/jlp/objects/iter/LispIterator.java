@@ -39,20 +39,12 @@ public abstract class LispIterator extends LispBaseObject
             return false;
         }
     }
-}
 
-class IteratorType extends LispType {
-
-    IteratorType() {
-        super("iterator", new LispType[] {LispBaseObject.TYPE});
-    }
-
-    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        if (!args.containsKey(ARG_OBJ)) {
+    public static LispIterator create(LispObject obj) throws LispException {
+        if (obj == null) {
             return new LispIteratorImpl(new LispList().iterator());
         }
 
-        LispObject obj = args.get(ARG_OBJ);
         if (obj instanceof LispIterable) {
             return new LispIteratorImpl(((LispIterable) obj).iterator());
         }
@@ -72,6 +64,17 @@ class IteratorType extends LispType {
         }
 
         throw new LispCastException("object '%s' is not iterable", obj.getType().getName());
+    }
+}
+
+class IteratorType extends LispType {
+
+    IteratorType() {
+        super("iterator", new LispType[] {LispBaseObject.TYPE});
+    }
+
+    public LispObject call(LispRuntime runtime, Layer args) throws LispException {
+        return LispIterator.create(args.get(ARG_OBJ));
     }
 }
 

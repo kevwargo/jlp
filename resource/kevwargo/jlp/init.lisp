@@ -38,7 +38,7 @@
   (for-each (clause clauses)
             (if (eval (car clause))
                 (return (if (cdr clause)
-                            (append (list 'progn)
+                            (append '(progn)
                                     (cdr clause))
                             (car clause))))))
 
@@ -52,14 +52,14 @@
   object)
 
 (defmacro ++ (var)
-  (list setq var (list + var 1)))
+  `(setq ,var (+ ,var 1)))
 
 (defmacro -- (var)
-  (list setq var (list - var 1)))
+  `(setq ,var (- ,var 1)))
 
 (defun printf (fmt &rest args)
   (print (apply format
-                (append (list fmt)
+                (append '(fmt)
                         args))))
 
 (defmacro with-getters (getters object &rest body)

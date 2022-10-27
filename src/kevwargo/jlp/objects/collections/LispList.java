@@ -1,6 +1,5 @@
 package kevwargo.jlp.objects.collections;
 
-import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispObject;
@@ -8,6 +7,7 @@ import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.objects.functions.LispCallable;
 import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.objects.iter.LispIterable;
+import kevwargo.jlp.objects.iter.LispIterator;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -153,13 +153,11 @@ public class LispList extends LispBaseObject implements LispIterable {
 
 class ListType extends LispType {
 
-    private static final String ARG_ARGS = "args";
-
     ListType() {
-        super("list", new LispType[] {LispBaseObject.TYPE}, new CallArgs().rest(ARG_ARGS));
+        super("list", new LispType[] {LispBaseObject.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        return args.get(ARG_ARGS);
+        return new LispList(LispIterator.create(args.get(ARG_OBJ)));
     }
 }
