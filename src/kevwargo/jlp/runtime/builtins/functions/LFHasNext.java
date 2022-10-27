@@ -19,6 +19,6 @@ public class LFHasNext extends LispFunction {
         LispObject obj = args.get("obj");
         boolean hasNext = ((LispIterator) obj.cast(LispIterator.TYPE)).hasNext();
 
-        return hasNext ? LispBool.TRUE : LispBool.FALSE;
+        return LispBool.valueOf(hasNext);
     }
 }

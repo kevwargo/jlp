@@ -44,10 +44,7 @@ public class LispBaseObject implements LispObject {
             return LispNil.NIL;
         }
         if (cls == boolean.class) {
-            if ((boolean) obj) {
-                return LispBool.TRUE;
-            }
-            return LispBool.FALSE;
+            return LispBool.valueOf((boolean) obj);
         }
 
         if (cls == long.class) {

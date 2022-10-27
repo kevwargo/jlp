@@ -21,6 +21,10 @@ public class LispBool extends LispBaseObject {
         this.value = value;
     }
 
+    public static LispBool valueOf(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
     public boolean getValue() {
         return value;
     }
@@ -53,6 +57,6 @@ class BoolType extends LispType {
             return LispBool.FALSE;
         }
 
-        return args.get(ARG_OBJ).bool() ? LispBool.TRUE : LispBool.FALSE;
+        return LispBool.valueOf(args.get(ARG_OBJ).bool());
     }
 }

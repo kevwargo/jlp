@@ -18,6 +18,6 @@ public class LFNot extends LispFunction {
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        return args.get(ARG_OBJ).bool() ? LispBool.FALSE : LispBool.TRUE;
+        return LispBool.valueOf(!args.get(ARG_OBJ).bool());
     }
 }

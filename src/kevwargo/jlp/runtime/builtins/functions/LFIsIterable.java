@@ -19,9 +19,6 @@ public class LFIsIterable extends LispFunction {
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
-        if (LispIterator.isIterable(args.get(ARG_OBJ))) {
-            return LispBool.TRUE;
-        }
-        return LispBool.FALSE;
+        return LispBool.valueOf(LispIterator.isIterable(args.get(ARG_OBJ)));
     }
 }

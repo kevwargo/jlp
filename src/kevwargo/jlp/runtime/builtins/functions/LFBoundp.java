@@ -20,6 +20,6 @@ public class LFBoundp extends LispFunction {
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispSymbol symbol = (LispSymbol) args.get(ARG_SYMBOL).cast(LispSymbol.TYPE);
-        return runtime.getNS().get(symbol.getName()) == null ? LispBool.FALSE : LispBool.TRUE;
+        return LispBool.valueOf(runtime.getNS().get(symbol.getName()) != null);
     }
 }

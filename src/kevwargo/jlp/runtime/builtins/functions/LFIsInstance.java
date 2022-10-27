@@ -23,6 +23,6 @@ public class LFIsInstance extends LispFunction {
         LispObject obj = args.get(ARG_OBJ);
         LispType type = (LispType) args.get(ARG_TYPE).cast(LispType.TYPE);
 
-        return obj.isInstance(type) ? LispBool.TRUE : LispBool.FALSE;
+        return LispBool.valueOf(obj.isInstance(type));
     }
 }
