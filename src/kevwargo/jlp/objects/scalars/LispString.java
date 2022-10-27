@@ -6,7 +6,6 @@ import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.objects.iter.LispIterable;
-import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -110,6 +109,6 @@ class StringIterator implements Iterator<LispObject> {
             throw new NoSuchElementException();
         }
 
-        return new LispInt(value.charAt(pos++));
+        return new LispString(new String(new char[] {value.charAt(pos++)}));
     }
 }
