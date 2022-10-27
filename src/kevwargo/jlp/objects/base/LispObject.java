@@ -1,4 +1,4 @@
-package kevwargo.jlp.objects;
+package kevwargo.jlp.objects.base;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;

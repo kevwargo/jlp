@@ -1,8 +1,17 @@
-package kevwargo.jlp.objects;
+package kevwargo.jlp.objects.base;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.functions.LispFunction;
+import kevwargo.jlp.objects.functions.LispMethod;
+import kevwargo.jlp.objects.scalars.LispBool;
+import kevwargo.jlp.objects.scalars.LispNil;
+import kevwargo.jlp.objects.scalars.LispString;
+import kevwargo.jlp.objects.scalars.numbers.LispFloat;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
+import kevwargo.jlp.objects.wrappers.LispJavaObject;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 

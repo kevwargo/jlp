@@ -1,6 +1,9 @@
-package kevwargo.jlp.objects;
+package kevwargo.jlp.objects.scalars;
 
 import kevwargo.jlp.exceptions.LispException;
+import kevwargo.jlp.objects.base.LispBaseObject;
+import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
