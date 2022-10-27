@@ -55,8 +55,7 @@
 
 (defmacro with-getters (getters object &rest body)
   `(let (,@(mapcar (lambda (getter)
-                     `(,getter ((. ,object (concat "get"
-                                                   ,(capitalize (str getter)))))))
+                     `(,getter (-> ,object ,(concat "get" (capitalize (str getter))) ())))
                    getters))
      ,@body))
 
