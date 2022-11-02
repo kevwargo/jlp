@@ -273,6 +273,10 @@ public class CallArgs {
         return layer;
     }
 
+    public Layer apply(LispList args, LispDict kwargs) throws LispException {
+        throw new LispException("Not implemented");
+    }
+
     private void apply(Layer layer, LispList args) throws LispException {
         args = applyKeys(layer, args);
 

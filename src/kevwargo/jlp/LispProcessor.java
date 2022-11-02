@@ -23,8 +23,8 @@ import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 import kevwargo.jlp.runtime.builtins.exceptions.LMTry;
 import kevwargo.jlp.runtime.builtins.functions.LFAppend;
-import kevwargo.jlp.runtime.builtins.functions.LFApply;
 import kevwargo.jlp.runtime.builtins.functions.LFBoundp;
+import kevwargo.jlp.runtime.builtins.functions.LFCall;
 import kevwargo.jlp.runtime.builtins.functions.LFCapitalize;
 import kevwargo.jlp.runtime.builtins.functions.LFConcat;
 import kevwargo.jlp.runtime.builtins.functions.LFDel;
@@ -101,7 +101,7 @@ public class LispProcessor {
 
     private void defineFunctions() {
         define(new LFAppend());
-        define(new LFApply());
+        define(new LFCall());
         define(new LFBoundp());
         define(new LFCapitalize());
         define(new LFConcat());

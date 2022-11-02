@@ -9,14 +9,18 @@ import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
-public class LFApply extends LispFunction {
+public class LFCall extends LispFunction {
 
     public static final String NAME = "apply";
+
     public static final String ARG_CALLABLE = "callable";
     public static final String ARG_ARGS = "args";
+    public static final String ARG_KWARGS = "kwargs";
+    private static final CallArgs callArgs =
+            new CallArgs(ARG_CALLABLE).opt(ARG_ARGS).opt(ARG_KWARGS);
 
-    public LFApply() {
-        super(LispFunction.FUNCTION_TYPE, NAME, new CallArgs(ARG_CALLABLE, ARG_ARGS));
+    public LFCall() {
+        super(LispFunction.FUNCTION_TYPE, NAME, callArgs);
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
