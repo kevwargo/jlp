@@ -1,4 +1,4 @@
-package kevwargo.jlp.objects.scalars;
+package kevwargo.jlp.objects.collections;
 
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.exceptions.LispException;

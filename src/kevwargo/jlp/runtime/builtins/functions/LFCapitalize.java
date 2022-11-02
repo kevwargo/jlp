@@ -3,8 +3,8 @@ package kevwargo.jlp.runtime.builtins.functions;
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispString;
 import kevwargo.jlp.objects.functions.LispFunction;
-import kevwargo.jlp.objects.scalars.LispString;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 

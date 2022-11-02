@@ -6,8 +6,8 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.objects.collections.LispList;
+import kevwargo.jlp.objects.collections.LispString;
 import kevwargo.jlp.objects.functions.LispFunction;
-import kevwargo.jlp.objects.scalars.LispString;
 import kevwargo.jlp.objects.scalars.numbers.LispNumber;
 
 import java.util.Iterator;

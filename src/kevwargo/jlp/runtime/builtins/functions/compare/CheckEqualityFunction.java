@@ -3,7 +3,7 @@ package kevwargo.jlp.runtime.builtins.functions.compare;
 import kevwargo.jlp.exceptions.LispCastException;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.collections.LispList;
-import kevwargo.jlp.objects.scalars.LispString;
+import kevwargo.jlp.objects.collections.LispString;
 import kevwargo.jlp.objects.scalars.numbers.LispNumber;
 import kevwargo.jlp.objects.wrappers.LispJavaObject;
 

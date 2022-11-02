@@ -6,6 +6,7 @@ import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
+import kevwargo.jlp.objects.collections.LispString;
 import kevwargo.jlp.objects.wrappers.LispJavaClass;
 import kevwargo.jlp.runtime.LispNamespace;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
