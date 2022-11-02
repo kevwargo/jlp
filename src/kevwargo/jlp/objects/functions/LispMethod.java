@@ -2,14 +2,12 @@ package kevwargo.jlp.objects.functions;
 
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
-import kevwargo.jlp.objects.base.LispBaseObject;
-import kevwargo.jlp.objects.base.LispNamedObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
-public class LispMethod extends LispBaseObject implements LispCallable, LispNamedObject {
+public class LispMethod extends LispFunction {
 
     public static final LispType TYPE = new FunctionType("method", LispFunction.FUNCTION_TYPE);
 
@@ -19,7 +17,7 @@ public class LispMethod extends LispBaseObject implements LispCallable, LispName
     private CallArgs callArgs;
 
     public LispMethod(LispObject instance, LispFunction function) {
-        super(LispMethod.TYPE);
+        super(LispMethod.TYPE, function.getName(), function.getCallArgs());
         this.instance = instance;
         this.function = function;
 
@@ -36,15 +34,7 @@ public class LispMethod extends LispBaseObject implements LispCallable, LispName
         return function.call(runtime, args);
     }
 
-    public String getName() {
-        return function.getName();
-    }
-
     public String repr() {
         return String.format("<bound method %s of %s>", function.getName(), instance.repr());
-    }
-
-    public boolean bool() {
-        return true;
     }
 }
