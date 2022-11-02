@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class LispDict extends LispBaseObject {
+public class LispDict extends LispBaseObject implements LispCollection {
 
     public static final LispType TYPE = new DictType();
 
@@ -53,6 +53,20 @@ public class LispDict extends LispBaseObject {
 
         return sb.append("}").toString();
     }
+
+    public LispObject getItem(LispObject keyObj) throws LispException {
+        if (!keyObj.isInstance(LispString.TYPE)) {
+            throw new LispException("Currently only strings are supported as dict keys");
+        }
+
+        String key = ((LispString) keyObj.cast(LispString.TYPE)).getValue();
+        LispObject value = contents.get(key);
+        if (value != null) {
+            return value;
+        }
+
+        throw new LispException("No such key: %s", key);
+    }
 }
 
 class DictType extends LispType {
@@ -63,7 +77,7 @@ class DictType extends LispType {
     private static final CallArgs args = new CallArgs().otherKeys(ARG_KEYS);
 
     DictType() {
-        super("dict", new LispType[] {LispBaseObject.TYPE}, args);
+        super("dict", new LispType[] {LispCollection.TYPE}, args);
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

@@ -8,6 +8,7 @@ import kevwargo.jlp.objects.functions.LispCallable;
 import kevwargo.jlp.objects.functions.LispFunction;
 import kevwargo.jlp.objects.iter.LispIterable;
 import kevwargo.jlp.objects.iter.LispIterator;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
@@ -16,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class LispList extends LispBaseObject implements LispIterable {
+public class LispList extends LispBaseObject implements LispIterable, LispCollection {
 
     public static final LispType TYPE = new ListType();
 
@@ -54,6 +55,15 @@ public class LispList extends LispBaseObject implements LispIterable {
 
     public Iterator<LispObject> iterator() {
         return contents.iterator();
+    }
+
+    public LispObject getItem(LispObject key) throws LispException {
+        if (!key.isInstance(LispInt.TYPE)) {
+            throw new LispException("list index must be int");
+        }
+
+        int index = (int) ((LispInt) key.cast(LispInt.TYPE)).getValue();
+        return contents.get(index);
     }
 
     public ListIterator<LispObject> listIterator() {
@@ -154,7 +164,7 @@ public class LispList extends LispBaseObject implements LispIterable {
 class ListType extends LispType {
 
     ListType() {
-        super("list", new LispType[] {LispBaseObject.TYPE});
+        super("list", new LispType[] {LispCollection.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {

@@ -6,13 +6,14 @@ import kevwargo.jlp.objects.base.LispBaseObject;
 import kevwargo.jlp.objects.base.LispObject;
 import kevwargo.jlp.objects.base.LispType;
 import kevwargo.jlp.objects.iter.LispIterable;
+import kevwargo.jlp.objects.scalars.numbers.LispInt;
 import kevwargo.jlp.runtime.LispNamespace.Layer;
 import kevwargo.jlp.runtime.LispRuntime;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LispString extends LispBaseObject implements LispIterable {
+public class LispString extends LispBaseObject implements LispIterable, LispCollection {
 
     public static final LispType TYPE = new StringType();
 
@@ -67,6 +68,15 @@ public class LispString extends LispBaseObject implements LispIterable {
         return new StringIterator(value);
     }
 
+    public LispObject getItem(LispObject key) throws LispException {
+        if (!key.isInstance(LispInt.TYPE)) {
+            throw new LispException("string index must be int");
+        }
+
+        int index = (int) ((LispInt) key.cast(LispInt.TYPE)).getValue();
+        return new LispString(new String(new char[] {value.charAt(index)}));
+    }
+
     public Object getJavaObject() {
         return value;
     }
@@ -79,7 +89,7 @@ public class LispString extends LispBaseObject implements LispIterable {
 class StringType extends LispType {
 
     StringType() {
-        super("str", new LispType[] {LispBaseObject.TYPE});
+        super("str", new LispType[] {LispCollection.TYPE});
     }
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
