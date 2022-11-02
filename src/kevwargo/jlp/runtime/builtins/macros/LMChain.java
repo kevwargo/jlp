@@ -3,6 +3,7 @@ package kevwargo.jlp.runtime.builtins.macros;
 import kevwargo.jlp.calls.CallArgs;
 import kevwargo.jlp.exceptions.LispException;
 import kevwargo.jlp.objects.base.LispObject;
+import kevwargo.jlp.objects.collections.LispCollection;
 import kevwargo.jlp.objects.collections.LispList;
 import kevwargo.jlp.objects.functions.LispCallable;
 import kevwargo.jlp.objects.functions.LispFunction;
@@ -23,39 +24,45 @@ public class LMChain extends LispFunction {
 
     public LispObject call(LispRuntime runtime, Layer args) throws LispException {
         LispObject obj = args.get(ARG_OBJ).eval(runtime);
-        LispObject attr = getAttr(obj, args.get(ARG_ATTR), runtime);
+        LispObject item = getItem(obj, args.get(ARG_ATTR), runtime);
 
         for (LispObject form : (LispList) args.get(ARG_CHAIN)) {
             if (form.isInstance(LispList.TYPE)) {
-                if (!(attr instanceof LispCallable)) {
+                if (!(item instanceof LispCallable)) {
                     throw new LispException(
-                            "Object '%s' is not callable", attr.getType().getName());
+                            "Object '%s' is not callable", item.getType().getName());
                 }
-                LispCallable callable = (LispCallable) attr;
-                attr = ((LispList) form.cast(LispList.TYPE)).applyCallable(callable, runtime);
+                LispCallable callable = (LispCallable) item;
+                item = ((LispList) form.cast(LispList.TYPE)).applyCallable(callable, runtime);
             } else {
-                attr = getAttr(attr, form, runtime);
+                item = getItem(item, form, runtime);
             }
         }
 
-        return attr;
+        return item;
     }
 
-    private static LispObject getAttr(LispObject obj, LispObject attrDesc, LispRuntime runtime)
+    private LispObject getItem(LispObject obj, LispObject item, LispRuntime runtime)
             throws LispException {
-        String attrName;
-        if (attrDesc.isInstance(LispSymbol.TYPE)) {
-            attrName = ((LispSymbol) attrDesc.cast(LispSymbol.TYPE)).getName();
-        } else {
-            attrName = attrDesc.eval(runtime).toString();
+        if (item.isInstance(LispList.TYPE)) {
+            item = item.eval(runtime);
         }
 
-        LispObject attr = obj.getAttr(attrName);
-        if (attr == null) {
-            throw new LispException(
-                    "'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
+        if (item.isInstance(LispSymbol.TYPE)) {
+            String attrName = ((LispSymbol) item.cast(LispSymbol.TYPE)).getName();
+            LispObject attr = obj.getAttr(attrName);
+            if (attr == null) {
+                throw new LispException(
+                        "'%s' object has no attribute '%s'", obj.getType().getName(), attrName);
+            }
+            return attr;
         }
 
-        return attr;
+        if (!obj.isInstance(LispCollection.TYPE)) {
+            throw new LispException("%s is not a collection", obj.repr());
+        }
+
+        LispCollection collection = (LispCollection) obj.cast(LispCollection.TYPE);
+        return collection.getItem(item);
     }
 }
